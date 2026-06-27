@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý kho hàng | Tứ Quý Garden</title>
+  <meta name="description" content="Quản lý kho hàng sản phẩm, thêm sửa xóa sản phẩm Tứ Quý Garden.">
+  <link rel="icon" type="image/png" href="images/logo/logo.png">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .admin-layout-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 30px;
+      margin-top: 20px;
+      margin-bottom: 70px;
+      align-items: start;
+    }
+
+    .admin-sidebar {
+      background-color: var(--color-cream-light);
+      border-radius: 12px;
+      border: 1px solid var(--color-gray-border);
+      padding: 25px;
+    }
+
+    .admin-sidebar-header {
+      border-bottom: 1px solid var(--color-gray-border);
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .admin-sidebar-role {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--color-primary);
+      background-color: rgba(47, 107, 47, 0.1);
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 5px;
+    }
+
+    .admin-sidebar-title {
+      font-size: 16px;
+      color: var(--color-text-dark);
+      margin: 0;
+    }
+
+    .admin-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      list-style: none;
+      padding: 0;
+    }
+
+    .admin-menu-item {
+      padding: 12px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-dark);
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-menu-item:hover, .admin-menu-item.active {
+      background-color: var(--color-white);
+      color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .admin-menu-item.logout-item {
+      color: var(--color-danger);
+      border-top: 1px solid var(--color-gray-border);
+      border-radius: 0;
+      margin-top: 15px;
+      padding-top: 20px;
+    }
+
+    .admin-menu-item.logout-item:hover {
+      background-color: transparent;
+      color: #c54a37;
+      box-shadow: none;
+    }
+
+    .admin-content-panel {
+      background-color: var(--color-white);
+      border-radius: 12px;
+      border: 1px solid var(--color-gray-border);
+      padding: 30px;
+      min-height: 500px;
+    }
+
+    .admin-section-title {
+      font-size: 22px;
+      color: var(--color-text-dark);
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--color-gray-border);
+      padding-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--color-gray-border);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .products-table th {
+      background-color: var(--color-cream-light);
+      padding: 12px 15px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--color-text-dark);
+      border-bottom: 1px solid var(--color-gray-border);
+    }
+
+    .products-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--color-gray-light);
+      vertical-align: middle;
+    }
+
+    .products-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .prod-thumb {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      background: white;
+      border: 1px solid var(--color-gray-border);
+      border-radius: 4px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      border: none;
+    }
+
+    .btn-edit {
+      background-color: #e0f2fe;
+      color: #0369a1;
+    }
+    .btn-edit:hover { background-color: #bae6fd; }
+
+    .btn-delete {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+    .btn-delete:hover { background-color: #fecaca; }
+
+    /* Search bar for inventory */
+    .inventory-header-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .inventory-search {
+      padding: 8px 15px;
+      border-radius: 6px;
+      border: 1px solid var(--color-gray-border);
+      outline: none;
+      font-size: 13.5px;
+      min-width: 250px;
+      background-color: var(--color-cream-light);
+    }
+
+    .inventory-search:focus {
+      background-color: white;
+      border-color: var(--color-primary);
+    }
+
+    /* Modal styles specifically */
+    .admin-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 992px) {
+      .admin-layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="lang-vi">
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-container container">
+      <!-- Logo -->
+      <a href="index.html" class="logo">
+        <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+      </a>
+
+      <!-- Mobile toggle menu -->
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Navigation links -->
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-list">
+          <li>
+            <a href="index.html" class="nav-link">
+              <span class="lang-vi">Trang chủ</span>
+              <span class="lang-en">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="nav-link">
+              <span class="lang-vi">Về chúng tôi</span>
+              <span class="lang-en">About Us</span>
+            </a>
+          </li>
+          <li class="dropdown">
+            <a href="products.html" class="nav-link dropdown-toggle">
+              <span class="lang-vi">Sản phẩm</span>
+              <span class="lang-en">Products</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-chevron">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="products.html?category=all">
+                  <span class="lang-vi">Tất cả sản phẩm</span>
+                  <span class="lang-en">All Products</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Fruits">
+                  <span class="lang-vi">Trái cây tươi</span>
+                  <span class="lang-en">Fresh Fruits</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Nutritional Seeds">
+                  <span class="lang-vi">Hạt dinh dưỡng</span>
+                  <span class="lang-en">Nutritional Seeds</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Granola">
+                  <span class="lang-vi">Granola ngũ cốc</span>
+                  <span class="lang-en">Granola</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Combo Healthy">
+                  <span class="lang-vi">Combo sống khỏe</span>
+                  <span class="lang-en">Combo Healthy</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="index.html#footer-contact" class="nav-link">
+              <span class="lang-vi">Liên hệ</span>
+              <span class="lang-en">Contact</span>
+            </a>
+          </li>
+          <li>
+            <a href="traceability.html" class="nav-link">
+              <span class="lang-vi">Truy xuất nguồn gốc</span>
+              <span class="lang-en">Traceability</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Right actions -->
+      <div class="header-actions">
+        <!-- Search bar -->
+        <div class="search-bar">
+          <input type="text" placeholder="Tìm sản phẩm..." id="header-search-input">
+          <button class="search-btn" id="header-search-btn" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Account -->
+        <a href="login.html" class="action-icon-btn profile-btn active" id="header-profile-btn" title="Tài khoản">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="btn-text">
+            <span class="lang-vi" id="header-profile-txt-vi">Quản trị</span>
+            <span class="lang-en" id="header-profile-txt-en">Admin</span>
+          </span>
+        </a>
+
+        <!-- Cart -->
+        <a href="cart.html" class="action-icon-btn cart-btn" title="Giỏ hàng">
+          <div class="cart-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-badge" id="header-cart-badge" style="display:none;">0</span>
+          </div>
+          <span class="btn-text">
+            <span class="lang-vi">Giỏ hàng</span>
+            <span class="lang-en">Cart</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="container">
+    <div class="admin-layout-grid">
+      <!-- Admin Sidebar -->
+      <div class="admin-sidebar">
+        <div class="admin-sidebar-header">
+          <span class="admin-sidebar-role">Administrator</span>
+          <h3 class="admin-sidebar-title">Tứ Quý Garden</h3>
+        </div>
+
+        <ul class="admin-menu">
+          <li>
+            <a href="admin-dashboard.html" class="admin-menu-item">
+              📊 <span class="lang-vi">Thống kê chung</span><span class="lang-en">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="admin-products.html" class="admin-menu-item active">
+              🍎 <span class="lang-vi">Quản lý kho hàng</span><span class="lang-en">Products CRUD</span>
+            </a>
+          </li>
+          <li>
+            <a href="admin-orders.html" class="admin-menu-item">
+              📝 <span class="lang-vi">Quản lý đơn hàng</span><span class="lang-en">Manage Orders</span>
+            </a>
+          </li>
+          <li class="admin-menu-item logout-item" onclick="handleAdminLogout()">
+            🚪 <span class="lang-vi">Đăng xuất quản trị</span><span class="lang-en">Log Out</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Panel content -->
+      <div class="admin-content-panel">
+        <div class="admin-section-title">
+          <span>🍎 <span class="lang-vi">Quản Lý Danh Sách Kho Hàng</span><span class="lang-en">Inventory Product Management</span></span>
+          <button class="btn btn-primary btn-sm" onclick="openAddProductModal()">
+            ✚ <span class="lang-vi">Thêm sản phẩm mới</span><span class="lang-en">Add New Product</span>
+          </button>
+        </div>
+
+        <!-- Search / Filter -->
+        <div class="inventory-header-row">
+          <input type="text" id="inventory-search-input" class="inventory-search" placeholder="Tìm theo tên sản phẩm..." oninput="handleInventorySearch(this.value)">
+          
+          <div style="display:flex; gap:10px;">
+            <select id="inventory-filter-category" onchange="handleInventoryCategoryFilter(this.value)" style="padding: 8px 12px; border-radius: 6px; border:1px solid var(--color-gray-border); font-size:13px; outline:none;">
+              <option value="all">Tất cả danh mục</option>
+              <option value="Fruits">Trái cây tươi</option>
+              <option value="Nutritional Seeds">Hạt dinh dưỡng</option>
+              <option value="Granola">Granola ngũ cốc</option>
+              <option value="Combo Healthy">Combo sống khỏe</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table list -->
+        <div class="table-container">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">ID</th>
+                <th style="width: 70px;"><span class="lang-vi">Hình ảnh</span><span class="lang-en">Image</span></th>
+                <th><span class="lang-vi">Tên sản phẩm (VI / EN)</span><span class="lang-en">Product Name (VI / EN)</span></th>
+                <th><span class="lang-vi">Danh mục</span><span class="lang-en">Category</span></th>
+                <th><span class="lang-vi">Đơn giá</span><span class="lang-en">Price</span></th>
+                <th style="text-align: center;"><span class="lang-vi">Tồn kho</span><span class="lang-en">Stock</span></th>
+                <th style="width: 140px; text-align: center;"><span class="lang-vi">Thao tác</span><span class="lang-en">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="inventory-table-body">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Total count summary -->
+        <div style="font-size:13px; color: var(--color-text-light); text-align:right;" id="inventory-total-txt">
+          Đang hiển thị 0 sản phẩm
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="main-footer" id="footer-contact">
+    <div class="footer-top container">
+      <div class="footer-block brand-block">
+        <a href="index.html" class="footer-logo">
+          <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+        </a>
+        <p class="footer-tagline">“Trái tươi bốn mùa, hạt lành mỗi ngày”</p>
+      </div>
+      <div class="footer-block">
+        <h3 class="footer-title">Quản trị viên</h3>
+        <p style="font-size:12.5px; opacity:0.8;">Hệ thống thuộc sở hữu độc quyền của Tứ Quý Garden Co.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-content">
+        <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. Admin Dashboard Console.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data/data.js"></script>
+  <script src="services/cartService.js"></script>
+  <script src="services/authService.js"></script>
+  <script src="services/orderService.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

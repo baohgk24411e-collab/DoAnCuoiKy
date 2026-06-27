@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập & Đăng ký | Tứ Quý Garden</title>
+  <meta name="description" content="Đăng nhập hoặc đăng ký tài khoản Tứ Quý Garden để quản lý đơn hàng và tích lũy ưu đãi.">
+  <link rel="icon" type="image/png" href="images/logo/logo.png">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .auth-page-container {
+      max-width: 950px;
+      margin: 40px auto 70px auto;
+      background: var(--color-white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--color-gray-border);
+      display: flex;
+      min-height: 550px;
+    }
+    
+    .auth-banner {
+      flex: 1.1;
+      background: linear-gradient(rgba(31, 77, 43, 0.85), rgba(31, 77, 43, 0.85)), url('images/image/image2.jpg');
+      background-size: cover;
+      background-position: center;
+      padding: 40px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .auth-banner-top .banner-logo {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+
+    .auth-banner-middle h2 {
+      color: white;
+      font-size: 28px;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .auth-banner-middle p {
+      opacity: 0.9;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .auth-banner-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 20px;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .auth-form-side {
+      flex: 1.2;
+      padding: 45px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--color-gray-light);
+      margin-bottom: 30px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px 0;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--color-text-light);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: var(--transition-smooth);
+    }
+
+    .auth-tab.active {
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .auth-form-panel {
+      display: none;
+    }
+
+    .auth-form-panel.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-form-group {
+      margin-bottom: 18px;
+    }
+
+    .auth-form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--color-text-dark);
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 11px 15px;
+      border-radius: 8px;
+      border: 1px solid var(--color-gray-border);
+      outline: none;
+      font-size: 14px;
+      transition: var(--transition-smooth);
+      background-color: var(--color-cream-light);
+    }
+
+    .auth-input:focus {
+      border-color: var(--color-primary);
+      background-color: var(--color-white);
+      box-shadow: 0 0 0 3px rgba(47, 107, 47, 0.1);
+    }
+
+    .auth-select {
+      width: 100%;
+      padding: 11px 15px;
+      border-radius: 8px;
+      border: 1px solid var(--color-gray-border);
+      outline: none;
+      font-size: 14px;
+      background-color: var(--color-cream-light);
+      height: 44px;
+    }
+
+    .auth-flex-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      font-size: 13px;
+    }
+
+    .auth-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--color-text-light);
+    }
+
+    .auth-forgot-link {
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+
+    .auth-forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .auth-page-container {
+        flex-direction: column;
+        margin: 20px;
+      }
+      .auth-banner {
+        padding: 30px;
+        min-height: 200px;
+      }
+      .auth-form-side {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body class="lang-vi">
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-container container">
+      <!-- Logo -->
+      <a href="index.html" class="logo">
+        <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+      </a>
+
+      <!-- Mobile toggle menu -->
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Navigation links -->
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-list">
+          <li>
+            <a href="index.html" class="nav-link">
+              <span class="lang-vi">Trang chủ</span>
+              <span class="lang-en">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="nav-link">
+              <span class="lang-vi">Về chúng tôi</span>
+              <span class="lang-en">About Us</span>
+            </a>
+          </li>
+          <li class="dropdown">
+            <a href="products.html" class="nav-link dropdown-toggle">
+              <span class="lang-vi">Sản phẩm</span>
+              <span class="lang-en">Products</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-chevron">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="products.html?category=all">
+                  <span class="lang-vi">Tất cả sản phẩm</span>
+                  <span class="lang-en">All Products</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Fruits">
+                  <span class="lang-vi">Trái cây tươi</span>
+                  <span class="lang-en">Fresh Fruits</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Nutritional Seeds">
+                  <span class="lang-vi">Hạt dinh dưỡng</span>
+                  <span class="lang-en">Nutritional Seeds</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Granola">
+                  <span class="lang-vi">Granola ngũ cốc</span>
+                  <span class="lang-en">Granola</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Combo Healthy">
+                  <span class="lang-vi">Combo sống khỏe</span>
+                  <span class="lang-en">Combo Healthy</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="index.html#footer-contact" class="nav-link">
+              <span class="lang-vi">Liên hệ</span>
+              <span class="lang-en">Contact</span>
+            </a>
+          </li>
+          <li>
+            <a href="traceability.html" class="nav-link">
+              <span class="lang-vi">Truy xuất nguồn gốc</span>
+              <span class="lang-en">Traceability</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Right actions -->
+      <div class="header-actions">
+        <!-- Search bar -->
+        <div class="search-bar">
+          <input type="text" placeholder="Tìm sản phẩm..." id="header-search-input">
+          <button class="search-btn" id="header-search-btn" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Language toggle button -->
+        <button class="lang-switch-btn" id="lang-toggle-btn" title="Toggle Language">
+          <span class="lang-vi">EN</span>
+          <span class="lang-en">VI</span>
+        </button>
+
+        <!-- Account -->
+        <a href="login.html" class="action-icon-btn profile-btn active" id="header-profile-btn" title="Tài khoản">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="btn-text">
+            <span class="lang-vi" id="header-profile-txt-vi">Tài khoản</span>
+            <span class="lang-en" id="header-profile-txt-en">Account</span>
+          </span>
+        </a>
+
+        <!-- Cart -->
+        <a href="cart.html" class="action-icon-btn cart-btn" title="Giỏ hàng">
+          <div class="cart-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-badge" id="header-cart-badge" style="display:none;">0</span>
+          </div>
+          <span class="btn-text">
+            <span class="lang-vi">Giỏ hàng</span>
+            <span class="lang-en">Cart</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="container" style="margin-top: 30px;">
+    <!-- Breadcrumbs -->
+    <ul class="breadcrumb" style="display:flex; list-style:none; gap:10px; font-size:14px; margin-bottom:20px; padding:0;">
+      <li><a href="index.html" style="color:var(--color-text-light);"><span class="lang-vi">Trang chủ</span><span class="lang-en">Home</span></a></li>
+      <li><span style="color:var(--color-text-light);">/</span></li>
+      <li style="color:var(--color-primary); font-weight:600;"><span class="lang-vi">Tài khoản</span><span class="lang-en">Account</span></li>
+    </ul>
+
+    <div class="auth-page-container">
+      <!-- Left side banner -->
+      <div class="auth-banner">
+        <div class="auth-banner-top">
+          <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="banner-logo">
+        </div>
+        <div class="auth-banner-middle">
+          <h2>
+            <span class="lang-vi">Vì Sức Khỏe Gia Đình Bạn</span>
+            <span class="lang-en">For Your Family's Health</span>
+          </h2>
+          <p>
+            <span class="lang-vi">Đăng nhập tài khoản để theo dõi lịch sử đơn hàng, lưu danh sách yêu thích và nhận ngay cẩm nang cùng mã giảm giá riêng cho hội viên.</span>
+            <span class="lang-en">Log in to track orders, save wishlists, and receive exclusive member guides & vouchers.</span>
+          </p>
+        </div>
+        <div class="auth-banner-bottom">
+          <span>&copy; 2026 Tứ Quý Garden. Green & healthy life.</span>
+        </div>
+      </div>
+
+      <!-- Right side forms -->
+      <div class="auth-form-side">
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">
+            <span class="lang-vi">Đăng nhập</span>
+            <span class="lang-en">Log In</span>
+          </div>
+          <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">
+            <span class="lang-vi">Đăng ký</span>
+            <span class="lang-en">Register</span>
+          </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="auth-form-panel active" id="panel-login">
+          <form id="auth-login-form">
+            <div class="auth-form-group">
+              <label for="login-email"><span class="lang-vi">Địa chỉ Email *</span><span class="lang-en">Email Address *</span></label>
+              <input type="email" id="login-email" class="auth-input" required placeholder="example@tuquygarden.vn">
+            </div>
+            <div class="auth-form-group">
+              <label for="login-password"><span class="lang-vi">Mật khẩu *</span><span class="lang-en">Password *</span></label>
+              <input type="password" id="login-password" class="auth-input" required placeholder="••••••••">
+            </div>
+            
+            <div class="auth-flex-row">
+              <label class="auth-checkbox-label">
+                <input type="checkbox" id="login-remember">
+                <span class="lang-vi">Ghi nhớ đăng nhập</span>
+                <span class="lang-en">Remember me</span>
+              </label>
+              <a href="#" class="auth-forgot-link" onclick="handleForgotPassword(event)">
+                <span class="lang-vi">Quên mật khẩu?</span>
+                <span class="lang-en">Forgot password?</span>
+              </a>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg" style="padding:12px 0; font-size:15px; width: 100%;">
+              <span class="lang-vi">Đăng Nhập</span>
+              <span class="lang-en">Log In</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Register Form -->
+        <div class="auth-form-panel" id="panel-register">
+          <form id="auth-register-form">
+            <div class="auth-form-group">
+              <label for="register-name"><span class="lang-vi">Họ và tên *</span><span class="lang-en">Full Name *</span></label>
+              <input type="text" id="register-name" class="auth-input" required placeholder="Nguyễn Văn A">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div class="auth-form-group">
+                <label for="register-email"><span class="lang-vi">Địa chỉ Email *</span><span class="lang-en">Email Address *</span></label>
+                <input type="email" id="register-email" class="auth-input" required placeholder="name@domain.com">
+              </div>
+              <div class="auth-form-group">
+                <label for="register-phone"><span class="lang-vi">Số điện thoại *</span><span class="lang-en">Phone Number *</span></label>
+                <input type="tel" id="register-phone" class="auth-input" required placeholder="0912345678">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 15px;">
+              <div class="auth-form-group">
+                <label for="register-password"><span class="lang-vi">Mật khẩu *</span><span class="lang-en">Password *</span></label>
+                <input type="password" id="register-password" class="auth-input" required placeholder="Tối thiểu 6 ký tự">
+              </div>
+              
+              <div class="auth-form-group">
+                <label for="register-goal">
+                  <span class="lang-vi">Mục tiêu sức khỏe</span>
+                  <span class="lang-en">Health Goal</span>
+                </label>
+                <select id="register-goal" class="auth-select">
+                  <option value="Eat Clean">Eat Clean</option>
+                  <option value="Tăng cơ">Tăng cơ / Gym</option>
+                  <option value="Giảm cân">Giảm cân</option>
+                  <option value="Mẹ bầu">Mẹ bầu & Bé</option>
+                  <option value="Gia đình">Sức khỏe Gia đình</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg" style="padding:12px 0; font-size:15px; width: 100%; margin-top: 10px;">
+              <span class="lang-vi">Đăng Ký Tài Khoản</span>
+              <span class="lang-en">Create Account</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="main-footer" id="footer-contact">
+    <div class="footer-top container">
+      <div class="footer-block brand-block">
+        <a href="index.html" class="footer-logo">
+          <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+        </a>
+        <p class="footer-tagline">“Trái tươi bốn mùa, hạt lành mỗi ngày”</p>
+        <p class="footer-desc">
+          <span class="lang-vi">Tứ Quý Garden cam kết mang đến nông sản hữu cơ theo mùa tươi ngon, hạt dinh dưỡng chọn lọc và granola lành mạnh chăm sóc sức khỏe gia đình bạn mỗi ngày.</span>
+          <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+        </p>
+      </div>
+
+      <div class="footer-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Danh mục</span><span class="lang-en">Categories</span>
+        </h3>
+        <ul class="footer-links">
+          <li><a href="products.html?category=Fruits"><span class="lang-vi">Trái cây theo mùa</span><span class="lang-en">Seasonal Fruits</span></a></li>
+          <li><a href="products.html?category=Nutritional Seeds"><span class="lang-vi">Hạt dinh dưỡng</span><span class="lang-en">Seeds</span></a></li>
+          <li><a href="products.html?category=Granola"><span class="lang-vi">Granola ngũ cốc</span><span class="lang-en">Granola</span></a></li>
+          <li><a href="products.html?category=Combo Healthy"><span class="lang-vi">Combo sống khỏe</span><span class="lang-en">Healthy Combos</span></a></li>
+          <li><a href="traceability.html"><span class="lang-vi">Tra cứu nguồn gốc</span><span class="lang-en">Traceability</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Hỗ trợ khách hàng</span><span class="lang-en">Customer Service</span>
+        </h3>
+        <ul class="footer-links">
+          <li><a href="about.html"><span class="lang-vi">Giới thiệu cửa hàng</span><span class="lang-en">About Store</span></a></li>
+          <li><a href="about.html"><span class="lang-vi">Chính sách đổi trả</span><span class="lang-en">Exchange & Refund</span></a></li>
+          <li><a href="about.html"><span class="lang-vi">Chính sách giao hàng</span><span class="lang-en">Shipping Policies</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-block contact-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Kết nối với chúng tôi</span><span class="lang-en">Contact Info</span>
+        </h3>
+        <ul class="contact-info-list">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>Hotline: <strong>1900 633 123</strong></span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Email: <a href="mailto:info@tuquygarden.vn">info@tuquygarden.vn</a></span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Địa chỉ: Cái Bè, Tiền Giang</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-content">
+        <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="about.html"><span class="lang-vi">Điều khoản sử dụng</span><span class="lang-en">Terms of Use</span></a>
+          <span class="divider">|</span>
+          <a href="about.html"><span class="lang-vi">Chính sách bảo mật</span><span class="lang-en">Privacy Policy</span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data/data.js"></script>
+  <script src="services/cartService.js"></script>
+  <script src="services/authService.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

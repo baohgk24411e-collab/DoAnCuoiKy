@@ -1,0 +1,206 @@
+// js/traceability.js
+
+// Mock dataset for traceability batches
+const TRACE_DATABASE = {
+  "TQG-XOAI-001": {
+    nameVi: "Xoài cát Hòa Lộc sạch Cái Bè",
+    nameEn: "Hoa Loc Sweet Mangoes - Cái Bè",
+    image: "images/fruits/Xoài cát Hòa Lộc.png",
+    descVi: "Xoài chín cây thơm lừng, ngọt đậm vị, thu hoạch trực tiếp tại Hợp tác xã Xoài cát Cái Bè, tỉnh Tiền Giang. Đạt tiêu chuẩn VietGAP xuất khẩu.",
+    descEn: "Tree-ripened mangoes with rich sweet fragrance, harvested at Cai Be Mango Cooperative, Tien Giang province. Meets export VietGAP standards.",
+    coopVi: "HTX Xoài cát Cái Bè, Tiền Giang",
+    coopEn: "Cai Be Mango Cooperative, Tien Giang",
+    farmerVi: "Bác Hai Chân",
+    farmerEn: "Mr. Hai Chan",
+    harvestDate: "2026-06-24",
+    certs: ["VietGAP", "Chỉ dẫn địa lý", "Organic Packing"],
+    timelineVi: [
+      { step: "1", title: "Cải tạo đất & Bón phân hữu cơ", date: "2026-01-15", desc: "Đất trồng tại lô A3 được cày xới, bón lót phân trùn quế và xơ dừa vi sinh giúp bổ sung dưỡng chất tự nhiên. Kiểm tra chỉ số pH đạt 6.5 lý tưởng." },
+      { step: "2", title: "Kiểm tra chất lượng & Thu hoạch", date: "2026-06-24", desc: "Kỹ sư đo độ đường brix đạt trên 14%. Quả được hái tay lúc 5:00 sáng, bọc túi giấy bảo vệ để tránh trầy xước và côn trùng gây hại." },
+      { step: "3", title: "Rửa sạch & Phân loại tại HTX", date: "2026-06-24", desc: "Rửa sạch mủ xoài bằng hệ thống nước ozon vô trùng, sấy khô bằng quạt gió. Loại bỏ những quả trầy xước, dán mã QR truy xuất nguồn gốc." },
+      { step: "4", title: "Đóng gói & Vận chuyển lạnh", date: "2026-06-25", desc: "Xoài đóng gói trong hộp carton hữu cơ đục lỗ thông khí, xếp vào container lạnh kiểm soát nhiệt độ ổn định ở 8°C - 10°C để vận chuyển đến kho Tứ Quý." },
+      { step: "5", title: "Phân phối đến cửa hàng Tứ Quý Garden", date: "2026-06-26", desc: "Kiểm tra cảm quan cuối cùng đạt yêu cầu độ chín tươi ngon. Lên kệ trưng bày tại cửa hàng để sẵn sàng phục vụ khách hàng." }
+    ],
+    timelineEn: [
+      { step: "1", title: "Soil preparation & Organic fertilizing", date: "2026-01-15", desc: "Soil in plot A3 was tilled, composted with organic vermicompost and biological coco peat. Soil pH verified at ideal 6.5 index." },
+      { step: "2", title: "Quality assurance & Hand harvesting", date: "2026-06-24", desc: "Brix sugar levels tested at over 14%. Harvested by hand at 5:00 AM, wrapped in paper bags to prevent bruises and pests." },
+      { step: "3", title: "Washing & Sorting at the Cooperative", date: "2026-06-24", desc: "Washed with sterile ozone water, fan-dried. Sorted to discard bruised fruits, tagged with traceability QR codes." },
+      { step: "4", title: "Packaging & Cold chain logistics", date: "2026-06-25", desc: "Packed in ventilated organic cartons. Loaded into refrigerated containers at 8°C - 10°C temperature log for dispatch." },
+      { step: "5", title: "Store arrival at Tứ Quý Garden", date: "2026-06-26", desc: "Final sensory check passed for perfect ripeness. Displayed on store shelves ready for customer selection." }
+    ]
+  },
+  "TQG-MAN-002": {
+    nameVi: "Mận hậu chín ngọt Bản Ôn, Sơn La",
+    nameEn: "Sweet Red Plums - Ban On, Son La",
+    image: "images/fruits/Mận.png",
+    descVi: "Mận hậu chín đỏ ngọt lịm pha chút chua nhẹ giòn tan, phủ phấn trắng tự nhiên, hái từ nông trại cao nguyên Mộc Châu lộng gió.",
+    descEn: "Ripe sweet red plums with crispy texture and natural white powder, harvested from high-altitude Moc Chau highlands.",
+    coopVi: "HTX Mận Hậu sạch Bản Ôn, Sơn La",
+    coopEn: "Ban On Plum Cooperative, Son La",
+    farmerVi: "Chị Mỷ (Dân tộc H'Mông)",
+    farmerEn: "Mrs. My (H'mong Ethnic)",
+    harvestDate: "2026-06-23",
+    certs: ["VietGAP", "An Toàn Thực Phẩm", "Hái tay chọn lọc"],
+    timelineVi: [
+      { step: "1", title: "Chăm sóc mùa hoa và đậu quả", date: "2026-02-10", desc: "Tỉa cành tạo tán giúp đón nắng tốt nhất. Sử dụng phân bón lá sinh học an toàn không hóa chất bảo vệ thực vật độc hại." },
+      { step: "2", title: "Thu hoạch sáng sớm trên sườn núi", date: "2026-06-23", desc: "Thu hái thủ công từng quả chín đỏ còn nguyên cuống lá và phấn trắng bảo vệ tự nhiên, đựng vào gùi wicker tre truyền thống." },
+      { step: "3", title: "Phân loại kích thước tại nhà đóng gói", date: "2026-06-23", desc: "Mận được phân loại theo đường kính lớn (loại VIP), loại bỏ quả giập. Đóng vào khay nhựa sinh học tự hủy thân thiện môi trường." },
+      { step: "4", title: "Chuyển phát nhanh đường hàng không", date: "2026-06-24", desc: "Vận chuyển nhanh bằng xe tải giữ nhiệt đến sân bay Nội Bài, bay thẳng vào TP. HCM để bảo toàn độ giòn rụm tối đa." },
+      { step: "5", title: "Lên kệ cửa hàng Tứ Quý Garden", date: "2026-06-25", desc: "Trưng bày tủ mát 5°C tại cửa hàng Tứ Quý Garden. Khách hàng quét mã có thể cảm nhận vị giòn ngọt nguyên bản núi rừng." }
+    ],
+    timelineEn: [
+      { step: "1", title: "Blossoming & Fruit care", date: "2026-02-10", desc: "Pruned branches to maximize sunlight. Applied organic bio-fertilizers without using synthetic chemical sprays." },
+      { step: "2", title: "Harvesting on mountain slopes", date: "2026-06-23", desc: "Hand-picked ripe red plums retaining leaf stems and natural white bloom coating. Collected in traditional bamboo back baskets." },
+      { step: "3", title: "Sizing & Biodegradable packaging", date: "2026-06-23", desc: "Sorted for premium diameter sizes. Packed in eco-friendly biodegradable cornstarch trays." },
+      { step: "4", title: "Air cargo express shipping", date: "2026-06-24", desc: "Loaded in insulated trucks to Noi Bai airport. Flown directly to Ho Chi Minh City to maintain ultimate freshness and crunch." },
+      { step: "5", title: "Shelf display at Tứ Quý Garden", date: "2026-06-25", desc: "Displayed in 5°C cooling shelves at Tứ Quý Garden stores, preserving mountain fresh taste." }
+    ]
+  },
+  "TQG-BUOI-003": {
+    nameVi: "Bưởi da xanh Bến Tre ruột đỏ VIP",
+    nameEn: "Green Skin Pink Pomelos - Bến Tre",
+    image: "images/fruits/Bưởi da xanh.png",
+    descVi: "Múi bưởi hồng đậm, mọng nước, dễ lột, ngọt thanh không đắng. Được canh tác theo tiêu chuẩn GlobalGAP khắt khe nhất.",
+    descEn: "Rich pink pulps, juicy, easy to peel, sweet and refreshingly crisp. Grown under rigorous GlobalGAP protocols.",
+    coopVi: "HTX Bưởi Da Xanh Mỏ Cày Bắc, Bến Tre",
+    coopEn: "Mo Cay Bac Pomelo Cooperative, Ben Tre",
+    farmerVi: "Chú Tư Bông",
+    farmerEn: "Mr. Tu Bong",
+    harvestDate: "2026-06-22",
+    certs: ["GlobalGAP", "OCOP 4 Sao", "Không hóa chất bảo quản"],
+    timelineVi: [
+      { step: "1", title: "Bọc trái chống ruồi vàng", date: "2026-03-05", desc: "Khi trái bằng quả cam, tiến hành bọc lưới chuyên dụng ngăn chặn ruồi vàng và sâu hại tự nhiên mà không cần phun thuốc hóa học." },
+      { step: "2", title: "Thu hoạch tuyển chọn quả bánh tẻ", date: "2026-06-22", desc: "Hái quả đúng độ chín vừa phải (da căng láng, gõ tiếng trầm đục). Cắt cuống dài 2cm và bôi vôi đầu cuống tránh vi khuẩn xâm nhập." },
+      { step: "3", title: "Vệ sinh & Xử lý quang học", date: "2026-06-22", desc: "Lau bóng vỏ nhẹ nhàng bằng khăn mềm, chiếu tia cực tím khử trùng nấm ngoài vỏ bưởi trước khi đưa vào rổ." },
+      { step: "4", title: "Vận chuyển đường sông và đường bộ", date: "2026-06-23", desc: "Vận chuyển bằng ghe từ vườn tập kết về nhà máy, đóng thùng xuất phát đi xe tải tải trọng lớn về kho trung tâm." },
+      { step: "5", title: "Bàn giao đến các siêu thị Tứ Quý", date: "2026-06-24", desc: "Kiểm tra chất lượng vỏ, cân nặng đạt từ 1.2kg - 1.5kg chuẩn tiêu chuẩn OCOP 4 sao trước khi trưng bày." }
+    ],
+    timelineEn: [
+      { step: "1", title: "Fruit wrapping against fruit flies", date: "2026-03-05", desc: "Wrapped each young fruit in protective mesh nets when it reached orange size to defend against insects naturally without chemical spraying." },
+      { step: "2", title: "Harvesting by size and skin tension", date: "2026-06-22", desc: "Harvested at peak maturity (stretched skin, deep resonant sound when tapped). Cut stem with 2cm length and applied lime to prevent rot." },
+      { step: "3", title: "Cleaning & UV sterilization", date: "2026-06-22", desc: "Gently polished the rind with soft towels. Treated with UV light to sterilize surface spores before packing." },
+      { step: "4", title: "River & road transport", date: "2026-06-23", desc: "Shipped via wooden boats to consolidation stations, then loaded on trucks to distribution center." },
+      { step: "5", title: "Stock arrival at Tứ Quý stores", date: "2026-06-24", desc: "Verified pomelo weight is within 1.2kg - 1.5kg range (OCOP 4-star specification) before retail display." }
+    ]
+  },
+  "TQG-HAT-004": {
+    nameVi: "Mix Hạt Dinh Dưỡng 5 loại cao cấp",
+    nameEn: "Premium 5-Nut Mixed Seeds",
+    image: "images/granola/Mix hạt.png",
+    descVi: "Hạt dinh dưỡng sấy giòn thơm ngậy bao gồm Macca, Hạnh nhân, Hạt điều, Óc chó, và Hạt bí hữu cơ sấy lạnh giữ nguyên dưỡng chất.",
+    descEn: "Bake-crisp nutritional nuts including Macadamia, Almond, Cashew, Walnut, and organic Pumpkin seeds dried with low-temp technology.",
+    coopVi: "HTX Nông nghiệp Hữu cơ Krông Năng, Đắk Lắk",
+    coopEn: "Krong Nang Organic Agriculture Coop, Dak Lak",
+    farmerVi: "Hộ liên kết K'Măng",
+    farmerEn: "K'Mang Farm Union",
+    harvestDate: "2026-06-20",
+    certs: ["ISO 22000", "HACCP", "Sấy lạnh tự nhiên"],
+    timelineVi: [
+      { step: "1", title: "Thu hoạch hạt thô vùng cao nguyên", date: "2026-04-10", desc: "Điều thu hái tại Bình Phước, Macca thu hoạch tại Đắk Lắk khi nứt vỏ tự nhiên. Đảm bảo thu mua giá công bằng hỗ trợ bà con đồng bào." },
+      { step: "2", title: "Tách vỏ cứng & Phơi sấy sơ bộ", date: "2026-04-18", desc: "Hạt được tách lớp vỏ gỗ cứng bằng máy chuyên dụng tránh giập nát nhân, phơi sấy hạ độ ẩm hạt xuống dưới 6% để chống nấm mốc." },
+      { step: "3", title: "Sấy lạnh vô trùng công nghệ cao", date: "2026-06-20", desc: "Nướng chín bằng khí nóng đối lưu tuần hoàn vô trùng ở nhiệt độ thấp giúp hạt chín đều, giòn rụm mà không làm biến tính các acid béo tốt." },
+      { step: "4", title: "Phối trộn tỉ lệ & Hút chân không", date: "2026-06-21", desc: "Phối trộn hạt theo công thức dinh dưỡng vàng, đóng hũ thủy tinh tiệt trùng và hút chân không, chèn hạt chống ẩm thực phẩm." },
+      { step: "5", title: "Giao đến showroom Tứ Quý Garden", date: "2026-06-23", desc: "Sản phẩm được đóng thùng niêm phong mã chống giả và phân phối tới hệ thống showroom toàn quốc." }
+    ],
+    timelineEn: [
+      { step: "1", title: "Harvesting raw nuts in Central Highlands", date: "2026-04-10", desc: "Harvested ripe cashews and macadamias at peak maturity. Traded under Fairtrade concepts supporting indigenous communities." },
+      { step: "2", title: "Shelling & Dehumidification", date: "2026-04-18", desc: "Removed hard wood shells with precise crackers to avoid kernel breakage. Dried raw nuts until moisture dropped below 6% to prevent mold." },
+      { step: "3", title: "Low-temperature sterilization baking", date: "2026-06-20", desc: "Baked with hot sterile air convection cycles at low temperatures to ensure even crispiness and protect healthy omega fats." },
+      { step: "4", title: "Ratio mixing & Vacuum sealing", date: "2026-06-21", desc: "Mixed nuts based on optimal nutrition ratios. Sealer-packed in sterilized glass jars with food-grade silica gel pouches." },
+      { step: "5", title: "Showroom dispatch at Tứ Quý Garden", date: "2026-06-23", desc: "Sealed cases with anti-counterfeit labels and dispatched to showrooms nationwide." }
+    ]
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Check URL query parameters for default batch
+  const batchCode = window.getUrlParam ? window.getUrlParam("batch") : "";
+  if (batchCode) {
+    const input = document.getElementById("trace-search-input");
+    if (input) input.value = batchCode;
+    
+    // Select option in dropdown if matching
+    const select = document.getElementById("trace-sample-select");
+    if (select && TRACE_DATABASE[batchCode]) {
+      select.value = batchCode;
+    }
+    
+    executeTrace(batchCode);
+  }
+});
+
+// Dropdown change listener
+window.handleSampleSelect = function(val) {
+  if (!val) return;
+  const input = document.getElementById("trace-search-input");
+  if (input) input.value = val;
+  executeTrace(val);
+};
+
+// Search submit button trigger
+window.handleTraceSearchSubmit = function() {
+  const input = document.getElementById("trace-search-input");
+  if (!input) return;
+  const val = input.value.trim().toUpperCase();
+  if (!val) {
+    const isEn = document.body.classList.contains("lang-en");
+    window.showToast(isEn ? "Please enter a batch code." : "Vui lòng nhập mã lô hàng để tra cứu.", "error");
+    return;
+  }
+  executeTrace(val);
+};
+
+// Run the search and render results
+function executeTrace(code) {
+  const root = document.getElementById("trace-results-root");
+  if (!root) return;
+
+  const data = TRACE_DATABASE[code];
+  const isEn = document.body.classList.contains("lang-en");
+
+  if (!data) {
+    // If not found, show nice mockup warning
+    window.showToast(isEn ? "Batch code not found! Try a sample." : "Không tìm thấy mã lô hàng! Hãy thử các mã mẫu có sẵn.", "error");
+    root.style.display = "none";
+    return;
+  }
+
+  // Update batch info values
+  document.getElementById("result-product-img").src = data.image;
+  document.getElementById("result-product-name").innerText = isEn ? data.nameEn : data.nameVi;
+  document.getElementById("result-batch-code").innerText = `${isEn ? "Batch Code" : "Mã lô"}: #${code}`;
+  document.getElementById("result-product-desc").innerText = isEn ? data.descEn : data.descVi;
+  document.getElementById("result-coop").innerText = isEn ? data.coopEn : data.coopVi;
+  document.getElementById("result-farmer").innerText = isEn ? data.farmerEn : data.farmerVi;
+  document.getElementById("result-date").innerText = new Date(data.harvestDate).toLocaleDateString(isEn ? 'en-US' : 'vi-VN');
+
+  // Update certifications list
+  const certsContainer = document.getElementById("result-certs");
+  if (certsContainer) {
+    certsContainer.innerHTML = data.certs.map(c => `<span class="cert-badge-item">${c}</span>`).join("");
+  }
+
+  // Render vertical timeline nodes
+  const timelineRoot = document.getElementById("trace-timeline-root");
+  if (timelineRoot) {
+    const timelineData = isEn ? data.timelineEn : data.timelineVi;
+    timelineRoot.innerHTML = timelineData.map(node => `
+      <div class="trace-timeline-item completed">
+        <div class="trace-node">${node.step}</div>
+        <div class="trace-timeline-content">
+          <div class="trace-timeline-header">
+            <h4 class="trace-timeline-title">${node.title}</h4>
+            <span class="trace-timeline-date">${new Date(node.date).toLocaleDateString(isEn ? 'en-US' : 'vi-VN')}</span>
+          </div>
+          <p class="trace-timeline-desc">${node.desc}</p>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // Display results
+  root.style.display = "block";
+  
+  // Smooth scroll to results
+  root.scrollIntoView({ behavior: "smooth" });
+}

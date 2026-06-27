@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang cá nhân | Tứ Quý Garden</title>
+  <meta name="description" content="Trang cá nhân khách hàng Tứ Quý Garden - xem lịch sử đơn hàng và danh sách yêu thích.">
+  <link rel="icon" type="image/png" href="images/logo/logo.png">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .profile-layout-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 30px;
+      margin-top: 20px;
+      margin-bottom: 70px;
+      align-items: start;
+    }
+
+    .profile-sidebar {
+      background-color: var(--color-cream-light);
+      border-radius: 12px;
+      border: 1px solid var(--color-gray-border);
+      padding: 25px;
+      text-align: center;
+    }
+
+    .profile-avatar-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--color-primary);
+      color: white;
+      font-size: 32px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px auto;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .profile-sidebar-name {
+      font-size: 18px;
+      color: var(--color-text-dark);
+      margin-bottom: 5px;
+    }
+
+    .profile-sidebar-email {
+      font-size: 13px;
+      color: var(--color-text-light);
+      margin-bottom: 25px;
+      word-break: break-all;
+    }
+
+    .profile-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    .profile-menu-item {
+      padding: 12px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-dark);
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-menu-item:hover, .profile-menu-item.active {
+      background-color: var(--color-white);
+      color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .profile-menu-item.logout-item {
+      color: var(--color-danger);
+      border-top: 1px solid var(--color-gray-border);
+      border-radius: 0;
+      margin-top: 15px;
+      padding-top: 20px;
+    }
+
+    .profile-menu-item.logout-item:hover {
+      background-color: transparent;
+      color: #c54a37;
+      box-shadow: none;
+    }
+
+    .profile-content-card {
+      background-color: var(--color-white);
+      border-radius: 12px;
+      border: 1px solid var(--color-gray-border);
+      padding: 30px;
+      min-height: 450px;
+    }
+
+    .profile-section-title {
+      font-size: 20px;
+      color: var(--color-text-dark);
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--color-gray-border);
+      padding-bottom: 10px;
+    }
+
+    /* Wishlist grid */
+    .profile-wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    /* Orders timeline / history */
+    .order-history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .order-card {
+      border: 1px solid var(--color-gray-border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .order-card-header {
+      background-color: var(--color-cream-light);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--color-gray-border);
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .order-status-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-cho-xac-nhan { background-color: #ffe8cc; color: #d97706; }
+    .status-dang-xu-ly { background-color: #e0f2fe; color: #0369a1; }
+    .status-dang-giao { background-color: #f3e8ff; color: #7e22ce; }
+    .status-hoan-thanh { background-color: #dcfce7; color: #15803d; }
+    .status-da-huy { background-color: #fee2e2; color: #b91c1c; }
+
+    .order-card-body {
+      padding: 20px;
+    }
+
+    .order-item-row {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-gray-light);
+      font-size: 13px;
+    }
+
+    .order-item-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .order-item-thumb {
+      width: 50px;
+      height: 50px;
+      border-radius: 6px;
+      object-fit: contain;
+      background: white;
+      border: 1px solid var(--color-gray-border);
+    }
+
+    .order-card-footer {
+      padding: 15px 20px;
+      background: var(--color-white);
+      border-top: 1px solid var(--color-gray-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .profile-layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="lang-vi">
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-container container">
+      <!-- Logo -->
+      <a href="index.html" class="logo">
+        <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+      </a>
+
+      <!-- Mobile toggle menu -->
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Navigation links -->
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-list">
+          <li>
+            <a href="index.html" class="nav-link">
+              <span class="lang-vi">Trang chủ</span>
+              <span class="lang-en">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="nav-link">
+              <span class="lang-vi">Về chúng tôi</span>
+              <span class="lang-en">About Us</span>
+            </a>
+          </li>
+          <li class="dropdown">
+            <a href="products.html" class="nav-link dropdown-toggle">
+              <span class="lang-vi">Sản phẩm</span>
+              <span class="lang-en">Products</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-chevron">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="products.html?category=all">
+                  <span class="lang-vi">Tất cả sản phẩm</span>
+                  <span class="lang-en">All Products</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Fruits">
+                  <span class="lang-vi">Trái cây tươi</span>
+                  <span class="lang-en">Fresh Fruits</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Nutritional Seeds">
+                  <span class="lang-vi">Hạt dinh dưỡng</span>
+                  <span class="lang-en">Nutritional Seeds</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Granola">
+                  <span class="lang-vi">Granola ngũ cốc</span>
+                  <span class="lang-en">Granola</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Combo Healthy">
+                  <span class="lang-vi">Combo sống khỏe</span>
+                  <span class="lang-en">Combo Healthy</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="index.html#footer-contact" class="nav-link">
+              <span class="lang-vi">Liên hệ</span>
+              <span class="lang-en">Contact</span>
+            </a>
+          </li>
+          <li>
+            <a href="traceability.html" class="nav-link">
+              <span class="lang-vi">Truy xuất nguồn gốc</span>
+              <span class="lang-en">Traceability</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Right actions -->
+      <div class="header-actions">
+        <!-- Search bar -->
+        <div class="search-bar">
+          <input type="text" placeholder="Tìm sản phẩm..." id="header-search-input">
+          <button class="search-btn" id="header-search-btn" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Language toggle button -->
+        <button class="lang-switch-btn" id="lang-toggle-btn" title="Toggle Language">
+          <span class="lang-vi">EN</span>
+          <span class="lang-en">VI</span>
+        </button>
+
+        <!-- Account -->
+        <a href="login.html" class="action-icon-btn profile-btn active" id="header-profile-btn" title="Tài khoản">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="btn-text">
+            <span class="lang-vi" id="header-profile-txt-vi">Tài khoản</span>
+            <span class="lang-en" id="header-profile-txt-en">Account</span>
+          </span>
+        </a>
+
+        <!-- Cart -->
+        <a href="cart.html" class="action-icon-btn cart-btn" title="Giỏ hàng">
+          <div class="cart-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-badge" id="header-cart-badge" style="display:none;">0</span>
+          </div>
+          <span class="btn-text">
+            <span class="lang-vi">Giỏ hàng</span>
+            <span class="lang-en">Cart</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="container">
+    <!-- Breadcrumbs -->
+    <ul class="breadcrumb" style="display:flex; list-style:none; gap:10px; font-size:14px; margin-top: 20px; padding:0;">
+      <li><a href="index.html" style="color:var(--color-text-light);"><span class="lang-vi">Trang chủ</span><span class="lang-en">Home</span></a></li>
+      <li><span style="color:var(--color-text-light);">/</span></li>
+      <li style="color:var(--color-primary); font-weight:600;"><span class="lang-vi">Trang cá nhân</span><span class="lang-en">My Profile</span></li>
+    </ul>
+
+    <div class="profile-layout-grid">
+      <!-- Sidebar -->
+      <div class="profile-sidebar">
+        <div class="profile-avatar-circle" id="profile-avatar-char">U</div>
+        <h3 class="profile-sidebar-name" id="profile-sidebar-name">User Name</h3>
+        <p class="profile-sidebar-email" id="profile-sidebar-email">user@gmail.com</p>
+
+        <ul class="profile-menu">
+          <li class="profile-menu-item active" id="menu-tab-info" onclick="switchProfileTab('info')">
+            👤 <span class="lang-vi">Thông tin cá nhân</span><span class="lang-en">Profile Info</span>
+          </li>
+          <li class="profile-menu-item" id="menu-tab-orders" onclick="switchProfileTab('orders')">
+            📦 <span class="lang-vi">Lịch sử đơn hàng</span><span class="lang-en">Order History</span>
+          </li>
+          <li class="profile-menu-item" id="menu-tab-wishlist" onclick="switchProfileTab('wishlist')">
+            ♥ <span class="lang-vi">Sản phẩm yêu thích</span><span class="lang-en">My Wishlist</span>
+          </li>
+          <li class="profile-menu-item logout-item" onclick="handleLogoutClick()">
+            🚪 <span class="lang-vi">Đăng xuất</span><span class="lang-en">Log Out</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Panel content -->
+      <div class="profile-content-card">
+        
+        <!-- Panel 1: Profile Info -->
+        <div class="profile-tab-panel active" id="panel-info">
+          <h3 class="profile-section-title">
+            <span class="lang-vi">Thông Tin Tài Khoản</span><span class="lang-en">Account Information</span>
+          </h3>
+          <form id="profile-edit-form" style="max-width: 500px;">
+            <div class="auth-form-group">
+              <label><span class="lang-vi">Họ và tên</span><span class="lang-en">Full Name</span></label>
+              <input type="text" id="profile-name" class="auth-input" required>
+            </div>
+            <div class="auth-form-group">
+              <label>Email</label>
+              <input type="email" id="profile-email" class="auth-input" disabled style="background-color: var(--color-gray-light); cursor: not-allowed; opacity:0.8;">
+            </div>
+            <div class="auth-form-group">
+              <label><span class="lang-vi">Số điện thoại</span><span class="lang-en">Phone Number</span></label>
+              <input type="tel" id="profile-phone" class="auth-input" required>
+            </div>
+            <div class="auth-form-group">
+              <label><span class="lang-vi">Mục tiêu sức khỏe</span><span class="lang-en">Health Goal</span></label>
+              <select id="profile-goal" class="auth-select">
+                <option value="Eat Clean">Eat Clean</option>
+                <option value="Tăng cơ">Tăng cơ / Gym</option>
+                <option value="Giảm cân">Giảm cân</option>
+                <option value="Mẹ bầu">Mẹ bầu & Bé</option>
+                <option value="Gia đình">Sức khỏe Gia đình</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 15px; padding: 12px 25px;">
+              <span class="lang-vi">Lưu thay đổi</span><span class="lang-en">Save Changes</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Panel 2: Order History -->
+        <div class="profile-tab-panel" id="panel-orders" style="display:none;">
+          <h3 class="profile-section-title">
+            <span class="lang-vi">Lịch Sử Đơn Hàng</span><span class="lang-en">Order History</span>
+          </h3>
+          <div class="order-history-list" id="order-history-container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Panel 3: Wishlist -->
+        <div class="profile-tab-panel" id="panel-wishlist" style="display:none;">
+          <h3 class="profile-section-title">
+            <span class="lang-vi">Danh Sách Yêu Thích</span><span class="lang-en">My Wishlist</span>
+          </h3>
+          <div class="profile-wishlist-grid" id="wishlist-items-container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="main-footer" id="footer-contact">
+    <div class="footer-top container">
+      <div class="footer-block brand-block">
+        <a href="index.html" class="footer-logo">
+          <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+        </a>
+        <p class="footer-tagline">“Trái tươi bốn mùa, hạt lành mỗi ngày”</p>
+        <p class="footer-desc">
+          <span class="lang-vi">Tứ Quý Garden cam kết mang đến nông sản hữu cơ theo mùa tươi ngon, hạt dinh dưỡng chọn lọc và granola lành mạnh chăm sóc sức khỏe gia đình bạn mỗi ngày.</span>
+          <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+        </p>
+      </div>
+
+      <div class="footer-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Danh mục</span><span class="lang-en">Categories</span>
+        </h3>
+        <ul class="footer-links">
+          <li><a href="products.html?category=Fruits"><span class="lang-vi">Trái cây theo mùa</span><span class="lang-en">Seasonal Fruits</span></a></li>
+          <li><a href="products.html?category=Nutritional Seeds"><span class="lang-vi">Hạt dinh dưỡng</span><span class="lang-en">Seeds</span></a></li>
+          <li><a href="products.html?category=Granola"><span class="lang-vi">Granola ngũ cốc</span><span class="lang-en">Granola</span></a></li>
+          <li><a href="products.html?category=Combo Healthy"><span class="lang-vi">Combo sống khỏe</span><span class="lang-en">Healthy Combos</span></a></li>
+          <li><a href="traceability.html"><span class="lang-vi">Tra cứu nguồn gốc</span><span class="lang-en">Traceability</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Hỗ trợ khách hàng</span><span class="lang-en">Customer Service</span>
+        </h3>
+        <ul class="footer-links">
+          <li><a href="about.html"><span class="lang-vi">Giới thiệu cửa hàng</span><span class="lang-en">About Store</span></a></li>
+          <li><a href="about.html"><span class="lang-vi">Chính sách đổi trả</span><span class="lang-en">Exchange & Refund</span></a></li>
+          <li><a href="about.html"><span class="lang-vi">Chính sách giao hàng</span><span class="lang-en">Shipping Policies</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-block contact-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Kết nối với chúng tôi</span><span class="lang-en">Contact Info</span>
+        </h3>
+        <ul class="contact-info-list">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>Hotline: <strong>1900 633 123</strong></span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Email: <a href="mailto:info@tuquygarden.vn">info@tuquygarden.vn</a></span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Địa chỉ: Cái Bè, Tiền Giang</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-content">
+        <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="about.html"><span class="lang-vi">Điều khoản sử dụng</span><span class="lang-en">Terms of Use</span></a>
+          <span class="divider">|</span>
+          <a href="about.html"><span class="lang-vi">Chính sách bảo mật</span><span class="lang-en">Privacy Policy</span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data/data.js"></script>
+  <script src="services/cartService.js"></script>
+  <script src="services/authService.js"></script>
+  <script src="services/orderService.js"></script>
+  <script src="js/common.js"></script>
+  <script src="components/ProductCard.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truy xuất nguồn gốc | Tứ Quý Garden</title>
+  <meta name="description" content="Tra cứu mã lô hàng truy xuất nguồn gốc số hóa 100% nông sản tại Tứ Quý Garden.">
+  <link rel="icon" type="image/png" href="images/logo/logo.png">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .trace-hero-section {
+      background-image: linear-gradient(rgba(31, 77, 43, 0.88), rgba(31, 77, 43, 0.88)), url('images/image/image2.jpg');
+      background-size: cover;
+      background-position: center;
+      padding: 60px 0;
+      color: white;
+      text-align: center;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .trace-hero-section h1 {
+      color: white;
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .trace-hero-section p {
+      opacity: 0.9;
+      font-size: 14px;
+      max-width: 600px;
+      margin: 0 auto 25px auto;
+      line-height: 1.6;
+    }
+
+    .trace-search-box {
+      max-width: 650px;
+      background: var(--color-white);
+      border-radius: 50px;
+      padding: 6px 8px;
+      display: flex;
+      gap: 10px;
+      margin: 0 auto;
+      box-shadow: var(--shadow-md);
+      align-items: center;
+    }
+
+    .trace-search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 40px;
+      color: var(--color-text-dark);
+    }
+
+    .trace-search-box select {
+      border: none;
+      outline: none;
+      padding: 10px;
+      font-size: 14px;
+      border-right: 1px solid var(--color-gray-border);
+      color: var(--color-text-light);
+      background: transparent;
+      max-width: 180px;
+    }
+
+    .trace-results-container {
+      margin-top: 40px;
+      margin-bottom: 70px;
+      display: none; /* Shown dynamically */
+      animation: fadeIn 0.4s ease;
+    }
+
+    .trace-info-card {
+      background: var(--color-cream-light);
+      border: 1px solid var(--color-gray-border);
+      border-radius: 12px;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .trace-product-img {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid var(--color-gray-border);
+      padding: 10px;
+    }
+
+    .trace-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px 30px;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .trace-meta-item {
+      display: flex;
+      flex-direction: column;
+      border-left: 3px solid var(--color-primary);
+      padding-left: 12px;
+    }
+
+    .trace-meta-item label {
+      font-size: 11px;
+      color: var(--color-text-light);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .trace-meta-item span {
+      font-weight: 700;
+      color: var(--color-text-dark);
+    }
+
+    /* Vertical Timeline */
+    .trace-timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 40px auto 0 auto;
+      padding-left: 40px;
+    }
+
+    .trace-timeline::before {
+      content: "";
+      position: absolute;
+      left: 19px;
+      top: 10px;
+      bottom: 10px;
+      width: 3px;
+      background: repeating-linear-gradient(to bottom, var(--color-secondary), var(--color-secondary) 8px, transparent 8px, transparent 16px);
+    }
+
+    .trace-timeline-item {
+      position: relative;
+      margin-bottom: 40px;
+    }
+
+    .trace-timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .trace-node {
+      position: absolute;
+      left: -32px;
+      top: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: white;
+      border: 4px solid var(--color-secondary);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .trace-timeline-item.completed .trace-node {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    .trace-timeline-content {
+      background: white;
+      border: 1px solid var(--color-gray-border);
+      border-radius: 8px;
+      padding: 20px 25px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .trace-timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--color-gray-light);
+      padding-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .trace-timeline-title {
+      font-size: 16px;
+      color: var(--color-primary);
+      margin: 0;
+    }
+
+    .trace-timeline-date {
+      font-size: 12px;
+      color: var(--color-text-light);
+      font-weight: 500;
+    }
+
+    .trace-timeline-desc {
+      font-size: 13.5px;
+      color: var(--color-text-dark);
+      line-height: 1.6;
+    }
+
+    .trace-gallery-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .trace-gallery-row img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--color-gray-border);
+    }
+
+    .cert-badge-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .cert-badge-item {
+      background: var(--color-cream);
+      border: 1px solid var(--color-yellow);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-dark);
+    }
+
+    @media (max-width: 768px) {
+      .trace-info-card {
+        grid-template-columns: 1fr;
+      }
+      .trace-search-box {
+        flex-direction: column;
+        border-radius: 12px;
+        padding: 15px;
+      }
+      .trace-search-box select {
+        border-right: none;
+        border-bottom: 1px solid var(--color-gray-border);
+        width: 100%;
+        max-width: 100%;
+        padding-bottom: 10px;
+      }
+      .trace-search-box input {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body class="lang-vi">
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-container container">
+      <!-- Logo -->
+      <a href="index.html" class="logo">
+        <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+      </a>
+
+      <!-- Mobile toggle menu -->
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Navigation links -->
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-list">
+          <li>
+            <a href="index.html" class="nav-link">
+              <span class="lang-vi">Trang chủ</span>
+              <span class="lang-en">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="about.html" class="nav-link">
+              <span class="lang-vi">Về chúng tôi</span>
+              <span class="lang-en">About Us</span>
+            </a>
+          </li>
+          <li class="dropdown">
+            <a href="products.html" class="nav-link dropdown-toggle">
+              <span class="lang-vi">Sản phẩm</span>
+              <span class="lang-en">Products</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-chevron">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="products.html?category=all">
+                  <span class="lang-vi">Tất cả sản phẩm</span>
+                  <span class="lang-en">All Products</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Fruits">
+                  <span class="lang-vi">Trái cây tươi</span>
+                  <span class="lang-en">Fresh Fruits</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Nutritional Seeds">
+                  <span class="lang-vi">Hạt dinh dưỡng</span>
+                  <span class="lang-en">Nutritional Seeds</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Granola">
+                  <span class="lang-vi">Granola ngũ cốc</span>
+                  <span class="lang-en">Granola</span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html?category=Combo Healthy">
+                  <span class="lang-vi">Combo sống khỏe</span>
+                  <span class="lang-en">Combo Healthy</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="index.html#footer-contact" class="nav-link">
+              <span class="lang-vi">Liên hệ</span>
+              <span class="lang-en">Contact</span>
+            </a>
+          </li>
+          <li>
+            <a href="traceability.html" class="nav-link active">
+              <span class="lang-vi">Truy xuất nguồn gốc</span>
+              <span class="lang-en">Traceability</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Right actions -->
+      <div class="header-actions">
+        <!-- Search bar -->
+        <div class="search-bar">
+          <input type="text" placeholder="Tìm sản phẩm..." id="header-search-input">
+          <button class="search-btn" id="header-search-btn" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Language toggle button -->
+        <button class="lang-switch-btn" id="lang-toggle-btn" title="Toggle Language">
+          <span class="lang-vi">EN</span>
+          <span class="lang-en">VI</span>
+        </button>
+
+        <!-- Account -->
+        <a href="login.html" class="action-icon-btn profile-btn" id="header-profile-btn" title="Tài khoản">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="btn-text">
+            <span class="lang-vi" id="header-profile-txt-vi">Tài khoản</span>
+            <span class="lang-en" id="header-profile-txt-en">Account</span>
+          </span>
+        </a>
+
+        <!-- Cart -->
+        <a href="cart.html" class="action-icon-btn cart-btn" title="Giỏ hàng">
+          <div class="cart-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-badge" id="header-cart-badge" style="display:none;">0</span>
+          </div>
+          <span class="btn-text">
+            <span class="lang-vi">Giỏ hàng</span>
+            <span class="lang-en">Cart</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="container" style="margin-bottom: 80px;">
+    <!-- Breadcrumbs -->
+    <ul class="breadcrumb" style="display:flex; list-style:none; gap:10px; font-size:14px; margin-top: 20px; padding:0;">
+      <li><a href="index.html" style="color:var(--color-text-light);"><span class="lang-vi">Trang chủ</span><span class="lang-en">Home</span></a></li>
+      <li><span style="color:var(--color-text-light);">/</span></li>
+      <li style="color:var(--color-primary); font-weight:600;"><span class="lang-vi">Truy xuất nguồn gốc</span><span class="lang-en">Traceability</span></li>
+    </ul>
+
+    <!-- Hero / Title -->
+    <div class="trace-hero-section">
+      <div class="container">
+        <h1>
+          <span class="lang-vi">Hệ Thống Truy Xuất Nguồn Gốc Số Hóa</span>
+          <span class="lang-en">Digitized Food Traceability System</span>
+        </h1>
+        <p>
+          <span class="lang-vi">Tất cả sản phẩm tại Tứ Quý Garden đều có một câu chuyện riêng. Vui lòng nhập mã lô sản phẩm in trên nhãn bao bì hoặc chọn một mã lô mẫu bên dưới để theo dõi hành trình từ nông trại đến bàn ăn của bạn.</span>
+          <span class="lang-en">Every product at Tứ Quý Garden has a unique story. Enter the batch number printed on the product label or choose a sample batch code to trace its farm-to-table journey.</span>
+        </p>
+
+        <div class="trace-search-box">
+          <select id="trace-sample-select" onchange="handleSampleSelect(this.value)">
+            <option value=""><span class="lang-vi">-- Chọn mã mẫu --</span><span class="lang-en">-- Choose sample --</span></option>
+            <option value="TQG-XOAI-001">#TQG-XOAI-001 (Xoài cát Hòa Lộc)</option>
+            <option value="TQG-MAN-002">#TQG-MAN-002 (Mận hậu Bản Ôn)</option>
+            <option value="TQG-BUOI-003">#TQG-BUOI-003 (Bưởi da xanh)</option>
+            <option value="TQG-HAT-004">#TQG-HAT-004 (Hạt Dinh Dưỡng Mix)</option>
+          </select>
+          <input type="text" id="trace-search-input" placeholder="Ví dụ: TQG-XOAI-001 hoặc mã đơn hàng...">
+          <button class="btn btn-secondary" onclick="handleTraceSearchSubmit()" style="color: var(--color-text-dark); border-radius: 40px; padding: 10px 24px; min-width: 120px; font-weight: 600;">
+            <span class="lang-vi">Tra cứu</span><span class="lang-en">Trace</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Traceability Output results -->
+    <div class="trace-results-container" id="trace-results-root">
+      <!-- General Batch Info -->
+      <div class="trace-info-card">
+        <img id="result-product-img" src="images/fruits/Xoài cát Hòa Lộc.png" alt="" class="trace-product-img">
+        <div>
+          <h2 id="result-product-name" style="font-size: 26px; color: var(--color-text-dark); margin-bottom: 8px;">Xoài cát Hòa Lộc sạch Cái Bè</h2>
+          <p id="result-batch-code" style="color: var(--color-primary); font-weight:700; font-size:16px; margin-bottom: 15px;">Mã lô: #TQG-XOAI-001</p>
+          <p id="result-product-desc" style="font-size: 14px; line-height: 1.6; color: var(--color-text-light);">Xoài chín cây thơm lừng, thu hoạch trực tiếp tại Hợp tác xã Song Thuận, huyện Cái Bè, tỉnh Tiền Giang. Đạt tiêu chuẩn VietGAP xuất khẩu.</p>
+          
+          <div class="trace-meta-grid">
+            <div class="trace-meta-item">
+              <label><span class="lang-vi">Nhà vườn/Hợp tác xã</span><span class="lang-en">Cooperative / Farm</span></label>
+              <span id="result-coop">HTX Xoài cát Cái Bè, Tiền Giang</span>
+            </div>
+            <div class="trace-meta-item">
+              <label><span class="lang-vi">Nông dân đại diện</span><span class="lang-en">Lead Farmer</span></label>
+              <span id="result-farmer">Bác Hai Chân</span>
+            </div>
+            <div class="trace-meta-item">
+              <label><span class="lang-vi">Ngày thu hoạch</span><span class="lang-en">Harvest Date</span></label>
+              <span id="result-date">24/06/2026</span>
+            </div>
+            <div class="trace-meta-item">
+              <label><span class="lang-vi">Chứng nhận</span><span class="lang-en">Certifications</span></label>
+              <div class="cert-badge-row" id="result-certs">
+                <span class="cert-badge-item">VietGAP</span>
+                <span class="cert-badge-item">Chỉ dẫn địa lý</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Journey -->
+      <h3 class="font-serif text-center" style="font-size: 24px; margin-bottom: 30px; color: var(--color-text-dark);">
+        <span class="lang-vi">Hành Trình Nông Sản Sạch</span>
+        <span class="lang-en">The Clean Produce Journey</span>
+      </h3>
+
+      <div class="trace-timeline" id="trace-timeline-root">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="main-footer" id="footer-contact">
+    <div class="footer-top container">
+      <div class="footer-block brand-block">
+        <a href="index.html" class="footer-logo">
+          <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+        </a>
+        <p class="footer-tagline">“Trái tươi bốn mùa, hạt lành mỗi ngày”</p>
+        <p class="footer-desc">
+          <span class="lang-vi">Tứ Quý Garden cam kết mang đến nông sản hữu cơ theo mùa tươi ngon, hạt dinh dưỡng chọn lọc và granola lành mạnh chăm sóc sức khỏe gia đình bạn mỗi ngày.</span>
+          <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+        </p>
+      </div>
+
+      <div class="footer-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Danh mục</span><span class="lang-en">Categories</span>
+        </h3>
+        <ul class="footer-links">
+          <li><a href="products.html?category=Fruits"><span class="lang-vi">Trái cây theo mùa</span><span class="lang-en">Seasonal Fruits</span></a></li>
+          <li><a href="products.html?category=Nutritional Seeds"><span class="lang-vi">Hạt dinh dưỡng</span><span class="lang-en">Seeds</span></a></li>
+          <li><a href="products.html?category=Granola"><span class="lang-vi">Granola ngũ cốc</span><span class="lang-en">Granola</span></a></li>
+          <li><a href="products.html?category=Combo Healthy"><span class="lang-vi">Combo sống khỏe</span><span class="lang-en">Healthy Combos</span></a></li>
+          <li><a href="traceability.html"><span class="lang-vi">Tra cứu nguồn gốc</span><span class="lang-en">Traceability</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Hỗ trợ khách hàng</span><span class="lang-en">Customer Service</span>
+        </h3>
+        <ul class="footer-links">
+          <li><a href="about.html"><span class="lang-vi">Giới thiệu cửa hàng</span><span class="lang-en">About Store</span></a></li>
+          <li><a href="about.html"><span class="lang-vi">Chính sách đổi trả</span><span class="lang-en">Exchange & Refund</span></a></li>
+          <li><a href="about.html"><span class="lang-vi">Chính sách giao hàng</span><span class="lang-en">Shipping Policies</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-block contact-block">
+        <h3 class="footer-title">
+          <span class="lang-vi">Kết nối với chúng tôi</span><span class="lang-en">Contact Info</span>
+        </h3>
+        <ul class="contact-info-list">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>Hotline: <strong>1900 633 123</strong></span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Email: <a href="mailto:info@tuquygarden.vn">info@tuquygarden.vn</a></span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Địa chỉ: Cái Bè, Tiền Giang</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-content">
+        <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="about.html"><span class="lang-vi">Điều khoản sử dụng</span><span class="lang-en">Terms of Use</span></a>
+          <span class="divider">|</span>
+          <a href="about.html"><span class="lang-vi">Chính sách bảo mật</span><span class="lang-en">Privacy Policy</span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data/data.js"></script>
+  <script src="services/cartService.js"></script>
+  <script src="services/authService.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/traceability.js"></script>
+</body>
+</html>
