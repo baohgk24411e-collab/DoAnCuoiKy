@@ -14,6 +14,10 @@ const TRACE_DATABASE = {
     farmerEn: "Mr. Hai Chan",
     harvestDate: "2026-06-24",
     certs: ["VietGAP", "Chỉ dẫn địa lý", "Organic Packing"],
+    lat: 10.2709,
+    lng: 105.9922,
+    storageVi: "Bảo quản trong tủ lạnh ở nhiệt độ 8°C - 10°C. Tránh tiếp xúc trực tiếp ánh mặt trời hoặc nơi ẩm mốc. Nên sử dụng trong vòng 5 ngày sau khi chín.",
+    storageEn: "Store in refrigerator at 8°C - 10°C. Avoid direct sunlight or humid environments. Best consumed within 5 days of ripening.",
     timelineVi: [
       { step: "1", title: "Cải tạo đất & Bón phân hữu cơ", date: "2026-01-15", desc: "Đất trồng tại lô A3 được cày xới, bón lót phân trùn quế và xơ dừa vi sinh giúp bổ sung dưỡng chất tự nhiên. Kiểm tra chỉ số pH đạt 6.5 lý tưởng." },
       { step: "2", title: "Kiểm tra chất lượng & Thu hoạch", date: "2026-06-24", desc: "Kỹ sư đo độ đường brix đạt trên 14%. Quả được hái tay lúc 5:00 sáng, bọc túi giấy bảo vệ để tránh trầy xước và côn trùng gây hại." },
@@ -41,6 +45,10 @@ const TRACE_DATABASE = {
     farmerEn: "Mrs. My (H'mong Ethnic)",
     harvestDate: "2026-06-23",
     certs: ["VietGAP", "An Toàn Thực Phẩm", "Hái tay chọn lọc"],
+    lat: 20.8491,
+    lng: 104.6294,
+    storageVi: "Bảo quản tốt nhất trong tủ lạnh ở nhiệt độ 5°C - 8°C giúp quả giữ độ giòn ngọt. Rửa kỹ bằng nước sạch trước khi ăn.",
+    storageEn: "Best preserved in refrigerator at 5°C - 8°C to retain crispiness. Wash thoroughly with clean water before eating.",
     timelineVi: [
       { step: "1", title: "Chăm sóc mùa hoa và đậu quả", date: "2026-02-10", desc: "Tỉa cành tạo tán giúp đón nắng tốt nhất. Sử dụng phân bón lá sinh học an toàn không hóa chất bảo vệ thực vật độc hại." },
       { step: "2", title: "Thu hoạch sáng sớm trên sườn núi", date: "2026-06-23", desc: "Thu hái thủ công từng quả chín đỏ còn nguyên cuống lá và phấn trắng bảo vệ tự nhiên, đựng vào gùi wicker tre truyền thống." },
@@ -68,6 +76,10 @@ const TRACE_DATABASE = {
     farmerEn: "Mr. Tu Bong",
     harvestDate: "2026-06-22",
     certs: ["GlobalGAP", "OCOP 4 Sao", "Không hóa chất bảo quản"],
+    lat: 10.1554,
+    lng: 106.3314,
+    storageVi: "Bảo quản ở nơi thoáng mát, khô ráo tự nhiên (15°C - 20°C). Tránh đè nặng lên quả. Múi bưởi lột sẵn bảo quản hộp kín trong tủ lạnh dùng tốt nhất trong 3 ngày.",
+    storageEn: "Store in a cool, dry natural place (15°C - 20°C). Avoid stacking. Peeled segments should be stored in an airtight container in the fridge and eaten within 3 days.",
     timelineVi: [
       { step: "1", title: "Bọc trái chống ruồi vàng", date: "2026-03-05", desc: "Khi trái bằng quả cam, tiến hành bọc lưới chuyên dụng ngăn chặn ruồi vàng và sâu hại tự nhiên mà không cần phun thuốc hóa học." },
       { step: "2", title: "Thu hoạch tuyển chọn quả bánh tẻ", date: "2026-06-22", desc: "Hái quả đúng độ chín vừa phải (da căng láng, gõ tiếng trầm đục). Cắt cuống dài 2cm và bôi vôi đầu cuống tránh vi khuẩn xâm nhập." },
@@ -95,6 +107,10 @@ const TRACE_DATABASE = {
     farmerEn: "K'Mang Farm Union",
     harvestDate: "2026-06-20",
     certs: ["ISO 22000", "HACCP", "Sấy lạnh tự nhiên"],
+    lat: 12.9818,
+    lng: 108.2435,
+    storageVi: "Bảo quản ở nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp. Sau khi mở nắp, cần vặn chặt hũ thủy tinh và nên bảo quản mát trong tủ lạnh để giữ độ giòn tốt nhất.",
+    storageEn: "Store in a cool, dry place away from direct sunlight. Seal tight after opening, refrigeration is recommended to preserve optimal crunch.",
     timelineVi: [
       { step: "1", title: "Thu hoạch hạt thô vùng cao nguyên", date: "2026-04-10", desc: "Điều thu hái tại Bình Phước, Macca thu hoạch tại Đắk Lắk khi nứt vỏ tự nhiên. Đảm bảo thu mua giá công bằng hỗ trợ bà con đồng bào." },
       { step: "2", title: "Tách vỏ cứng & Phơi sấy sơ bộ", date: "2026-04-18", desc: "Hạt được tách lớp vỏ gỗ cứng bằng máy chuyên dụng tránh giập nát nhân, phơi sấy hạ độ ẩm hạt xuống dưới 6% để chống nấm mốc." },
@@ -110,7 +126,7 @@ const TRACE_DATABASE = {
       { step: "5", title: "Showroom dispatch at Tứ Quý Garden", date: "2026-06-23", desc: "Sealed cases with anti-counterfeit labels and dispatched to showrooms nationwide." }
     ]
   }
-};
+};;
 
 document.addEventListener("DOMContentLoaded", () => {
   // Check URL query parameters for default batch
@@ -174,6 +190,12 @@ function executeTrace(code) {
   document.getElementById("result-farmer").innerText = isEn ? data.farmerEn : data.farmerVi;
   document.getElementById("result-date").innerText = new Date(data.harvestDate).toLocaleDateString(isEn ? 'en-US' : 'vi-VN');
 
+  // Update storage instruction
+  const storageEl = document.getElementById("result-storage");
+  if (storageEl) {
+    storageEl.innerText = isEn ? (data.storageEn || "") : (data.storageVi || "");
+  }
+
   // Update certifications list
   const certsContainer = document.getElementById("result-certs");
   if (certsContainer) {
@@ -198,9 +220,191 @@ function executeTrace(code) {
     `).join("");
   }
 
+  // Render Leaflet Map
+  const mapContainer = document.getElementById("trace-map");
+  if (mapContainer && data.lat && data.lng && typeof L !== "undefined") {
+    // If map already initialized, just setView and update marker
+    if (window.traceMap) {
+      window.traceMap.setView([data.lat, data.lng], 13);
+      if (window.traceMarker) {
+        window.traceMarker.setLatLng([data.lat, data.lng]);
+        window.traceMarker.setPopupContent(`<strong>${isEn ? data.coopEn : data.coopVi}</strong><br/>${isEn ? 'Lead farmer: ' : 'Nông dân: '} ${isEn ? data.farmerEn : data.farmerVi}`).openPopup();
+      }
+    } else {
+      // Otherwise, create map
+      window.traceMap = L.map('trace-map', { scrollWheelZoom: false }).setView([data.lat, data.lng], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(window.traceMap);
+      
+      window.traceMarker = L.marker([data.lat, data.lng]).addTo(window.traceMap)
+        .bindPopup(`<strong>${isEn ? data.coopEn : data.coopVi}</strong><br/>${isEn ? 'Lead farmer: ' : 'Nông dân: '} ${isEn ? data.farmerEn : data.farmerVi}`)
+        .openPopup();
+    }
+    // Force redraw of leaflet map due to dynamic show container
+    setTimeout(() => {
+      if (window.traceMap) window.traceMap.invalidateSize();
+    }, 450);
+  }
+
   // Display results
   root.style.display = "block";
   
   // Smooth scroll to results
   root.scrollIntoView({ behavior: "smooth" });
 }
+
+// BEEP AUDIO FEEDBACK
+function playBeepSound() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    oscillator.type = "sine";
+    oscillator.frequency.value = 1200; // Tone pitch (Hz)
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.25);
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + 0.3);
+  } catch (err) {
+    console.warn("Web Audio API blocked or not supported", err);
+  }
+}
+
+// QR CODE WEBCAM SCANNER & SIMULATOR
+let html5QrScanner = null;
+window.openQrScanner = function() {
+  document.getElementById("qr-modal-container").classList.add("open");
+  document.getElementById("qr-sim-select").value = "";
+  isCameraMirrored = false;
+  
+  const isEn = document.body.classList.contains("lang-en");
+  document.getElementById("qr-scanner-status").innerText = isEn ? "Status: Ready" : "Trạng thái: Sẵn sàng";
+  
+  if (typeof Html5Qrcode !== "undefined") {
+    html5QrScanner = new Html5Qrcode("qr-webcam-reader");
+    const config = { fps: 10, qrbox: { width: 180, height: 180 } };
+    
+    html5QrScanner.start(
+      { facingMode: "environment" },
+      config,
+      (decodedText) => {
+        playBeepSound();
+        document.getElementById("qr-scanner-status").innerText = isEn ? `Scanned: ${decodedText}` : `Quét thấy: ${decodedText}`;
+        setTimeout(() => {
+          closeQrScanner();
+          const val = decodedText.trim().toUpperCase();
+          const searchInput = document.getElementById("trace-search-input");
+          if (searchInput) searchInput.value = val;
+          
+          const select = document.getElementById("trace-sample-select");
+          if (select && TRACE_DATABASE[val]) {
+            select.value = val;
+          }
+          executeTrace(val);
+        }, 800);
+      },
+      (errorMessage) => {
+        // Ignored
+      }
+    ).catch(err => {
+      console.log("No web camera available or insecure context. Using simulation mode.", err);
+    });
+  }
+};
+
+window.closeQrScanner = function() {
+  document.getElementById("qr-modal-container").classList.remove("open");
+  if (html5QrScanner) {
+    try {
+      html5QrScanner.stop().then(() => {
+        html5QrScanner = null;
+      }).catch(err => console.log("Scanner stop error:", err));
+    } catch (e) {
+      html5QrScanner = null;
+    }
+  }
+};
+
+window.runSimulatedScan = function(val) {
+  if (!val) {
+    document.getElementById("virtual-qr-code").innerHTML = `
+      <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; display: block; opacity: 0.5;">
+        <rect width="100" height="100" fill="#f8f8f8" rx="6" />
+        <rect x="15" y="15" width="25" height="25" fill="#aaa" />
+        <rect x="60" y="15" width="25" height="25" fill="#aaa" />
+        <rect x="15" y="60" width="25" height="25" fill="#aaa" />
+        <rect x="50" y="50" width="10" height="10" fill="#aaa" />
+        <text x="50" y="80" text-anchor="middle" font-size="7" fill="#666">Chờ chọn sản phẩm</text>
+      </svg>
+    `;
+    document.getElementById("virtual-qr-label").innerText = document.body.classList.contains("lang-en") ? "No product selected" : "Chưa có sản phẩm";
+    return;
+  }
+  
+  // Render simulated QR code image on screen
+  document.getElementById("virtual-qr-code").innerHTML = getQrSvg(val);
+  document.getElementById("virtual-qr-label").innerText = val;
+  
+  const isEn = document.body.classList.contains("lang-en");
+  document.getElementById("qr-scanner-status").innerText = isEn ? "Scanning..." : "Đang quét...";
+  
+  // Simulate delay
+  setTimeout(() => {
+    playBeepSound();
+    document.getElementById("qr-scanner-status").innerText = isEn ? "Scanned successfully!" : "Quét thành công!";
+    
+    setTimeout(() => {
+      closeQrScanner();
+      const searchInput = document.getElementById("trace-search-input");
+      if (searchInput) searchInput.value = val;
+      
+      const select = document.getElementById("trace-sample-select");
+      if (select) select.value = val;
+      
+      executeTrace(val);
+    }, 800);
+  }, 1500);
+};
+
+// SVG-based dynamic QR Code Generator
+function getQrSvg(code) {
+  let pathD = "";
+  if (code === "TQG-XOAI-001") {
+    pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M55 55h5v5h-5z M70 70h10v10h-10z M60 50h10v10h-10z M75 60h5v5h-5z M50 75h5v5h-5z M60 65h5v5h-5z";
+  } else if (code === "TQG-MAN-002") {
+    pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M60 60h10v10h-10z M50 50h5v5h-5z M75 75h5v5h-5z M70 50h5v5h-5z M55 70h5v5h-5z M65 75h5v5h-5z";
+  } else if (code === "TQG-BUOI-003") {
+    pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M55 65h10v10h-10z M50 60h5v5h-5z M70 75h10v5h-10z M60 50h5v5h-5z M75 55h5v15h-5z";
+  } else {
+    pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M70 60h10v10h-10z M50 70h5v5h-5z M55 50h10v5h-10z M65 75h5v5h-5z M75 50h5v5h-5z";
+  }
+  
+  return `
+    <svg viewBox="0 0 90 90" style="width: 100%; height: 100%; display: block;">
+      <!-- White background -->
+      <rect width="90" height="90" fill="white" rx="6" />
+      <!-- Grid matrix path -->
+      <path d="${pathD}" fill="#1F4D2B" style="fill-rule: evenodd;" />
+      <!-- Center branding logo -->
+      <rect x="37" y="37" width="16" height="16" fill="white" rx="3" />
+      <circle cx="45" cy="45" r="5" fill="#6FAF3A" />
+    </svg>
+  `;
+}
+
+let isCameraMirrored = false;
+window.toggleCameraMirror = function() {
+  const video = document.querySelector("#qr-webcam-reader video");
+  if (video) {
+    isCameraMirrored = !isCameraMirrored;
+    video.style.transform = isCameraMirrored ? "scaleX(-1)" : "scaleX(1)";
+  } else {
+    // Also try checking parent canvas/components if customized by html5-qrcode
+    const isEn = document.body.classList.contains("lang-en");
+    window.showToast(isEn ? "No active camera feed found to mirror." : "Không tìm thấy luồng camera hoạt động để lật.", "warning");
+  }
+};
