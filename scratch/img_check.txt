@@ -1,0 +1,24 @@
+Images referenced:
+  [EXISTS] images/combo/Combo.png
+  [EXISTS] images/fruits/Quýt đường.png
+  [EXISTS] images/fruits/Xoài cát Hòa Lộc.png
+  [EXISTS] images/granola/Granola.png
+  [EXISTS] images/granola/Mix hạt.png
+  [EXISTS] images/granola/Nutritional Seeds.png
+  [EXISTS] images/image/86ee8597-e021-435e-888b-9fd170d406d0.png
+  [EXISTS] images/image/HuynhBao.png
+  [EXISTS] images/image/NhatKhoa.png
+  [EXISTS] images/image/PhuongAnh.png
+  [EXISTS] images/image/ThaoLinh.png
+  [EXISTS] images/image/about_farm_story.png
+  [EXISTS] images/image/coverpage_2.png
+  [EXISTS] images/image/coverpage_5.png
+  [EXISTS] images/image/coverpage_6.png
+  [EXISTS] images/image/coverpage_7.png
+  [EXISTS] images/image/image1.png
+  [EXISTS] images/image/image2.jpg
+  [EXISTS] images/image/seed.jpg
+  [EXISTS] images/image/trái cây.png
+  [EXISTS] images/logo/logo ngang.png
+  [EXISTS] images/logo/logo-ngang-cropped.png
+  [EXISTS] images/logo/logo_white.png

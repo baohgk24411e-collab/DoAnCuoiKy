@@ -125,6 +125,68 @@ const TRACE_DATABASE = {
       { step: "4", title: "Ratio mixing & Vacuum sealing", date: "2026-06-21", desc: "Mixed nuts based on optimal nutrition ratios. Sealer-packed in sterilized glass jars with food-grade silica gel pouches." },
       { step: "5", title: "Showroom dispatch at Tứ Quý Garden", date: "2026-06-23", desc: "Sealed cases with anti-counterfeit labels and dispatched to showrooms nationwide." }
     ]
+  },
+  "TQG-CHIA-005": {
+    nameVi: "Hạt chia hữu cơ nhập khẩu Úc",
+    nameEn: "Organic Chia Seeds - Imported from Australia",
+    image: "images/granola/Hạt Chia.png",
+    descVi: "Hạt chia hữu cơ nhập khẩu nguyên bao từ Úc, giàu chất xơ, Omega-3 tốt cho hệ tim mạch và hỗ trợ giảm cân hiệu quả.",
+    descEn: "Organic chia seeds imported from Australia, rich in fiber, Omega-3 for cardiovascular health and weight management.",
+    coopVi: "Nông trại hữu cơ EcoFarm Australia (Nhập khẩu bởi Tứ Quý)",
+    coopEn: "EcoFarm Australia Organic (Imported by Tu Quy Garden)",
+    farmerVi: "Gia đình nông dân John Smith",
+    farmerEn: "John Smith's Family",
+    harvestDate: "2026-06-15",
+    certs: ["Organic Australia", "Non-GMO", "USDA Organic"],
+    lat: -27.5584,
+    lng: 151.9507,
+    storageVi: "Bảo quản ở nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp. Sau khi mở túi nên đậy kín hoặc cho vào hũ thủy tinh.",
+    storageEn: "Store in a cool, dry place away from direct sunlight. Seal tight or transfer to a glass jar after opening.",
+    timelineVi: [
+      { step: "1", title: "Chuẩn bị đất và gieo hạt", date: "2026-02-10", desc: "Gieo hạt chia hữu cơ theo hàng lối trên cánh đồng cao nguyên Darling Downs rộng lớn." },
+      { step: "2", title: "Chăm sóc tự nhiên không chất độc", date: "2026-04-05", desc: "Tưới tiêu bằng nguồn nước mưa tự nhiên, làm cỏ bằng máy chuyên dụng không dùng thuốc diệt cỏ hóa học." },
+      { step: "3", title: "Thu hoạch cơ giới hóa", date: "2026-06-15", desc: "Thu hoạch hạt chia bằng máy gặt đập khi hoa chia khô héo hoàn toàn, tách hạt sạch khỏi vỏ hoa." },
+      { step: "4", title: "Khử trùng & Đóng bao xuất khẩu", date: "2026-06-18", desc: "Làm sạch hạt bằng luồng khí lạnh, chiếu tia hồng ngoại khử trùng và đóng bao kín 25kg xuất khẩu." },
+      { step: "5", title: "Nhập cảng & Lên kệ Tứ Quý Garden", date: "2026-06-25", desc: "Vận chuyển về cảng Cát Lái, thông quan và đóng gói nhỏ hũ thủy tinh tại kho Tứ Quý Garden để sẵn sàng lên kệ." }
+    ],
+    timelineEn: [
+      { step: "1", title: "Soil preparation & Sowing", date: "2026-02-10", desc: "Sowed organic chia seeds in neat rows across the vast Darling Downs highland fields." },
+      { step: "2", title: "Natural weeding & Tending", date: "2026-04-05", desc: "Watered by natural rain, weeded using mechanical tools without synthetic chemicals." },
+      { step: "3", title: "Mechanical harvesting", date: "2026-06-15", desc: "Harvested with combines when flowers completely dried up, separating tiny seeds from flower shells." },
+      { step: "4", title: "Sterilization & Bulk packing", date: "2026-06-18", desc: "Cleaned via cool air flow, sterilized with infrared radiation, and packed in 25kg sealed bulk bags for export." },
+      { step: "5", title: "Importation & Shelf display", date: "2026-06-25", desc: "Shipped to Cat Lai port, cleared customs, repackaged into glass jars at Tu Quy Garden facility, and placed on store shelves." }
+    ]
+  },
+  "TQG-ROI-006": {
+    nameVi: "Roi An Phước đỏ ngọt Cái Bè",
+    nameEn: "An Phuoc Red Rose Apple - Cai Be",
+    image: "images/fruits/Roi.png",
+    descVi: "Roi An Phước hình quả chuông màu đỏ sẫm rất bắt mắt, thịt quả dày giòn xốp mọng nước, vị ngọt thanh và thơm dịu, thu hoạch trực tiếp tại nhà vườn Cái Bè.",
+    descEn: "An Phuoc Red Rose Apple shaped like a bell with deep red color, thick crispy flesh, juicy, sweet and mild fragrance.",
+    coopVi: "HTX Cây ăn trái hữu cơ Cái Bè, Tiền Giang",
+    coopEn: "Cai Be Organic Fruit Cooperative, Tien Giang",
+    farmerVi: "Chú Năm Hùng",
+    farmerEn: "Mr. Nam Hung",
+    harvestDate: "2026-06-25",
+    certs: ["VietGAP", "An Toàn Thực Phẩm", "Chuẩn hữu cơ"],
+    lat: 10.2820,
+    lng: 105.9754,
+    storageVi: "Bảo quản mát trong tủ lạnh ở nhiệt độ 6°C - 10°C để duy trì độ giòn mọng nước. Rửa sạch bằng nước mát trước khi ăn.",
+    storageEn: "Store in refrigerator at 6°C - 10°C to retain crispiness and juiciness. Wash with cool water before eating.",
+    timelineVi: [
+      { step: "1", title: "Bọc túi lưới bảo vệ chùm quả", date: "2026-03-20", desc: "Tiến hành bọc túi lưới nilon chuyên dụng cho từng chùm roi non để ngăn ngừa sâu hại tự nhiên mà không phun thuốc bảo vệ thực vật." },
+      { step: "2", title: "Bón phân hữu cơ làm ngọt quả", date: "2026-04-15", desc: "Bón phân hữu cơ sinh học làm từ phân chuồng hoai mục và phân cá ủ vi sinh giúp quả mọng nước ngọt thanh tự nhiên." },
+      { step: "3", title: "Thu hoạch chín lúc sáng sớm", date: "2026-06-25", desc: "Thu hái roi bằng tay lúc sáng sớm mát mẻ khi vỏ đạt độ chín đỏ sẫm bóng mịn, tránh làm giập vỏ ngoài mỏng manh." },
+      { step: "4", title: "Rửa sạch bằng nước ozone & Đóng khay", date: "2026-06-25", desc: "Rửa sạch bụi bẩn qua bồn sục khí ozone vô trùng, hong khô gió và đóng khay sinh học bọc màng co thân thiện." },
+      { step: "5", title: "Vận chuyển lạnh & Lên kệ showroom", date: "2026-06-26", desc: "Vận chuyển bằng xe mát về cửa hàng Tứ Quý Garden và trưng bày mát lên quầy kệ trong vòng 24 giờ kể từ lúc thu hoạch." }
+    ],
+    timelineEn: [
+      { step: "1", title: "Pest protection bagging", date: "2026-03-20", desc: "Wrapped young rose apple clusters in specialized mesh bags to exclude insect pests without using chemical sprays." },
+      { step: "2", title: "Organic fertilizing", date: "2026-04-15", desc: "Applied organic compost and fermented fish emulsion to feed trees, enhancing fruit sweetness and pulp thickness." },
+      { step: "3", title: "Hand-picking at dawn", date: "2026-06-25", desc: "Harvested by hand in the early morning coolness when skin reached deep glossy red color, minimizing bruising." },
+      { step: "4", title: "Ozone wash & Biodegradable packaging", date: "2026-06-25", desc: "Sanitized in clean ozone bubble baths, fan-dried, and packed in biodegradable trays with protective film." },
+      { step: "5", title: "Cold logistics & Store arrival", date: "2026-06-26", desc: "Shipped in refrigerated trucks to Tu Quy Garden showrooms, displayed on cooling racks within 24 hours of harvest." }
+    ]
   }
 };;
 
@@ -134,19 +196,19 @@ document.addEventListener("DOMContentLoaded", () => {
   if (batchCode) {
     const input = document.getElementById("trace-search-input");
     if (input) input.value = batchCode;
-    
+
     // Select option in dropdown if matching
     const select = document.getElementById("trace-sample-select");
     if (select && TRACE_DATABASE[batchCode]) {
       select.value = batchCode;
     }
-    
+
     executeTrace(batchCode);
   }
 });
 
 // Dropdown change listener
-window.handleSampleSelect = function(val) {
+window.handleSampleSelect = function (val) {
   if (!val) return;
   const input = document.getElementById("trace-search-input");
   if (input) input.value = val;
@@ -154,7 +216,7 @@ window.handleSampleSelect = function(val) {
 };
 
 // Search submit button trigger
-window.handleTraceSearchSubmit = function() {
+window.handleTraceSearchSubmit = function () {
   const input = document.getElementById("trace-search-input");
   if (!input) return;
   const val = input.value.trim().toUpperCase();
@@ -202,22 +264,32 @@ function executeTrace(code) {
     certsContainer.innerHTML = data.certs.map(c => `<span class="cert-badge-item">${c}</span>`).join("");
   }
 
-  // Render vertical timeline nodes
+  // Render horizontal journey stepper nodes matching CSS
   const timelineRoot = document.getElementById("trace-timeline-root");
   if (timelineRoot) {
     const timelineData = isEn ? data.timelineEn : data.timelineVi;
-    timelineRoot.innerHTML = timelineData.map(node => `
-      <div class="trace-timeline-item completed">
-        <div class="trace-node">${node.step}</div>
-        <div class="trace-timeline-content">
-          <div class="trace-timeline-header">
-            <h4 class="trace-timeline-title">${node.title}</h4>
-            <span class="trace-timeline-date">${new Date(node.date).toLocaleDateString(isEn ? 'en-US' : 'vi-VN')}</span>
+    const stepIcons = {
+      "1": "🌱",
+      "2": "🧑‍🌾",
+      "3": "🧼",
+      "4": "📦",
+      "5": "🏪"
+    };
+    timelineRoot.innerHTML = timelineData.map((node, index) => {
+      const icon = stepIcons[node.step] || "📍";
+      // The last step can be set as active (e.g. current location) and others as completed
+      const statusClass = (index === timelineData.length - 1) ? "active" : "completed";
+      return `
+        <div class="journey-step-card ${statusClass}">
+          <div class="journey-step-icon">${icon}</div>
+          <div class="journey-step-body">
+            <div class="journey-step-name">${node.title}</div>
+            <div class="journey-step-date">${new Date(node.date).toLocaleDateString(isEn ? 'en-US' : 'vi-VN')}</div>
+            <div class="journey-step-desc">${node.desc}</div>
           </div>
-          <p class="trace-timeline-desc">${node.desc}</p>
         </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   // Render Leaflet Map
@@ -236,7 +308,7 @@ function executeTrace(code) {
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap'
       }).addTo(window.traceMap);
-      
+
       window.traceMarker = L.marker([data.lat, data.lng]).addTo(window.traceMap)
         .bindPopup(`<strong>${isEn ? data.coopEn : data.coopVi}</strong><br/>${isEn ? 'Lead farmer: ' : 'Nông dân: '} ${isEn ? data.farmerEn : data.farmerVi}`)
         .openPopup();
@@ -249,7 +321,7 @@ function executeTrace(code) {
 
   // Display results
   root.style.display = "block";
-  
+
   // Smooth scroll to results
   root.scrollIntoView({ behavior: "smooth" });
 }
@@ -276,18 +348,18 @@ function playBeepSound() {
 
 // QR CODE WEBCAM SCANNER & SIMULATOR
 let html5QrScanner = null;
-window.openQrScanner = function() {
+window.openQrScanner = function () {
   document.getElementById("qr-modal-container").classList.add("open");
   document.getElementById("qr-sim-select").value = "";
   isCameraMirrored = false;
-  
+
   const isEn = document.body.classList.contains("lang-en");
   document.getElementById("qr-scanner-status").innerText = isEn ? "Status: Ready" : "Trạng thái: Sẵn sàng";
-  
+
   if (typeof Html5Qrcode !== "undefined") {
     html5QrScanner = new Html5Qrcode("qr-webcam-reader");
     const config = { fps: 10, qrbox: { width: 180, height: 180 } };
-    
+
     html5QrScanner.start(
       { facingMode: "environment" },
       config,
@@ -299,7 +371,7 @@ window.openQrScanner = function() {
           const val = decodedText.trim().toUpperCase();
           const searchInput = document.getElementById("trace-search-input");
           if (searchInput) searchInput.value = val;
-          
+
           const select = document.getElementById("trace-sample-select");
           if (select && TRACE_DATABASE[val]) {
             select.value = val;
@@ -316,7 +388,7 @@ window.openQrScanner = function() {
   }
 };
 
-window.closeQrScanner = function() {
+window.closeQrScanner = function () {
   document.getElementById("qr-modal-container").classList.remove("open");
   if (html5QrScanner) {
     try {
@@ -329,7 +401,7 @@ window.closeQrScanner = function() {
   }
 };
 
-window.runSimulatedScan = function(val) {
+window.runSimulatedScan = function (val) {
   if (!val) {
     document.getElementById("virtual-qr-code").innerHTML = `
       <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; display: block; opacity: 0.5;">
@@ -344,27 +416,41 @@ window.runSimulatedScan = function(val) {
     document.getElementById("virtual-qr-label").innerText = document.body.classList.contains("lang-en") ? "No product selected" : "Chưa có sản phẩm";
     return;
   }
-  
+
   // Render simulated QR code image on screen
-  document.getElementById("virtual-qr-code").innerHTML = getQrSvg(val);
+  if (val === "TQG-XOAI-001") {
+    document.getElementById("virtual-qr-code").innerHTML = `<img src="demo_assets/qr_xoai_cat.png" style="width: 100%; height: 100%; object-fit: contain;" />`;
+  } else if (val === "TQG-MAN-002") {
+    document.getElementById("virtual-qr-code").innerHTML = `<img src="demo_assets/qr_man_hau.png" style="width: 100%; height: 100%; object-fit: contain;" />`;
+  } else if (val === "TQG-BUOI-003") {
+    document.getElementById("virtual-qr-code").innerHTML = `<img src="demo_assets/qr_buoi_da_xanh.png" style="width: 100%; height: 100%; object-fit: contain;" />`;
+  } else if (val === "TQG-HAT-004") {
+    document.getElementById("virtual-qr-code").innerHTML = `<img src="demo_assets/qr_hat_dinh_duong.png" style="width: 100%; height: 100%; object-fit: contain;" />`;
+  } else if (val === "TQG-CHIA-005") {
+    document.getElementById("virtual-qr-code").innerHTML = `<img src="demo_assets/qr_hat_chia.png" style="width: 100%; height: 100%; object-fit: contain;" />`;
+  } else if (val === "TQG-ROI-006") {
+    document.getElementById("virtual-qr-code").innerHTML = `<img src="demo_assets/qr_roi_an_phuoc.png" style="width: 100%; height: 100%; object-fit: contain;" />`;
+  } else {
+    document.getElementById("virtual-qr-code").innerHTML = getQrSvg(val);
+  }
   document.getElementById("virtual-qr-label").innerText = val;
-  
+
   const isEn = document.body.classList.contains("lang-en");
   document.getElementById("qr-scanner-status").innerText = isEn ? "Scanning..." : "Đang quét...";
-  
+
   // Simulate delay
   setTimeout(() => {
     playBeepSound();
     document.getElementById("qr-scanner-status").innerText = isEn ? "Scanned successfully!" : "Quét thành công!";
-    
+
     setTimeout(() => {
       closeQrScanner();
       const searchInput = document.getElementById("trace-search-input");
       if (searchInput) searchInput.value = val;
-      
+
       const select = document.getElementById("trace-sample-select");
       if (select) select.value = val;
-      
+
       executeTrace(val);
     }, 800);
   }, 1500);
@@ -379,25 +465,26 @@ function getQrSvg(code) {
     pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M60 60h10v10h-10z M50 50h5v5h-5z M75 75h5v5h-5z M70 50h5v5h-5z M55 70h5v5h-5z M65 75h5v5h-5z";
   } else if (code === "TQG-BUOI-003") {
     pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M55 65h10v10h-10z M50 60h5v5h-5z M70 75h10v5h-10z M60 50h5v5h-5z M75 55h5v15h-5z";
+  } else if (code === "TQG-CHIA-005") {
+    pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M50 50h10v5h-10z M65 50h15v5h-15z M60 60h5v10h-5z M70 60h10v5h-10z M50 70h10v5h-10z M65 75h15v5h-15z";
+  } else if (code === "TQG-ROI-006") {
+    pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M50 50h5v10h-5z M60 50h5v5h-5z M70 50h10v10h-10z M55 65h10v5h-10z M70 65h5v15h-5z M50 75h15v5h-15z";
   } else {
     pathD = "M10 10h30v30h-30z M15 15h20v20h-20z M50 10h30v30h-30z M55 15h20v20h-20z M10 50h30v30h-30z M15 55h20v20h-20z M70 60h10v10h-10z M50 70h5v5h-5z M55 50h10v5h-10z M65 75h5v5h-5z M75 50h5v5h-5z";
   }
-  
+
   return `
     <svg viewBox="0 0 90 90" style="width: 100%; height: 100%; display: block;">
       <!-- White background -->
       <rect width="90" height="90" fill="white" rx="6" />
       <!-- Grid matrix path -->
       <path d="${pathD}" fill="#1F4D2B" style="fill-rule: evenodd;" />
-      <!-- Center branding logo -->
-      <rect x="37" y="37" width="16" height="16" fill="white" rx="3" />
-      <circle cx="45" cy="45" r="5" fill="#6FAF3A" />
     </svg>
   `;
 }
 
 let isCameraMirrored = false;
-window.toggleCameraMirror = function() {
+window.toggleCameraMirror = function () {
   const video = document.querySelector("#qr-webcam-reader video");
   if (video) {
     isCameraMirrored = !isCameraMirrored;

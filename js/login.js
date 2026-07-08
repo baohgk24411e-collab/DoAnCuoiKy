@@ -38,8 +38,11 @@ window.switchAuthTab = function(tabName) {
   const tabRegister = document.getElementById("tab-register");
   const panelLogin = document.getElementById("panel-login");
   const panelRegister = document.getElementById("panel-register");
+  const authContainer = document.getElementById("auth-page-container");
 
   if (!tabLogin || !tabRegister || !panelLogin || !panelRegister) return;
+
+  if (authContainer) authContainer.dataset.authMode = tabName === "register" ? "register" : "login";
 
   if (tabName === "login") {
     tabLogin.classList.add("active");
@@ -52,6 +55,13 @@ window.switchAuthTab = function(tabName) {
     panelRegister.classList.add("active");
     panelLogin.classList.remove("active");
   }
+};
+
+window.togglePasswordVisibility = function(inputId, button) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.type = input.type === "password" ? "text" : "password";
+  if (button) button.classList.toggle("is-visible", input.type === "text");
 };
 
 // Handle Login submit
@@ -126,4 +136,59 @@ window.handleForgotPassword = function(e) {
   const msgEn = "We have sent a password reset link to your email (Mockup). Please check your inbox.";
   
   window.showToast(isEn ? msgEn : msgVi, "success");
+};
+
+window.handleGoogleLogin = function() {
+  try {
+    if (typeof google === "undefined" || !google.accounts || !google.accounts.oauth2) {
+      window.showToast("Google Login SDK is loading, please wait...", "info");
+      return;
+    }
+    
+    // Use user's real Google Client ID as default, allow localStorage override if needed
+    const clientId = localStorage.getItem("tqg_google_client_id") || "1011167322512-od2uphf25qg5bcbd909qekukrkb80veb.apps.googleusercontent.com";
+    
+    const client = google.accounts.oauth2.initTokenClient({
+      client_id: clientId,
+      scope: "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+      callback: (tokenResponse) => {
+        if (tokenResponse && tokenResponse.access_token) {
+          window.showToast("Google account authorized! Retrieving profile...", "info");
+          
+          fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+          })
+          .then(res => {
+            if (!res.ok) throw new Error("Failed to fetch profile");
+            return res.json();
+          })
+          .then(userInfo => {
+            if (!window.AuthService) return;
+            const result = window.AuthService.loginOrRegisterGoogle(userInfo.name, userInfo.email);
+            if (result.success) {
+              window.showToast(result.message, "success");
+              setTimeout(() => {
+                window.location.href = "index.html";
+              }, 1000);
+            } else {
+              window.showToast(result.message || "Registration failed", "error");
+            }
+          })
+          .catch(err => {
+            window.showToast("Failed to fetch Google profile info", "error");
+            console.error(err);
+          });
+        }
+      },
+      error_callback: (err) => {
+        window.showToast("Google authorization failed", "error");
+        console.error(err);
+      }
+    });
+    
+    client.requestAccessToken();
+  } catch (e) {
+    console.error("Failed to initialize Google login client: ", e);
+    window.showToast("Could not start Google Sign-In. Please check console logs.", "error");
+  }
 };

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,14 +16,24 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
     .trace-hero-section {
-      background-image: linear-gradient(rgba(31, 77, 43, 0.88), rgba(31, 77, 43, 0.88)), url('images/image/image2.jpg');
+      position: relative;
+      background: linear-gradient(rgba(15, 45, 25, 0.75), rgba(15, 45, 25, 0.85)), url('images/image/coverpage_7.png');
       background-size: cover;
-      background-position: center;
-      padding: 60px 0;
+      background-position: center 30%;
+      padding: 72px 0 60px;
       color: white;
       text-align: center;
-      border-radius: 12px;
+      border-radius: 22px;
       margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .trace-hero-section::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center bottom, rgba(111, 175, 58, 0.12) 0%, transparent 70%);
+      pointer-events: none;
     }
 
     .trace-hero-section h1 {
@@ -41,15 +51,17 @@
     }
 
     .trace-search-box {
-      max-width: 650px;
-      background: var(--color-white);
-      border-radius: 50px;
-      padding: 6px 8px;
+      max-width: 680px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 60px;
+      padding: 6px 8px 6px 20px;
       display: flex;
       gap: 10px;
       margin: 0 auto;
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18), 0 4px 16px rgba(0, 0, 0, 0.08);
       align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(16px);
     }
 
     .trace-search-box input {
@@ -81,14 +93,15 @@
     }
 
     .trace-info-card {
-      background: var(--color-cream-light);
-      border: 1px solid var(--color-gray-border);
-      border-radius: 12px;
-      padding: 30px;
+      background: linear-gradient(135deg, #fffdf8 0%, #f8fdf4 100%);
+      border: 1px solid rgba(47, 107, 47, 0.12);
+      border-radius: 22px;
+      padding: 32px;
       display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 30px;
-      margin-bottom: 40px;
+      grid-template-columns: 240px 1fr;
+      gap: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 16px 48px rgba(31, 77, 43, 0.08);
     }
 
     .trace-product-img {
@@ -129,107 +142,121 @@
       color: var(--color-text-dark);
     }
 
-    /* Vertical Timeline */
-    .trace-timeline {
+    /* ─── HORIZONTAL JOURNEY STEPPER ──────────────────────── */
+    .journey-stepper-section {
+      background: white;
+      border: 1px solid var(--color-gray-border);
+      border-radius: 24px;
+      padding: 40px 32px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(7, 95, 42, 0.04);
+    }
+
+    .journey-stepper {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
       position: relative;
-      max-width: 800px;
-      margin: 40px auto 0 auto;
-      padding-left: 40px;
+      margin: 0;
+      padding: 10px 0;
     }
 
-    .trace-timeline::before {
-      content: "";
-      position: absolute;
-      left: 19px;
-      top: 10px;
-      bottom: 10px;
-      width: 3px;
-      background: repeating-linear-gradient(to bottom, var(--color-secondary), var(--color-secondary) 8px, transparent 8px, transparent 16px);
-    }
-
-    .trace-timeline-item {
+    .journey-step-card {
       position: relative;
-      margin-bottom: 40px;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      padding: 0 10px;
+      gap: 10px;
+      cursor: default;
     }
 
-    .trace-timeline-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .trace-node {
-      position: absolute;
-      left: -32px;
-      top: 0;
-      width: 26px;
-      height: 26px;
+    .journey-step-icon {
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       background: white;
-      border: 4px solid var(--color-secondary);
-      z-index: 2;
+      border: 3.5px solid var(--color-gray-border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 12px;
-      color: var(--color-primary);
-      box-shadow: var(--shadow-sm);
+      font-size: 26px;
+      box-shadow: 0 6px 18px rgba(31, 77, 43, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      flex-shrink: 0;
+      z-index: 2;
     }
 
-    .trace-timeline-item.completed .trace-node {
+    .journey-step-card.completed .journey-step-icon {
       border-color: var(--color-primary);
-      background-color: var(--color-primary);
+      background: linear-gradient(135deg, var(--color-primary) 0%, #1c7230 100%);
+      box-shadow: 0 10px 24px rgba(7, 95, 42, 0.2);
       color: white;
     }
 
-    .trace-timeline-content {
-      background: white;
-      border: 1px solid var(--color-gray-border);
-      border-radius: 8px;
-      padding: 20px 25px;
-      box-shadow: var(--shadow-sm);
+    .journey-step-card.active .journey-step-icon {
+      border-color: var(--color-secondary);
+      background: linear-gradient(135deg, var(--color-secondary) 0%, #5a9930 100%);
+      box-shadow: 0 10px 24px rgba(111, 175, 58, 0.25);
+      color: white;
+      transform: scale(1.1);
     }
 
-    .trace-timeline-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      border-bottom: 1px solid var(--color-gray-light);
-      padding-bottom: 8px;
-      flex-wrap: wrap;
-      gap: 10px;
+    .journey-step-body {
+      text-align: center;
     }
 
-    .trace-timeline-title {
-      font-size: 16px;
-      color: var(--color-primary);
-      margin: 0;
-    }
-
-    .trace-timeline-date {
-      font-size: 12px;
-      color: var(--color-text-light);
-      font-weight: 500;
-    }
-
-    .trace-timeline-desc {
-      font-size: 13.5px;
+    .journey-step-name {
+      font-size: 13px;
+      font-weight: 800;
       color: var(--color-text-dark);
-      line-height: 1.6;
+      margin-bottom: 4px;
+      line-height: 1.35;
     }
 
-    .trace-gallery-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
+    .journey-step-card.completed .journey-step-name {
+      color: var(--color-primary);
     }
 
-    .trace-gallery-row img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid var(--color-gray-border);
+    .journey-step-date {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-primary);
+      background: rgba(7, 95, 42, 0.06);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin: 4px 0 6px;
+      border: 1px solid rgba(7, 95, 42, 0.08);
+    }
+
+    .journey-step-desc {
+      font-size: 11.5px;
+      color: var(--color-text-light);
+      line-height: 1.5;
+      max-width: 155px;
+      margin: 0 auto;
+    }
+
+    /* Connecting line behind all steps */
+    .journey-step-card:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 32px; /* Center of the 64px icon */
+      left: calc(50% + 32px); /* Start from icon edge */
+      width: calc(100% - 64px); /* Stretch to next icon edge */
+      height: 4px;
+      background: var(--color-gray-border);
+      z-index: 1;
+      transition: background 0.3s ease;
+    }
+
+    .journey-step-card.completed:not(:last-child)::after {
+      background: var(--color-primary);
     }
 
     .cert-badge-row {
@@ -420,154 +447,44 @@
         width: 100%;
         text-align: center;
       }
+      .journey-stepper {
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+      }
+      .journey-stepper::before {
+        display: none;
+      }
+      .journey-stepper::after {
+        content: '';
+        position: absolute;
+        top: 32px;
+        bottom: 32px;
+        left: 50%;
+        width: 3px;
+        background: linear-gradient(180deg, var(--color-primary), var(--color-secondary), var(--color-primary));
+        opacity: 0.25;
+        z-index: 1;
+        transform: translateX(-50%);
+      }
+      .journey-step-card::after {
+        display: none !important;
+      }
+      .journey-step-card {
+        padding-bottom: 0;
+        width: 100%;
+      }
+      .journey-step-desc {
+        max-width: 280px;
+        margin: 6px auto 0 auto;
+      }
     }
   </style>
 </head>
 <body class="lang-vi">
 
   <!-- HEADER -->
-  <header class="main-header">
-    <div class="header-container container">
-      <!-- Logo -->
-      <a href="index.html" class="logo">
-        <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
-      </a>
-
-      <!-- Mobile toggle menu -->
-      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-
-      <!-- Navigation links -->
-      <nav class="main-nav" id="main-nav">
-        <ul class="nav-list">
-          <li>
-            <a href="index.html" class="nav-link">
-              <span class="lang-vi">Trang chủ</span>
-              <span class="lang-en">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="about.html" class="nav-link">
-              <span class="lang-vi">Về chúng tôi</span>
-              <span class="lang-en">About Us</span>
-            </a>
-          </li>
-          <li class="dropdown">
-            <a href="products.html" class="nav-link dropdown-toggle">
-              <span class="lang-vi">Sản phẩm</span>
-              <span class="lang-en">Products</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-chevron">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="products.html?category=all">
-                  <span class="lang-vi">Tất cả sản phẩm</span>
-                  <span class="lang-en">All Products</span>
-                </a>
-              </li>
-              <li>
-                <a href="products.html?category=Fruits">
-                  <span class="lang-vi">Trái cây tươi</span>
-                  <span class="lang-en">Fresh Fruits</span>
-                </a>
-              </li>
-              <li>
-                <a href="products.html?category=Nutritional Seeds">
-                  <span class="lang-vi">Hạt dinh dưỡng</span>
-                  <span class="lang-en">Nutritional Seeds</span>
-                </a>
-              </li>
-              <li>
-                <a href="products.html?category=Granola">
-                  <span class="lang-vi">Granola ngũ cốc</span>
-                  <span class="lang-en">Granola</span>
-                </a>
-              </li>
-              <li>
-                <a href="products.html?category=Combo Healthy">
-                  <span class="lang-vi">Combo sống khỏe</span>
-                  <span class="lang-en">Combo Healthy</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="index.html#footer-contact" class="nav-link">
-              <span class="lang-vi">Liên hệ</span>
-              <span class="lang-en">Contact</span>
-            </a>
-          </li>
-          <li>
-            <a href="nutrition.html" class="nav-link">
-              <span class="lang-vi">Dinh dưỡng cá nhân</span>
-              <span class="lang-en">Nutrition Plan</span>
-            </a>
-          </li>
-          <li>
-            <a href="traceability.html" class="nav-link active">
-              <span class="lang-vi">Truy xuất nguồn gốc</span>
-              <span class="lang-en">Traceability</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- Right actions -->
-      <div class="header-actions">
-        <!-- Search bar -->
-        <div class="search-bar">
-          <input type="text" placeholder="Tìm sản phẩm..." id="header-search-input">
-          <button class="search-btn" id="header-search-btn" aria-label="Search">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Language toggle button -->
-        <button class="lang-switch-btn" id="lang-toggle-btn" title="Toggle Language">
-          <span class="lang-vi">EN</span>
-          <span class="lang-en">VI</span>
-        </button>
-
-        <!-- Account -->
-        <a href="login.html" class="action-icon-btn profile-btn" id="header-profile-btn" title="Tài khoản">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          <span class="btn-text">
-            <span class="lang-vi" id="header-profile-txt-vi">Tài khoản</span>
-            <span class="lang-en" id="header-profile-txt-en">Account</span>
-          </span>
-        </a>
-
-        <!-- Cart -->
-        <a href="cart.html" class="action-icon-btn cart-btn" title="Giỏ hàng">
-          <div class="cart-icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="9" cy="21" r="1"></circle>
-              <circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-            <span class="cart-badge" id="header-cart-badge" style="display:none;">0</span>
-          </div>
-          <span class="btn-text">
-            <span class="lang-vi">Giỏ hàng</span>
-            <span class="lang-en">Cart</span>
-          </span>
-        </a>
-      </div>
-    </div>
-  </header>
+  <header class="main-header" id="site-header" data-active-nav="traceability"></header>
 
   <!-- CONTENT -->
   <div class="container" style="margin-bottom: 80px;">
@@ -593,12 +510,14 @@
         <div class="trace-search-box">
           <select id="trace-sample-select" onchange="handleSampleSelect(this.value)">
             <option value=""><span class="lang-vi">-- Chọn mã mẫu --</span><span class="lang-en">-- Choose sample --</span></option>
-            <option value="TQG-XOAI-001">#TQG-XOAI-001 (Xoài cát Hòa Lộc)</option>
-            <option value="TQG-MAN-002">#TQG-MAN-002 (Mận hậu Bản Ôn)</option>
-            <option value="TQG-BUOI-003">#TQG-BUOI-003 (Bưởi da xanh)</option>
-            <option value="TQG-HAT-004">#TQG-HAT-004 (Hạt Dinh Dưỡng Mix)</option>
+            <option value="TQG-XOAI-001">#TQG-XOAI-001 (Hoa Loc Mango)</option>
+            <option value="TQG-MAN-002">#TQG-MAN-002 (Ban On Plum)</option>
+            <option value="TQG-BUOI-003">#TQG-BUOI-003 (Green Skin Pomelo)</option>
+            <option value="TQG-HAT-004">#TQG-HAT-004 (Nutritional Seeds Mix)</option>
+            <option value="TQG-CHIA-005">#TQG-CHIA-005 (Organic Chia Seeds)</option>
+            <option value="TQG-ROI-006">#TQG-ROI-006 (Cai Be Bell Fruit)</option>
           </select>
-          <input type="text" id="trace-search-input" placeholder="Ví dụ: TQG-XOAI-001 hoặc mã đơn hàng...">
+          <input type="text" id="trace-search-input" placeholder="e.g., TQG-XOAI-001 or order ID...">
           <button class="btn btn-secondary" onclick="handleTraceSearchSubmit()" style="color: var(--color-text-dark); border-radius: 40px; padding: 10px 24px; min-width: 120px; font-weight: 600;">
             <span class="lang-vi">Tra cứu</span><span class="lang-en">Trace</span>
           </button>
@@ -646,7 +565,7 @@
                 <rect x="60" y="15" width="25" height="25" fill="#aaa" />
                 <rect x="15" y="60" width="25" height="25" fill="#aaa" />
                 <rect x="50" y="50" width="10" height="10" fill="#aaa" />
-                <text x="50" y="80" text-anchor="middle" font-size="7" fill="#666">Chờ chọn sản phẩm</text>
+                <text x="50" y="80" text-anchor="middle" font-size="7" fill="#666">Waiting for product selection</text>
               </svg>
             </div>
             <div id="virtual-qr-label" style="margin-top: 15px; font-weight: 700; font-size: 13px; color: var(--color-text-dark); text-transform: uppercase;">
@@ -669,11 +588,13 @@
             <span class="lang-en">Simulated scan (Select product to quick scan):</span>
           </label>
           <select class="qr-select" id="qr-sim-select" onchange="runSimulatedScan(this.value)">
-            <option value="">-- Chọn sản phẩm giả lập --</option>
-            <option value="TQG-XOAI-001">Xoài cát Hòa Lộc (Cái Bè, Tiền Giang)</option>
-            <option value="TQG-MAN-002">Mận hậu Bản Ôn (Mộc Châu, Sơn La)</option>
-            <option value="TQG-BUOI-003">Bưởi da xanh (Mỏ Cày Bắc, Bến Tre)</option>
-            <option value="TQG-HAT-004">Mix hạt dinh dưỡng (Krông Năng, Đắk Lắk)</option>
+            <option value="">-- Choose Demo Product --</option>
+            <option value="TQG-XOAI-001">Hoa Loc Mango (Cai Be, Tien Giang)</option>
+            <option value="TQG-MAN-002">Ban On Plum (Moc Chau, Son La)</option>
+            <option value="TQG-BUOI-003">Green Skin Pomelo (Mo Cay Bac, Ben Tre)</option>
+            <option value="TQG-HAT-004">Nutritional Seeds Mix (Krong Nang, Dak Lak)</option>
+            <option value="TQG-CHIA-005">Organic Chia Seeds (Imported from Australia)</option>
+            <option value="TQG-ROI-006">Sweet An Phuoc Bell Fruit (Cai Be, Tien Giang)</option>
           </select>
           <div class="qr-status-msg" id="qr-scanner-status" style="font-weight: 600; color: var(--color-primary); margin-top: 8px;">
             <span class="lang-vi">Trạng thái: Sẵn sàng</span>
@@ -694,20 +615,20 @@
     <div class="trace-results-container" id="trace-results-root">
       <!-- General Batch Info -->
       <div class="trace-info-card">
-        <img id="result-product-img" src="images/fruits/Xoài cát Hòa Lộc.png" alt="" class="trace-product-img">
+        <img id="result-product-img" src="images/Product_Images/03. Hình ảnh/Trái cây/17-Xoài cát Hòa Lộc/17-1.png" alt="" class="trace-product-img">
         <div>
-          <h2 id="result-product-name" style="font-size: 26px; color: var(--color-text-dark); margin-bottom: 8px;">Xoài cát Hòa Lộc sạch Cái Bè</h2>
-          <p id="result-batch-code" style="color: var(--color-primary); font-weight:700; font-size:16px; margin-bottom: 15px;">Mã lô: #TQG-XOAI-001</p>
-          <p id="result-product-desc" style="font-size: 14px; line-height: 1.6; color: var(--color-text-light);">Xoài chín cây thơm lừng, thu hoạch trực tiếp tại Hợp tác xã Song Thuận, huyện Cái Bè, tỉnh Tiền Giang. Đạt tiêu chuẩn VietGAP xuất khẩu.</p>
+          <h2 id="result-product-name" style="font-size: 26px; color: var(--color-text-dark); margin-bottom: 8px;">Cai Be Organic Hoa Loc Mango</h2>
+          <p id="result-batch-code" style="color: var(--color-primary); font-weight:700; font-size:16px; margin-bottom: 15px;">Batch Code: #TQG-XOAI-001</p>
+          <p id="result-product-desc" style="font-size: 14px; line-height: 1.6; color: var(--color-text-light);">Fully tree-ripened mango, harvested directly at Song Thuan Cooperative, Cai Be district, Tien Giang province. Certified VietGAP for export.</p>
           
           <div class="trace-meta-grid">
             <div class="trace-meta-item">
               <label><span class="lang-vi">Nhà vườn/Hợp tác xã</span><span class="lang-en">Cooperative / Farm</span></label>
-              <span id="result-coop">HTX Xoài cát Cái Bè, Tiền Giang</span>
+              <span id="result-coop">Cai Be Mango Cooperative, Tien Giang</span>
             </div>
             <div class="trace-meta-item">
               <label><span class="lang-vi">Nông dân đại diện</span><span class="lang-en">Lead Farmer</span></label>
-              <span id="result-farmer">Bác Hai Chân</span>
+              <span id="result-farmer">Mr. Hai Chan (Farmer)</span>
             </div>
             <div class="trace-meta-item">
               <label><span class="lang-vi">Ngày thu hoạch</span><span class="lang-en">Harvest Date</span></label>
@@ -717,7 +638,7 @@
               <label><span class="lang-vi">Chứng nhận</span><span class="lang-en">Certifications</span></label>
               <div class="cert-badge-row" id="result-certs">
                 <span class="cert-badge-item">VietGAP</span>
-                <span class="cert-badge-item">Chỉ dẫn địa lý</span>
+                <span class="cert-badge-item">Geographical Indication</span>
               </div>
             </div>
           </div>
@@ -781,14 +702,18 @@
         </div>
       </div>
 
-      <!-- Timeline Journey -->
-      <h3 class="font-serif text-center" style="font-size: 24px; margin-bottom: 30px; color: var(--color-text-dark);">
-        <span class="lang-vi">Hành Trình Nông Sản Sạch</span>
-        <span class="lang-en">The Clean Produce Journey</span>
-      </h3>
-
-      <div class="trace-timeline" id="trace-timeline-root">
-        <!-- Rendered dynamically -->
+      <!-- Journey Stepper (Farm-to-Table) -->
+      <div class="journey-stepper-section">
+        <h3 style="font-size: 20px; text-align: center; margin-bottom: 36px; color: var(--color-text-dark); font-weight: 800;">
+          <span style="display:inline-flex; align-items:center; gap:10px;">
+            <span>🌿</span>
+            <span class="lang-vi">Hành Trình Nông Sản Từ Vườn Đến Bàn Ăn</span>
+            <span class="lang-en">The Farm-to-Table Journey</span>
+          </span>
+        </h3>
+        <div class="journey-stepper" id="trace-timeline-root">
+          <!-- Rendered dynamically by traceability.js -->
+        </div>
       </div>
     </div>
   </div>
@@ -798,9 +723,9 @@
     <div class="footer-top container">
       <div class="footer-block brand-block">
         <a href="index.html" class="footer-logo">
-          <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+          <img src="images/logo/logo-white-cropped.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
         </a>
-        <p class="footer-tagline">“Trái tươi bốn mùa, hạt lành mỗi ngày”</p>
+        <p class="footer-tagline">“Fresh fruits seasonal, healthy seeds daily”</p>
         <p class="footer-desc">
           <span class="lang-vi">Tứ Quý Garden cam kết mang đến nông sản hữu cơ theo mùa tươi ngon, hạt dinh dưỡng chọn lọc và granola lành mạnh chăm sóc sức khỏe gia đình bạn mỗi ngày.</span>
           <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
@@ -847,7 +772,7 @@
           </li>
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            <span>Địa chỉ: Cái Bè, Tiền Giang</span>
+            <span>Address: Cai Be, Tien Giang</span>
           </li>
         </ul>
       </div>
@@ -869,6 +794,7 @@
   <script src="data/data.js"></script>
   <script src="services/cartService.js"></script>
   <script src="services/authService.js"></script>
+  <script src="components/Header.js"></script>
   <script src="js/common.js"></script>
   <script src="js/traceability.js"></script>
 </body>

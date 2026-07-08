@@ -2,10 +2,23 @@
 
 // State variables
 let userGoal = "";
-let userActivity = 2; // 1: Low, 2: Moderate, 3: Active
+let userActivity = 3; // 1-5 scale (matches ACTIVITY_MULTIPLIERS array index 0-4)
 let userTime = "";
+let userGender = "male";
+let userAge = 25;
+let userWeight = 60;
+let userHeight = 165;
+let userDiet = "omnivore";
+let userServings = 1;
 let excludedIngredients = [];
 let currentStep = 1;
+const TOTAL_STEPS = 5;
+
+// Activity multipliers (Harris-Benedict TDEE)
+const ACTIVITY_MULTIPLIERS = [1.2, 1.375, 1.55, 1.725, 1.9];
+const ACTIVITY_LABELS_VI = ["Ngủ, nghỉ", "Nhẹ nhàng", "Vừa phải", "Tích cực", "Cường độ cao"];
+const ACTIVITY_LABELS_EN = ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"];
+
 
 // Recipe database matching user criteria
 const RECIPE_DATABASE = {
@@ -128,41 +141,58 @@ const RECIPE_DATABASE = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Check if lang set
   const currentLang = localStorage.getItem("tqg_lang") || "vi";
   document.body.className = "lang-" + currentLang;
-
-  // Initialize progress nodes
   updateProgressBar();
+  updateBMIPreview();
 });
 
-// QUIZ NAVIGATION LOGIC
+// ─── STEP SELECTORS ───────────────────────────────────────────────────────────
+
 window.selectGoal = function(goal, element) {
   userGoal = goal;
-  
-  // Highlight card
   const cards = element.parentElement.querySelectorAll(".option-card");
   cards.forEach(c => c.classList.remove("selected"));
   element.classList.add("selected");
-  
-  // Auto-next for step 1
-  setTimeout(() => {
-    goNext();
-  }, 350);
+  setTimeout(() => { goNext(); }, 350);
+};
+
+window.selectGender = function(gender, element) {
+  userGender = gender;
+  document.querySelectorAll("#gender-male, #gender-female").forEach(c => c.classList.remove("selected"));
+  element.classList.add("selected");
+  updateBMIPreview();
+};
+
+window.selectDiet = function(diet, element) {
+  userDiet = diet;
+  // Highlight only in parent container
+  const siblings = element.parentElement.querySelectorAll(".option-card");
+  siblings.forEach(c => c.classList.remove("selected"));
+  element.classList.add("selected");
+};
+
+window.selectServings = function(n, element) {
+  userServings = n;
+  document.querySelectorAll("#srv-1, #srv-2, #srv-3").forEach(c => c.classList.remove("selected"));
+  element.classList.add("selected");
+};
+
+window.selectTime = function(time, element) {
+  userTime = time;
+  const cards = element.parentElement.querySelectorAll(".option-card");
+  cards.forEach(c => c.classList.remove("selected"));
+  element.classList.add("selected");
 };
 
 window.updateActivityLabel = function(val) {
   userActivity = parseInt(val);
   const label = document.getElementById("label-activity-val");
   const isEn = document.body.classList.contains("lang-en");
-  
-  if (userActivity === 1) {
-    label.innerHTML = isEn ? "Sedentary" : "Ít vận động";
-  } else if (userActivity === 2) {
-    label.innerHTML = isEn ? "Moderate" : "Vừa phải";
-  } else {
-    label.innerHTML = isEn ? "Highly Active" : "Vận động nhiều";
-  }
+  const idx = userActivity - 1;
+  label.innerHTML = isEn
+    ? `<span class="lang-en">${ACTIVITY_LABELS_EN[idx]}</span>`
+    : `<span class="lang-vi">${ACTIVITY_LABELS_VI[idx]}</span>`;
 };
 
 window.toggleAllergen = function(item, element) {
@@ -174,51 +204,86 @@ window.toggleAllergen = function(item, element) {
   }
 };
 
-window.selectTime = function(time, element) {
-  userTime = time;
-  
-  const cards = element.parentElement.querySelectorAll(".option-card");
-  cards.forEach(c => c.classList.remove("selected"));
-  element.classList.add("selected");
-  
-  // Auto-next
-  setTimeout(() => {
-    goNext();
-  }, 350);
+// ─── BMI + TDEE CALCULATOR ───────────────────────────────────────────────────
+
+window.updateBMIPreview = function() {
+  const w = parseFloat(document.getElementById("input-weight")?.value) || userWeight;
+  const h = parseFloat(document.getElementById("input-height")?.value) || userHeight;
+  const a = parseFloat(document.getElementById("input-age")?.value) || userAge;
+  userWeight = w; userHeight = h; userAge = a;
+
+  const heightM = h / 100;
+  const bmi = w / (heightM * heightM);
+  const bmiRounded = bmi.toFixed(1);
+
+  const isEn = document.body.classList.contains("lang-en");
+
+  // BMI category
+  let catVi, catEn, catColor;
+  if (bmi < 18.5)        { catVi = "Thiếu cân";    catEn = "Underweight"; catColor = "#3b82f6"; }
+  else if (bmi < 23)     { catVi = "Bình thường";  catEn = "Normal";      catColor = "#22c55e"; }
+  else if (bmi < 27.5)   { catVi = "Thừa cân";     catEn = "Overweight";  catColor = "#f59e0b"; }
+  else                   { catVi = "Béo phì";       catEn = "Obese";       catColor = "#ef4444"; }
+
+  // Harris-Benedict BMR
+  const actIdx = (userActivity - 1);
+  const mult = ACTIVITY_MULTIPLIERS[actIdx] || 1.55;
+  let bmr;
+  if (userGender === "male") {
+    bmr = 88.362 + (13.397 * w) + (4.799 * h) - (5.677 * a);
+  } else {
+    bmr = 447.593 + (9.247 * w) + (3.098 * h) - (4.330 * a);
+  }
+  const tdee = Math.round(bmr * mult);
+
+  // Update preview elements
+  const bmiEl = document.getElementById("bmi-value");
+  const catEl = document.getElementById("bmi-category");
+  const tdeeEl = document.getElementById("tdee-preview");
+
+  if (bmiEl) { bmiEl.textContent = bmiRounded; bmiEl.style.color = catColor; }
+  if (catEl) { catEl.textContent = isEn ? catEn : catVi; catEl.style.color = catColor; }
+  if (tdeeEl) tdeeEl.textContent = tdee.toLocaleString() + " kcal";
+
+  // Store for result page
+  window._computedBmi = bmiRounded;
+  window._computedBmiCatVi = catVi;
+  window._computedBmiCatEn = catEn;
+  window._computedTdee = tdee;
 };
+
+// ─── STEP NAVIGATION ─────────────────────────────────────────────────────────
 
 window.goNext = function() {
   const isEn = document.body.classList.contains("lang-en");
-  
+
+  // Validation
   if (currentStep === 1 && !userGoal) {
-    window.showToast(isEn ? "Please select a fitness goal!" : "Vui lòng chọn một mục tiêu sức khỏe!", "error");
+    window.showToast(isEn ? "Please select a health goal!" : "Vui lòng chọn mục tiêu sức khỏe!", "error");
     return;
   }
-  
-  if (currentStep === 3 && !userTime) {
-    window.showToast(isEn ? "Please select a consumption time!" : "Vui lòng chọn thời gian sử dụng!", "error");
+  if (currentStep === 5 && !userTime) {
+    window.showToast(isEn ? "Please select a meal timing!" : "Vui lòng chọn thời điểm sử dụng bữa ăn!", "error");
     return;
   }
 
-  if (currentStep < 3) {
-    // Transition
+  if (currentStep < TOTAL_STEPS) {
     document.getElementById(`quiz-step-${currentStep}`).classList.remove("active");
     currentStep++;
     document.getElementById(`quiz-step-${currentStep}`).classList.add("active");
-    
-    // Manage back button visibility
+
     const backBtn = document.getElementById("btn-back");
     if (backBtn) backBtn.style.visibility = "visible";
-    
-    // Change next button to Finish on step 3
+
     const nextBtn = document.getElementById("btn-next");
-    if (nextBtn && currentStep === 3) {
-      nextBtn.innerHTML = isEn ? "Finish" : "Hoàn tất & Đề xuất";
+    if (nextBtn && currentStep === TOTAL_STEPS) {
+      nextBtn.innerHTML = isEn
+        ? '<span class="lang-en">🎉 Get My Plan</span>'
+        : '<span class="lang-vi">🎉 Tạo Kế Hoạch Của Tôi</span>';
     }
-    
+
     updateProgressBar();
   } else {
-    // Generate results
     generateNutritionPlan();
   }
 };
@@ -229,15 +294,17 @@ window.goBack = function() {
     document.getElementById(`quiz-step-${currentStep}`).classList.remove("active");
     currentStep--;
     document.getElementById(`quiz-step-${currentStep}`).classList.add("active");
-    
+
     const backBtn = document.getElementById("btn-back");
     if (backBtn && currentStep === 1) backBtn.style.visibility = "hidden";
-    
+
     const nextBtn = document.getElementById("btn-next");
     if (nextBtn) {
-      nextBtn.innerHTML = isEn ? "Next" : "Tiếp tục";
+      nextBtn.innerHTML = isEn
+        ? '<span class="lang-en">Next →</span>'
+        : '<span class="lang-vi">Tiếp tục →</span>';
     }
-    
+
     updateProgressBar();
   }
 };
@@ -245,24 +312,22 @@ window.goBack = function() {
 function updateProgressBar() {
   const fill = document.getElementById("progress-fill");
   if (fill) {
-    const pct = ((currentStep - 1) / 2) * 100;
+    const pct = ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100;
     fill.style.width = pct + "%";
   }
-  
   const nodes = document.querySelectorAll(".quiz-step-node");
   nodes.forEach(n => {
     const step = parseInt(n.getAttribute("data-step"));
     n.className = "quiz-step-node";
-    if (step === currentStep) {
-      n.classList.add("active");
-    } else if (step < currentStep) {
-      n.classList.add("completed");
-    }
+    if (step === currentStep) n.classList.add("active");
+    else if (step < currentStep) n.classList.add("completed");
   });
 }
 
+
 // GENERATE RECOMMENDATION RESULTS
-let activeRecipeIngredients = []; // Hold list of product IDs to add to cart
+
+let activeRecipeIngredients = [];
 
 function generateNutritionPlan() {
   const isEn = document.body.classList.contains("lang-en");
@@ -274,9 +339,34 @@ function generateNutritionPlan() {
   document.querySelector(".quiz-progress-bar").style.display = "none";
   document.getElementById("results-root").classList.add("active");
 
-  // 2. Set caloric target
-  const calories = recipe.calories[userActivity];
-  document.getElementById("macro-calories").innerText = `${calories.toLocaleString()} kcal`;
+  // 2. Populate BMI/TDEE result bar
+  const bmi = window._computedBmi || "--";
+  const tdee = window._computedTdee || 1800;
+  const bmiCat = isEn ? (window._computedBmiCatEn || "") : (window._computedBmiCatVi || "");
+  const resultBmiVal = document.getElementById("result-bmi-val");
+  const resultBmiCat = document.getElementById("result-bmi-cat");
+  const resultTdee = document.getElementById("result-tdee-val");
+  if (resultBmiVal) resultBmiVal.textContent = bmi;
+  if (resultBmiCat) resultBmiCat.textContent = bmiCat;
+  if (resultTdee) resultTdee.textContent = tdee.toLocaleString();
+
+  // 3. Set caloric target adjusted for goal
+  const actIdx = Math.max(0, userActivity - 1);
+  const baseCalories = recipe.calories[Math.min(actIdx + 1, 3)] || recipe.calories[2];
+  document.getElementById("macro-calories").innerText = `${baseCalories.toLocaleString()}`;
+
+  // 3b. Set goal icon + text in results banner
+  const goalMeta = {
+    'gain-muscle': { icon: '💪', vi: 'Tăng cơ & Bồi bổ', en: 'Gain Muscle' },
+    'lose-fat':    { icon: '🔥', vi: 'Giảm mỡ',          en: 'Lose Fat' },
+    'eat-clean':   { icon: '🍃', vi: 'Eat Clean & Đẹp da', en: 'Eat Clean' },
+    'brain-focus': { icon: '🧠', vi: 'Tập trung trí não',  en: 'Brain Focus' }
+  };
+  const gm = goalMeta[userGoal] || { icon: '🎯', vi: '--', en: '--' };
+  const goalIconEl = document.getElementById('result-goal-icon');
+  const goalTxtEl = document.getElementById('result-goal-txt');
+  if (goalIconEl) goalIconEl.textContent = gm.icon;
+  if (goalTxtEl) goalTxtEl.textContent = isEn ? gm.en : gm.vi;
 
   // 3. Render SVG Dashboards
   animateSvgMacros(recipe.macroPcts);
@@ -494,6 +584,8 @@ function drawLineChart(goal) {
 window.resetQuiz = function() {
   userGoal = "";
   userTime = "";
+  userDiet = "omnivore";
+  userServings = 1;
   excludedIngredients = [];
   currentStep = 1;
   activeRecipeIngredients = [];
@@ -511,24 +603,28 @@ window.resetQuiz = function() {
 
   const nextBtn = document.getElementById("btn-next");
   const isEn = document.body.classList.contains("lang-en");
-  if (nextBtn) nextBtn.innerHTML = isEn ? "Next" : "Tiếp tục";
+  if (nextBtn) nextBtn.innerHTML = isEn
+    ? '<span class="lang-en">Next →</span>'
+    : '<span class="lang-vi">Tiếp tục →</span>';
 
   // Swap back layout views
   document.getElementById("results-root").classList.remove("active");
   document.getElementById("quiz-form-area").style.display = "block";
   document.querySelector(".quiz-progress-bar").style.display = "flex";
   
-  // Show step 1
-  document.getElementById("quiz-step-1").classList.add("active");
-  document.getElementById("quiz-step-2").classList.remove("active");
-  document.getElementById("quiz-step-3").classList.remove("active");
+  // Show step 1, hide all others
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const el = document.getElementById(`quiz-step-${i}`);
+    if (el) el.classList.toggle("active", i === 1);
+  }
   
-  // Remove temporary swap messages if any
+  // Remove temporary swap messages
   const oldAlerts = document.querySelectorAll("#results-root div[style*='background:#FFF3CD']");
   oldAlerts.forEach(a => a.remove());
 
   updateProgressBar();
 };
+
 
 // 1-CLICK ADD COMBO INGREDIENTS TO CART
 window.addAllIngredientsToCart = function() {

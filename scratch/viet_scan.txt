@@ -1,0 +1,220 @@
+about.html:18: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+about.html:169: <span class="lang-en">About Tứ Quý Garden</span>
+about.html:192: <span class="lang-en">Tứ Quý Garden was founded by young pioneers with a deep passion for Vietnamese agriculture and a desire to create a clean, healthy eating solution for busy modern lives. We realized that Vietnam has some of the richest tropical fruits, but complex logistics make the quality decrease and farm origins unclear.</span>
+about.html:196: <span class="lang-en">Hence, Tứ Quý Garden introduces a digitized <strong>Farm-to-Table model</strong>. We directly collaborate with local VietGAP-standard orchards, implement strict quality inspections, package organically, and digitize batch codes to deliver the freshest ripe fruits and healthy baked seeds.</span>
+about.html:201: <img src="images/image/image1.png" alt="Tứ Quý Garden Brand Story" style="width: 100%; display: block; object-fit: cover; aspect-ratio: 4/3;">
+about.html:270: <img src="images/fruits/Xoài cát Hòa Lộc.png" alt="Cái Bè" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+about.html:276: <span class="lang-en">Cái Bè Mango Cooperative, Tiền Giang</span>
+about.html:288: <img src="images/image/about_farm_story.png" alt="Mộc Châu" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+about.html:294: <span class="lang-en">Ban On Clean Plum Cooperative, Sơn La</span>
+about.html:306: <img src="images/combo/Combo.png" alt="Tây Nguyên" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+about.html:312: <span class="lang-en">Krông Pắc Durian Farm, Đắk Lắk</span>
+about.html:332: <span class="lang-en">The People Behind Tứ Quý Garden</span>
+about.html:341: <img src="images/image/HuynhBao.png" alt="Huỳnh Bảo">
+about.html:344: <h4 class="team-name">Huỳnh Bảo</h4>
+about.html:354: <img src="images/image/NhatKhoa.png" alt="Nhật Khoa">
+about.html:357: <h4 class="team-name">Nhật Khoa</h4>
+about.html:367: <img src="images/image/PhuongAnh.png" alt="Phương Anh">
+about.html:370: <h4 class="team-name">Phương Anh</h4>
+about.html:380: <img src="images/image/ThaoLinh.png" alt="Thảo Linh">
+about.html:383: <h4 class="team-name">Thảo Linh</h4>
+about.html:397: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+about.html:402: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+about.html:454: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+admin-dashboard.html:19: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+admin-dashboard.html:140: <li><a href="#" onclick="window.showAdminChangePasswordModal(event)" style="display: block; padding: 8px 20px; font-size: 13.5px; color: var(--color-text-dark); text-decoration: none;">🔑 Đổi mật khẩu</a></li>
+admin-dashboard.html:141: <li><a href="#" onclick="handleAdminLogout()" style="display: block; padding: 8px 20px; font-size: 13.5px; color: #ff8787; text-decoration: none; border-top: 1px solid var(--color-gray-light);">🚪 Đăng xuất</a></li>
+admin-dashboard.html:173: Tứ Quý Garden
+admin-dashboard.html:174: <span>Quản trị viên</span>
+admin-dashboard.html:179: <div class="admin-sidebar-avatar-wrapper" onclick="window.changeAdminAvatar(event)" style="cursor:pointer;" title="Nhấp để đổi ảnh đại diện">
+admin-dashboard.html:184: <h4 class="admin-sidebar-user-name">Tứ Quý Garden</h4>
+admin-dashboard.html:226: <li><a class="admin-submenu-item" onclick="window.showAdminProductsModal(event); window.filterProductsByModalCategory('Fruits')">🍎 Trái cây tươi</a></li>
+admin-dashboard.html:227: <li><a class="admin-submenu-item" onclick="window.showAdminProductsModal(event); window.filterProductsByModalCategory('Nuts')">🌰 Hạt dinh dưỡng</a></li>
+admin-dashboard.html:237: <li><a class="admin-submenu-item" onclick="window.showAdminCustomersModal(event); window.focusAddCustomer()">👤 Danh sách tài khoản</a></li>
+admin-dashboard.html:238: <li><a class="admin-submenu-item" onclick="window.showAdminCustomersModal(event); window.focusAddCustomer()">➕ Thêm khách hàng</a></li>
+admin-dashboard.html:247: <li><a class="admin-submenu-item" onclick="window.showAdminCategoriesModal(event); window.focusAddCategory()">📁 Nhóm hiện có</a></li>
+admin-dashboard.html:248: <li><a class="admin-submenu-item" onclick="window.showAdminCategoriesModal(event); window.focusAddCategory()">➕ Tạo danh mục mới</a></li>
+admin-dashboard.html:257: <li><a class="admin-submenu-item" onclick="window.showAdminPromotionsModal(event); window.focusAddVoucher()">🏷️ Mã coupon đang chạy</a></li>
+admin-dashboard.html:258: <li><a class="admin-submenu-item" onclick="window.showAdminPromotionsModal(event); window.focusAddVoucher()">➕ Tạo coupon mới</a></li>
+admin-dashboard.html:267: <li><a class="admin-submenu-item" onclick="window.showAdminReportsModal(event)">📈 Tổng quan doanh thu</a></li>
+admin-dashboard.html:276: <li><a class="admin-submenu-item" onclick="window.showAdminSettingsModal(event)">⚙️ Cấu hình chung</a></li>
+admin-dashboard.html:332: <button onclick="resetAdminDataMockup()" class="btn btn-outline" style="border-radius: 8px; padding: 9px; font-size: 13px; border-color: var(--color-gray-border); color: var(--color-text-light);" title="Khôi phục dữ liệu mẫu">
+admin-dashboard.html:343: <a href="admin-orders.html?filter=Hoàn thành" class="admin-stat-card">
+admin-dashboard.html:350: <div class="admin-stat-value" id="kpi-revenue">0đ</div>
+admin-dashboard.html:412: <a href="admin-orders.html?filter=Chờ xác nhận" class="admin-stat-card">
+admin-dashboard.html:447: <option>Năm 2026</option>
+admin-dashboard.html:448: <option>Năm 2025</option>
+admin-dashboard.html:503: <strong style="font-size: 13px; color: var(--color-text-dark); display: block;" id="sub-revenue-total">0đ</strong>
+admin-dashboard.html:514: <strong style="font-size: 13px; color: var(--color-text-dark); display: block;" id="sub-revenue-avg">0đ</strong>
+admin-dashboard.html:525: <strong style="font-size: 13px; color: var(--color-text-dark); display: block;" id="sub-revenue-peak">0đ</strong>
+admin-dashboard.html:624: <th>Mã ĐH</th>
+admin-dashboard.html:669: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+admin-dashboard.html:674: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+admin-dashboard.html:726: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+admin-orders.html:19: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+admin-orders.html:134: <li><a href="#" onclick="window.showAdminChangePasswordModal(event)" style="display: block; padding: 8px 20px; font-size: 13.5px; color: var(--color-text-dark); text-decoration: none;">🔑 Đổi mật khẩu</a></li>
+admin-orders.html:135: <li><a href="#" onclick="handleAdminLogout()" style="display: block; padding: 8px 20px; font-size: 13.5px; color: #ff8787; text-decoration: none; border-top: 1px solid var(--color-gray-light);">🚪 Đăng xuất</a></li>
+admin-orders.html:167: Tứ Quý Garden
+admin-orders.html:168: <span>Quản trị viên</span>
+admin-orders.html:173: <div class="admin-sidebar-avatar-wrapper" onclick="window.changeAdminAvatar(event)" style="cursor:pointer;" title="Nhấp để đổi ảnh đại diện">
+admin-orders.html:178: <h4 class="admin-sidebar-user-name">Tứ Quý Garden</h4>
+admin-orders.html:220: <li><a class="admin-submenu-item" onclick="window.showAdminProductsModal(event); window.filterProductsByModalCategory('Fruits')">🍎 Trái cây tươi</a></li>
+admin-orders.html:221: <li><a class="admin-submenu-item" onclick="window.showAdminProductsModal(event); window.filterProductsByModalCategory('Nuts')">🌰 Hạt dinh dưỡng</a></li>
+admin-orders.html:231: <li><a class="admin-submenu-item" onclick="window.showAdminCustomersModal(event); window.focusAddCustomer()">👤 Danh sách tài khoản</a></li>
+admin-orders.html:232: <li><a class="admin-submenu-item" onclick="window.showAdminCustomersModal(event); window.focusAddCustomer()">➕ Thêm khách hàng</a></li>
+admin-orders.html:241: <li><a class="admin-submenu-item" onclick="window.showAdminCategoriesModal(event); window.focusAddCategory()">📁 Nhóm hiện có</a></li>
+admin-orders.html:242: <li><a class="admin-submenu-item" onclick="window.showAdminCategoriesModal(event); window.focusAddCategory()">➕ Tạo danh mục mới</a></li>
+admin-orders.html:251: <li><a class="admin-submenu-item" onclick="window.showAdminPromotionsModal(event); window.focusAddVoucher()">🏷️ Mã coupon đang chạy</a></li>
+admin-orders.html:252: <li><a class="admin-submenu-item" onclick="window.showAdminPromotionsModal(event); window.focusAddVoucher()">➕ Tạo coupon mới</a></li>
+admin-orders.html:261: <li><a class="admin-submenu-item" onclick="window.showAdminReportsModal(event)">📈 Tổng quan doanh thu</a></li>
+admin-orders.html:270: <li><a class="admin-submenu-item" onclick="window.showAdminSettingsModal(event)">⚙️ Cấu hình chung</a></li>
+admin-orders.html:304: <div class="admin-summary-card" style="border-left: 4px solid #d97706;" onclick="filterOrdersByStatus('Chờ xác nhận')">
+admin-orders.html:308: <div class="admin-summary-card" style="border-left: 4px solid #0369a1;" onclick="filterOrdersByStatus('Đang xử lý')">
+admin-orders.html:312: <div class="admin-summary-card" style="border-left: 4px solid #15803d;" onclick="filterOrdersByStatus('Hoàn thành')">
+admin-orders.html:343: <th>Mã ĐH</th>
+admin-orders.html:360: Đang hiển thị 0 đơn hàng
+admin-orders.html:372: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+admin-orders.html:377: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+admin-orders.html:429: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+admin-products.html:19: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+admin-products.html:134: <li><a href="#" onclick="window.showAdminChangePasswordModal(event)" style="display: block; padding: 8px 20px; font-size: 13.5px; color: var(--color-text-dark); text-decoration: none;">🔑 Đổi mật khẩu</a></li>
+admin-products.html:135: <li><a href="#" onclick="handleAdminLogout()" style="display: block; padding: 8px 20px; font-size: 13.5px; color: #ff8787; text-decoration: none; border-top: 1px solid var(--color-gray-light);">🚪 Đăng xuất</a></li>
+admin-products.html:167: Tứ Quý Garden
+admin-products.html:168: <span>Quản trị viên</span>
+admin-products.html:173: <div class="admin-sidebar-avatar-wrapper" onclick="window.changeAdminAvatar(event)" style="cursor:pointer;" title="Nhấp để đổi ảnh đại diện">
+admin-products.html:178: <h4 class="admin-sidebar-user-name">Tứ Quý Garden</h4>
+admin-products.html:220: <li><a class="admin-submenu-item" onclick="window.showAdminProductsModal(event); window.filterProductsByModalCategory('Fruits')">🍎 Trái cây tươi</a></li>
+admin-products.html:221: <li><a class="admin-submenu-item" onclick="window.showAdminProductsModal(event); window.filterProductsByModalCategory('Nuts')">🌰 Hạt dinh dưỡng</a></li>
+admin-products.html:231: <li><a class="admin-submenu-item" onclick="window.showAdminCustomersModal(event); window.focusAddCustomer()">👤 Danh sách tài khoản</a></li>
+admin-products.html:232: <li><a class="admin-submenu-item" onclick="window.showAdminCustomersModal(event); window.focusAddCustomer()">➕ Thêm khách hàng</a></li>
+admin-products.html:241: <li><a class="admin-submenu-item" onclick="window.showAdminCategoriesModal(event); window.focusAddCategory()">📁 Nhóm hiện có</a></li>
+admin-products.html:242: <li><a class="admin-submenu-item" onclick="window.showAdminCategoriesModal(event); window.focusAddCategory()">➕ Tạo danh mục mới</a></li>
+admin-products.html:251: <li><a class="admin-submenu-item" onclick="window.showAdminPromotionsModal(event); window.focusAddVoucher()">🏷️ Mã coupon đang chạy</a></li>
+admin-products.html:252: <li><a class="admin-submenu-item" onclick="window.showAdminPromotionsModal(event); window.focusAddVoucher()">➕ Tạo coupon mới</a></li>
+admin-products.html:261: <li><a class="admin-submenu-item" onclick="window.showAdminReportsModal(event)">📈 Tổng quan doanh thu</a></li>
+admin-products.html:270: <li><a class="admin-submenu-item" onclick="window.showAdminSettingsModal(event)">⚙️ Cấu hình chung</a></li>
+admin-products.html:332: <option value="all">Tất cả danh mục</option>
+admin-products.html:333: <option value="Fruits">Trái cây tươi</option>
+admin-products.html:334: <option value="Nutritional Seeds">Hạt dinh dưỡng</option>
+admin-products.html:335: <option value="Granola">Granola ngũ cốc</option>
+admin-products.html:336: <option value="Combo Healthy">Combo sống khỏe</option>
+admin-products.html:362: Đang hiển thị 0 sản phẩm
+admin-products.html:374: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+admin-products.html:379: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+admin-products.html:431: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+cart.html:18: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+cart.html:167: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+cart.html:172: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+cart.html:224: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+checkout.html:17: <a href="index.html" class="checkout-logo" aria-label="Tứ Quý Garden">
+checkout.html:18: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo">
+checkout.html:26: <div class="checkout-progress" aria-label="Tiến trình thanh toán">
+checkout.html:66: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+checkout.html:71: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+checkout.html:123: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+contact.html:168: <span class="lang-en">Connect with Tứ Quý Garden</span>
+contact.html:304: <span class="lang-en">Thank you for reaching out. The Tứ Quý Garden customer support team will contact you shortly.</span>
+detail.html:18: <img src="images/logo/logo-ngang-cropped.png" alt="Tứ Quý Garden Logo" class="logo-img">
+detail.html:219: <img src="images/logo/logo-white-cropped.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+detail.html:224: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+detail.html:276: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+index.html:18: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+index.html:173: <span class="hero-tagline">Tứ Quý Garden</span>
+index.html:264: <span class="lang-en">Power your day with natural roasted seeds and whole-grain organic granola from Tứ Quý Garden.</span>
+index.html:284: <button class="hero-carousel-btn" id="heroPrev" aria-label="Slide trước">
+index.html:287: <button class="hero-carousel-btn" id="heroNext" aria-label="Slide kế">
+index.html:391: <img src="images/fruits/Xoài cát Hòa Lộc.png" alt="Fruits" style="width: 100%; height: 100%; object-fit: cover;">
+index.html:494: <span class="lang-en">Tứ Quý Garden</span>
+index.html:498: <span class="lang-en">We believe nature always provides the purest gifts. Tứ Quý Garden selects seasonal produce from Vietnam's finest growing regions, bringing your family safe and nutritious food every day.</span>
+index.html:513: <img src="images/image/trái cây.png" alt="Fresh fruits" style="width:100%; height:100%; object-fit:cover;">
+index.html:714: "Tứ Quý Garden does a wonderful job of providing full transparency on calories, protein, and carbs for every single product. This is incredibly helpful for gym-goers to keep track of their nutrition."
+index.html:744: <img src="images/fruits/Quýt đường.png" alt="" style="width:100%; height:100%; object-fit:cover;">
+index.html:753: <img src="images/granola/Mix hạt.png" alt="" style="width:100%; height:100%; object-fit:cover;">
+index.html:777: <div style="position:absolute; inset:0; background-image:url('images/image/trái cây.png'); background-size:cover; background-position:center; opacity:0.08;"></div>
+index.html:782: <span class="lang-en">Get discounts & healthy tips from Tứ Quý Garden!</span>
+index.html:803: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+index.html:808: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+index.html:883: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+login.html:73: background-image: url('images/image/trái cây.png');
+login.html:594: <img src="images/logo/logo.png" alt="Tứ Quý Garden Logo" class="logo-img">
+login.html:746: <img src="images/logo/logo.png" alt="Tứ Quý Garden Logo" class="banner-logo auth-brand-logo">
+login.html:756: <span class="lang-en">Tứ Quý Garden offers fresh seasonal produce, nutritious seeds, and healthy options to care for your family's health daily.</span>
+login.html:762: <span class="lang-en">Welcome to<br>Tứ Quý Garden</span>
+login.html:807: <span class="lang-en">Welcome back to Tứ Quý Garden</span>
+login.html:822: <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password', this)" aria-label="Hiện hoặc ẩn mật khẩu">
+login.html:852: <button type="button" class="social-login-btn" onclick="showToast('Tính năng đăng nhập Google đang được mô phỏng.', 'info')">Google</button>
+login.html:853: <button type="button" class="social-login-btn" onclick="showToast('Tính năng đăng nhập Facebook đang được mô phỏng.', 'info')">Facebook</button>
+login.html:878: <input type="text" id="register-name" class="auth-input" required placeholder="Nguyễn Văn A">
+login.html:905: <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('register-password', this)" aria-label="Hiện hoặc ẩn mật khẩu">
+login.html:920: <option value="Tăng cơ">Tăng cơ / Gym & Fitness</option>
+login.html:921: <option value="Giảm cân">Giảm cân / Weight Loss</option>
+login.html:922: <option value="Mẹ bầu">Mẹ bầu & Bé / Mother & Baby</option>
+login.html:923: <option value="Gia đình">Sức khỏe Gia đình / Family Health</option>
+login.html:957: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+login.html:962: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+login.html:1014: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+nutrition.html:389: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+nutrition.html:855: <span class="lang-en">Certified by Tứ Quý Garden Dieticians</span>
+nutrition.html:987: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+nutrition.html:992: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+nutrition.html:1043: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+products.html:9: content="Danh sách sản phẩm Tứ Quý Garden - Trái cây tươi ngon, hạt dinh dưỡng, granola ngũ cốc và combo sống khỏe.">
+products.html:20: <img src="images/logo/logo-ngang-cropped.png" alt="Tứ Quý Garden Logo" class="logo-img">
+products.html:34: <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+products.html:35: <li><a href="about.html" class="nav-link">Về chúng tôi</a></li>
+products.html:119: <li><a href="index.html#footer-contact" class="nav-link">Liên hệ</a></li>
+products.html:120: <li><a href="nutrition.html" class="nav-link">Dinh dưỡng cá nhân</a></li>
+products.html:121: <li><a href="traceability.html" class="nav-link">Truy xuất nguồn gốc</a></li>
+products.html:145: <span class="btn-text" id="header-profile-txt-vi">Tài khoản</span>
+products.html:156: <span class="btn-text">Yêu thích</span>
+products.html:169: <span class="btn-text">Giỏ hàng</span>
+products.html:178: <li><a href="index.html" style="color: white; text-decoration: none;">Trang chủ</a></li>
+products.html:180: <li style="color: rgba(255,255,255,0.6);">Cửa hàng</li>
+products.html:240: <input type="radio" name="season" value="Mùa hè">
+products.html:242: <span class="filter-count" data-filter="season-Mùa hè"></span>
+products.html:247: <input type="radio" name="season" value="Mùa đông">
+products.html:249: <span class="filter-count" data-filter="season-Mùa đông"></span>
+products.html:254: <input type="radio" name="season" value="Quanh năm">
+products.html:256: <span class="filter-count" data-filter="season-Quanh năm"></span>
+products.html:274: <input type="checkbox" name="healthGoal" value="Tăng cơ">
+products.html:276: <span class="filter-count" data-filter="goal-Tăng cơ"></span>
+products.html:281: <input type="checkbox" name="healthGoal" value="Giảm cân">
+products.html:283: <span class="filter-count" data-filter="goal-Giảm cân"></span>
+products.html:288: <input type="checkbox" name="healthGoal" value="Bổ sung năng lượng">
+products.html:290: <span class="filter-count" data-filter="goal-Bổ sung năng lượng"></span>
+products.html:295: <input type="checkbox" name="healthGoal" value="Gia đình">
+products.html:297: <span class="filter-count" data-filter="goal-Gia đình"></span>
+products.html:302: <input type="checkbox" name="healthGoal" value="Snack lành mạnh">
+products.html:304: <span class="filter-count" data-filter="goal-Snack lành mạnh"></span>
+products.html:322: <span>Under 50,000đ</span>
+products.html:329: <span>50,000đ - 100,000đ</span>
+products.html:336: <span>100,000đ - 200,000đ</span>
+products.html:343: <span>Over 200,000đ</span>
+products.html:431: <button type="button" class="view-toggle-btn active" data-view="grid" title="Dạng lưới" aria-label="Grid view">
+products.html:434: <button type="button" class="view-toggle-btn" data-view="list" title="Dạng danh sách" aria-label="List view">
+products.html:540: <img src="images/logo/logo-white-cropped.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+products.html:544: Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.
+products.html:598: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+profile.html:1921: <img src="images/logo/logo ngang.png" alt="Tứ Quý Garden Logo" class="logo-img">
+profile.html:2075: <button type="button" class="avatar-camera-btn avatar-upload-btn" id="btn-avatar-camera" title="Đổi ảnh đại diện" onclick="triggerAvatarUpload()">
+profile.html:2079: <button type="button" class="avatar-remove-btn" id="avatar-remove-btn" onclick="removeAvatar(event)" title="Xóa ảnh đại diện" aria-label="Remove Avatar">
+profile.html:2083: <h3 class="profile-sidebar-name" id="profile-sidebar-name">Linh Ngô</h3>
+profile.html:2164: <input type="text" id="profile-name" class="profile-input" required disabled value="Linh Ngô">
+profile.html:2195: <option value="Tăng cơ">Gym / Muscle Gain</option>
+profile.html:2196: <option value="Giảm cân">Weight Loss</option>
+profile.html:2197: <option value="Mẹ bầu">Mother & Baby</option>
+profile.html:2198: <option value="Gia đình">Family Health</option>
+profile.html:2270: <button class="filter-chip active" id="chip-filter-All" onclick="filterOrdersByStatus('Tất cả')">All</button>
+profile.html:2271: <button class="filter-chip" id="chip-filter-Pending" onclick="filterOrdersByStatus('Chờ xác nhận')">Pending</button>
+profile.html:2272: <button class="filter-chip" id="chip-filter-Shipping" onclick="filterOrdersByStatus('Đang giao')">Shipping</button>
+profile.html:2273: <button class="filter-chip" id="chip-filter-Completed" onclick="filterOrdersByStatus('Hoàn thành')">Completed</button>
+profile.html:2274: <button class="filter-chip" id="chip-filter-Cancelled" onclick="filterOrdersByStatus('Đã hủy')">Cancelled</button>
+profile.html:2383: <img src="images/logo/logo_white.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+profile.html:2388: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+profile.html:2440: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>
+profile.html:2454: <button type="button" class="profile-modal-close" onclick="closeEmailOtpModal()" aria-label="Đóng modal">
+traceability.html:507: <span class="lang-en">Every product at Tứ Quý Garden has a unique story. Enter the batch number printed on the product label or choose a sample batch code to trace its farm-to-table journey.</span>
+traceability.html:618: <img id="result-product-img" src="images/Product_Images/03. Hình ảnh/Trái cây/17-Xoài cát Hòa Lộc/17-1.png" alt="" class="trace-product-img">
+traceability.html:726: <img src="images/logo/logo-white-cropped.png" alt="Tứ Quý Garden Logo" class="footer-logo-img">
+traceability.html:731: <span class="lang-en">Tứ Quý Garden commits to bringing ripe seasonal organic produce, premium seeds, and clean healthy granola to nourish your family daily.</span>
+traceability.html:783: <p class="copyright-txt">&copy; 2026 Tứ Quý Garden. All Rights Reserved.</p>

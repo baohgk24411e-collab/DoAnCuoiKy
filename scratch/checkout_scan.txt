@@ -1,0 +1,191 @@
+5: let placedDeliveryText = "Dự kiến 2-3 ngày";
+9: { code: "FREESHIP", title: "Miễn phí vận chuyển", description: "Áp dụng mọi đơn hàng", condition: "Không yêu cầu giá trị tối thiểu", type: "freeship", discountVal: 30000, minOrder: 0 },
+10: { code: "TUQUYGARDEN10", title: "Giảm 10%", description: "Tối đa 100.000đ", condition: "Áp dụng mọi đơn hàng", type: "percentage", discountVal: 10, maxDiscount: 100000, minOrder: 0 },
+11: { code: "HEALTHY50", title: "Giảm 50.000đ", description: "Cho đơn từ 500.000đ", condition: "Đơn hàng từ 500.000đ", type: "fixed", discountVal: 50000, minOrder: 500000 }
+15: standard: { id: "standard", title: "Giao tiêu chuẩn", desc: "Dự kiến giao trong 2-3 ngày", price: 0, priceText: "Freeship", tag: "Khuyến nghị" },
+16: express: { id: "express", title: "Giao nhanh", desc: "Dự kiến giao trong 24h-48h", price: 30000, priceText: "30.000đ" },
+17: scheduled: { id: "scheduled", title: "Giao hẹn giờ", desc: "Chọn khung giờ mong muốn", price: 40000, priceText: "40.000đ" }
+21: COD: { id: "COD", title: "Thanh toán khi nhận hàng (COD)", desc: "Thanh toán cho shipper khi nhận hàng" },
+22: "E-wallet": { id: "E-wallet", title: "Ví điện tử MoMo / ZaloPay", desc: "Chức năng thanh toán demo cho đồ án" },
+23: "Bank transfer": { id: "Bank transfer", title: "Chuyển khoản ngân hàng", desc: "Chuyển khoản theo thông tin tài khoản demo" },
+24: Card: { id: "Card", title: "Thẻ ATM / Visa (Demo)", desc: "Chức năng thanh toán demo cho đồ án" }
+30: fullName: "Nguyễn Hoàng Anh",
+33: province: "TP. Hồ Chí Minh",
+34: district: "Thành Phố Thủ Đức",
+35: ward: "Phường Linh Trung",
+36: address: "Cổng Sau Ktx Đhqg, Khu B Đhqg",
+121: .replace(/đ/g, "d")
+122: .replace(/Đ/g, "D");
+135: { code: "79", name: "Thành phố Hồ Chí Minh" },
+136: { code: "01", name: "Thành phố Hà Nội" },
+137: { code: "48", name: "Thành phố Đà Nẵng" }
+141: { code: "26734", name: "Phường Linh Trung", provinceCode: "79" },
+142: { code: "26737", name: "Phường Thủ Đức", provinceCode: "79" }
+145: { code: "00001", name: "Phường Ba Đình", provinceCode: "01" }
+148: { code: "20194", name: "Phường Hải Châu", provinceCode: "48" }
+168: locationData.error = "Không thể tải dữ liệu địa phương";
+234: return `${Math.max(0, value || 0).toLocaleString("vi-VN")}đ`;
+346: <button type="button" class="modern-place-order-btn" onclick="openConfirmOrderModal()">${icon("lock")} <span>Đặt hàng ngay</span><strong>${formatCurrency(totals.total)}</strong>${icon("chevron")}</button>
+347: <p class="modern-checkout-terms">${icon("shield")} Chúng tôi cam kết bảo mật thông tin của bạn và không chia sẻ cho bên thứ ba.</p>
+362: <h2 class="font-serif">Giỏ hàng của bạn đang trống</h2>
+363: <p>Không có sản phẩm nào để thanh toán. Vui lòng quay lại mua sắm.</p>
+364: <a href="products.html" class="btn btn-primary" style="margin-top: 20px;">Quay lại cửa hàng</a>
+384: return renderSectionCard("location", "Thông tin nhận hàng", `
+387: <div class="modern-line-strong">${escapeHTML(a.fullName)} <span>•</span> ${formatPhone(a.phone)} ${a.isDefault ? '<em>Mặc định</em>' : ''}</div>
+390: ${a.note ? `<small class="address-note">Ghi chú: ${escapeHTML(a.note)}</small>` : ""}
+393: <button type="button" class="modern-outline-btn" onclick="openAddressModal()">${icon("edit")} Thay đổi</button>
+401: return renderSectionCard("truck", "Phương thức giao hàng", `
+425: const slots = ["Sáng 8:00-11:00", "Chiều 13:00-17:00", "Tối 18:00-21:00"];
+429: <label for="checkout-shipping-timeslot">Khung giờ giao hàng</label>
+443: return renderSectionCard("wallet", "Phương thức thanh toán", `
+447: <button type="button" class="payment-more-toggle" onclick="togglePaymentMethods()">${paymentMethodsExpanded ? "Thu gọn" : "Xem thêm phương thức thanh toán"}</button>
+472: return `<p class="modern-demo-note checkout-inline-note">Chức năng thanh toán demo cho đồ án</p>`;
+493: <strong>Bạn chưa liên kết tài khoản ngân hàng</strong>
+494: <p>Liên kết tài khoản ngân hàng để dùng phương thức chuyển khoản.</p>
+496: <button type="button" class="modern-outline-btn" onclick="openLinkBankModal()">Liên kết ngân hàng</button>
+509: <strong>Ngân hàng đã liên kết</strong>
+510: <p>Thông tin chuyển khoản sẽ được lưu kèm đơn hàng demo.</p>
+512: <button type="button" class="modern-outline-btn" onclick="openLinkBankModal()">Liên kết ngân hàng</button>
+516: <span>Chọn ngân hàng</span>
+525: ${selectedBank.isDefault ? "<em>Mặc định</em>" : ""}
+526: <p>Chủ tài khoản: <strong>${escapeHTML(selectedBank.accountHolder)}</strong></p>
+527: <p>Số tài khoản: <strong>${escapeHTML(selectedBank.accountNumber)}</strong></p>
+528: <p>Nội dung: <strong>TQG ${escapeHTML(getSelectedAddress().phone)}</strong></p>
+542: const giftTitle = '<span class="lang-vi">Gói quà tặng?</span><span class="lang-en">Add Gift Wrap?</span>';
+545: : "Chúc bạn luôn khỏe mạnh và hạnh phúc!";
+551: <span class="lang-vi">Làm đơn hàng thêm đặc biệt hơn.</span>
+558: <span class="lang-vi">Có, gói giúp tôi! (+25.000đ)</span>
+559: <span class="lang-en">Yes, please! (+25.000đ)</span>
+561: <em><span class="lang-vi">Được gói đẹp</span><span class="lang-en">Beautiful wrap</span></em>
+566: <strong><span class="lang-vi">Không, cảm ơn</span><span class="lang-en">No, thanks</span></strong>
+568: <label class="modern-checkbox-row modern-greeting-toggle"><input type="checkbox" ${checkoutState.extras.greetingCard ? "checked" : ""} onchange="toggleExtra('greetingCard', this.checked)"><span></span><b><span class="lang-vi">Thêm thiệp chúc mừng?</span><span class="lang-en">Add greeting card?</span></b><em>+10.000đ</em></label>
+576: <div class="gift-body"><span></span><i><span class="lang-vi">Tặng bạn</span><span class="lang-en">For you</span></i></div>
+585: return renderSectionCard("star", "Điểm thưởng & Hóa đơn", `
+588: <p>Bạn hiện có: <strong>1.250 điểm</strong></p>
+589: <label class="modern-checkbox-row"><input type="checkbox" ${checkoutState.rewardApplied ? "checked" : ""} onchange="toggleReward(this.checked)"><span></span><b>Dùng 500 điểm để giảm 50.000đ</b></label>
+590: <small>Sau khi dùng, bạn còn 750 điểm</small>
+593: <label class="modern-checkbox-row invoice-toggle"><input type="checkbox" ${checkoutState.invoice.enabled ? "checked" : ""} onchange="toggleInvoice(this.checked)"><span></span><b>Tôi muốn xuất hóa đơn</b></label>
+594: <small>Hóa đơn điện tử sẽ được gửi qua email của bạn</small>
+597: <input value="${escapeHTML(checkoutState.invoice.company)}" oninput="updateInvoiceField('company', this.value)" placeholder="Tên công ty">
+598: <input value="${escapeHTML(checkoutState.invoice.taxCode)}" oninput="updateInvoiceField('taxCode', this.value)" placeholder="Mã số thuế">
+599: <input value="${escapeHTML(checkoutState.invoice.email)}" oninput="updateInvoiceField('email', this.value)" placeholder="Email nhận hóa đơn">
+609: <div class="modern-card-title"><span class="modern-card-icon">${icon("bag")}</span><h2>Đơn hàng của bạn</h2></div>
+623: <input id="checkout-voucher-input" type="text" placeholder="Nhập mã voucher" onkeydown="handleVoucherKey(event)">
+624: <button type="button" onclick="applyVoucherFromInput()">Áp dụng</button>
+626: <button type="button" class="modern-voucher-link" onclick="openVoucherModal()">Xem voucher có thể dùng</button>
+630: <h3 class="modern-summary-section-title">Chi tiết thanh toán</h3>
+631: ${moneyLine("Tạm tính", totals.subtotal)}
+632: ${moneyLine("Phí giao hàng", totals.shipping, totals.shipping === 0 ? "Freeship" : null)}
+633: ${totals.voucherDiscount ? moneyLine(`Giảm giá voucher (${totals.voucher.code})`, -totals.voucherDiscount, null, true) : ""}
+634: ${totals.shippingDiscount ? moneyLine("Giảm phí vận chuyển", -totals.shippingDiscount, null, true) : ""}
+635: ${totals.rewardDiscount ? moneyLine("Giảm giá điểm thưởng", -totals.rewardDiscount, null, true) : ""}
+636: ${totals.giftBox ? moneyLine("Đóng gói quà", totals.giftBox) : ""}
+637: ${totals.greetingCard ? moneyLine("Thiệp chúc mừng", totals.greetingCard) : ""}
+639: <div class="modern-summary-total"><span>Tổng thanh toán</span><strong>${formatCurrency(totals.total)}</strong></div>
+640: <div class="modern-summary-badges"><div>${icon("shield")} Bạn tiết kiệm: <strong>${formatCurrency(totals.saved)}</strong></div><div>${icon("star")} Bạn sẽ nhận được: <strong>+${totals.rewardEarned} điểm</strong></div></div>
+642: <span>${icon("shield")} Thanh toán an toàn</span>
+643: <span>${icon("headset")} Hỗ trợ 24/7<br><strong>1900 633 123</strong></span>
+644: <span>${icon("package")} Đổi trả dễ dàng<br>7 ngày</span>
+646: <p class="modern-secure-foot">${icon("lock")} Thông tin của bạn được bảo mật tuyệt đối</p>
+697: <h3>Thay đổi thông tin người nhận</h3>
+701: <div class="modern-modal-actions"><button class="modern-secondary-btn" onclick="openAddressFormModal()">Thêm người nhận khác</button><button class="modern-primary-btn" onclick="closeCheckoutModal()">Xong</button></div>
+712: <strong>${escapeHTML(address.fullName)} <em>${formatPhone(address.phone)}</em> ${address.isDefault ? "<b>Mặc định</b>" : ""}</strong>
+715: ${address.note ? `<small>Ghi chú: ${escapeHTML(address.note)}</small>` : ""}
+718: <button type="button" onclick="event.stopPropagation(); openAddressFormModal('${address.id}')">Sửa</button>
+768: <h3>${addressDraft.id ? "Sửa người nhận" : "Thêm người nhận khác"}</h3>
+772: ${field("address-name", "Họ và tên người nhận", addressDraft.fullName, "text", "updateAddressDraftField('fullName', this.value)")}
+773: ${field("address-phone", "Số điện thoại", addressDraft.phone, "tel", "updateAddressDraftField('phone', this.value)")}
+779: ${field("address-detail", "Địa chỉ chi tiết", addressDraft.address, "text", "updateAddressDraftField('address', this.value)")}
+780: <div class="modern-field full"><label>Ghi chú đơn hàng</label><input id="address-note" value="${escapeHTML(addressDraft.note)}" placeholder="Gọi trước khi giao" oninput="updateAddressDraftField('note', this.value)"><small class="address-field-error"></small></div>
+782: <label class="modern-checkbox-row full"><input type="checkbox" id="address-default" ${addressDraft.isDefault ? "checked" : ""} onchange="updateAddressDraftField('isDefault', this.checked)"><span></span><b>Đặt làm địa chỉ mặc định</b></label>
+784: <div class="modern-modal-actions address-form-actions"><button class="modern-secondary-btn" onclick="openAddressModal()">Quay lại</button><button class="modern-primary-btn" onclick="saveAddressModal()">Lưu địa chỉ</button></div>
+805: ? `<option value="">Đang tải dữ liệu địa phương...</option>`
+806: : `<option value="">Chọn Tỉnh/Thành phố</option>`;
+813: <label>Tỉnh/Thành phố</label>
+827: let placeholder = "Vui lòng chọn Tỉnh/Thành phố trước";
+831: placeholder = "Đang tải dữ liệu địa phương...";
+834: placeholder = allWards.length ? "Chọn Phường/Xã" : "Không có dữ liệu Phường/Xã";
+839: <label>Phường/Xã</label>
+859: <h4>Xác nhận vị trí giao hàng</h4>
+860: <p class="address-location-note">Ghim vị trí giúp shipper giao hàng chính xác hơn.</p>
+862: <button type="button" class="use-current-location-btn" onclick="getCurrentUserLocation()">Sử dụng vị trí hiện tại của bạn</button>
+865: <p class="address-coordinate-text">${hasCoordinates ? `Tọa độ giao hàng: ${Number(addressDraft.latitude).toFixed(6)}, ${Number(addressDraft.longitude).toFixed(6)}` : "Click vào bản đồ để ghim vị trí giao hàng."}</p>
+925: draftAddressModal.locationError = "Không thể tải bản đồ. Vui lòng kiểm tra kết nối mạng hoặc nhập địa chỉ thủ công.";
+990: ? `Tọa độ giao hàng: ${Number(draftAddressModal.latitude).toFixed(6)}, ${Number(draftAddressModal.longitude).toFixed(6)}`
+991: : "Click vào bản đồ để ghim vị trí giao hàng.";
+1016: draftAddressModal.locationError = "Trình duyệt của bạn không hỗ trợ lấy vị trí hiện tại.";
+1022: draftAddressModal.locationStatus = "Đang lấy vị trí...";
+1028: draftAddressModal.locationStatus = "Đã lấy vị trí hiện tại. Vui lòng kiểm tra lại ghim trên bản đồ.";
+1036: ? "Bạn đã từ chối quyền truy cập vị trí. Vui lòng nhập địa chỉ thủ công."
+1037: : "Không thể lấy vị trí hiện tại. Vui lòng thử lại hoặc ghim thủ công trên bản đồ.";
+1054: setFieldError("address-name", "Họ tên không được trống");
+1059: setFieldError("address-phone", "Số điện thoại không hợp lệ");
+1064: setFieldError("address-email", "Email không đúng định dạng");
+1069: setFieldError("address-province", "Vui lòng chọn Tỉnh/Thành phố");
+1074: setFieldError("address-ward", "Vui lòng chọn Phường/Xã");
+1079: setFieldError("address-detail", "Địa chỉ chi tiết không được trống");
+1098: draftAddressModal.locationWarning = "Bạn chưa ghim vị trí trên bản đồ. Shipper có thể cần gọi để xác nhận địa chỉ.";
+1143: showCheckoutToast("Đã cập nhật thông tin nhận hàng", "success");
+1145: showCheckoutToast("Bạn chưa ghim vị trí trên bản đồ. Shipper có thể cần gọi để xác nhận địa chỉ.", "warning");
+1152: <h3>Chọn phương thức giao hàng</h3>
+1157: <label>Khung giờ giao hàng</label>
+1158: <select id="shipping-timeslot"><option ${checkoutState.shipping.timeSlot === "Sáng 8:00-11:00" ? "selected" : ""}>Sáng 8:00-11:00</option><option ${checkoutState.shipping.timeSlot === "Chiều 13:00-17:00" ? "selected" : ""}>Chiều 13:00-17:00</option><option ${checkoutState.shipping.timeSlot === "Tối 18:00-21:00" ? "selected" : ""}>Tối 18:00-21:00</option></select>
+1160: <div class="modern-modal-actions"><button class="modern-secondary-btn" onclick="closeCheckoutModal()">Hủy</button><button class="modern-primary-btn" onclick="saveShippingModal()">Lưu phương thức</button></div>
+1179: showCheckoutToast("Đã cập nhật phương thức giao hàng", "success");
+1185: <h3>Chọn phương thức thanh toán</h3>
+1190: <div class="modern-modal-actions"><button class="modern-secondary-btn" onclick="closeCheckoutModal()">Hủy</button><button class="modern-primary-btn" onclick="savePaymentModal()">Lưu phương thức</button></div>
+1201: box.innerHTML = `<div class="modern-bank-box"><p><b>Ngân hàng:</b> Vietcombank</p><p><b>Chủ tài khoản:</b> TU QUY GARDEN</p><p><b>Số tài khoản:</b> 0123456789</p><p><b>Nội dung:</b> TQG ${getSelectedAddress().phone}</p></div>`;
+1203: box.innerHTML = `<p class="modern-demo-note">Chức năng thanh toán demo cho đồ án</p>`;
+1214: showCheckoutToast("Đã cập nhật phương thức thanh toán", "success");
+1221: <h3>Chọn voucher</h3>
+1225: return `<div class="modern-voucher-card ${eligible ? "" : "is-disabled"}"><div><strong>${voucher.code}</strong><h4>${voucher.title}</h4><p>${voucher.description}</p><span>${voucher.condition}</span></div><button class="modern-primary-btn" ${eligible ? `onclick="applyCheckoutVoucher('${voucher.code}')"` : "disabled"}>${eligible ? "Áp dụng" : "Chưa đủ điều kiện"}</button></div>`;
+1237: showCheckoutToast(`Đã áp dụng mã ${code}`, "success");
+1254: showCheckoutToast("Vui lòng nhập mã voucher", "error");
+1259: showCheckoutToast("Mã voucher không hợp lệ", "error");
+1264: showCheckoutToast("Đơn hàng chưa đủ điều kiện áp dụng voucher", "error");
+1270: showCheckoutToast(`Đã áp dụng mã ${voucher.code}`, "success");
+1276: showCheckoutToast("Đã xoá voucher", "success");
+1281: checkoutState.shipping.timeSlot = methodId === "scheduled" ? (checkoutState.shipping.timeSlot || "Sáng 8:00-11:00") : "";
+1311: <h3>Liên kết ngân hàng demo</h3>
+1313: ${field("demo-bank-name", "Tên ngân hàng", "")}
+1314: ${field("demo-bank-holder", "Chủ tài khoản", getSelectedAddress().fullName.toUpperCase())}
+1315: <div class="modern-field full"><label>Số tài khoản</label><input id="demo-bank-number" inputmode="numeric" value=""><small></small></div>
+1316: <label class="modern-checkbox-row full"><input type="checkbox" id="demo-bank-default" ${checkoutState.linkedBanks.length ? "" : "checked"}><span></span><b>Đặt làm ngân hàng mặc định</b></label>
+1318: <div class="modern-modal-actions"><button class="modern-secondary-btn" onclick="closeCheckoutModal()">Hủy</button><button class="modern-primary-btn" onclick="saveDemoLinkedBank()">Lưu ngân hàng</button></div>
+1333: if (!bankName) { setFieldError("demo-bank-name", "Vui lòng nhập tên ngân hàng"); valid = false; }
+1334: if (!accountHolder) { setFieldError("demo-bank-holder", "Vui lòng nhập chủ tài khoản"); valid = false; }
+1335: if (!/^\d{6,20}$/.test(accountNumber)) { setFieldError("demo-bank-number", "Số tài khoản cần từ 6 đến 20 chữ số"); valid = false; }
+1352: showCheckoutToast("Đã liên kết ngân hàng demo", "success");
+1373: if (checked) showCheckoutToast("Đã áp dụng điểm thưởng", "success");
+1390: if (!address.fullName || !address.fullName.trim()) errors.push("Vui lòng nhập tên người nhận.");
+1391: if (!/^(0|\+84)(\d{9,10})$/.test(compactPhone)) errors.push("Số điện thoại nhận hàng không hợp lệ.");
+1392: if (address.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address.email.trim())) errors.push("Email người nhận không đúng định dạng.");
+1393: if (!address.address || !address.address.trim()) errors.push("Vui lòng nhập địa chỉ chi tiết.");
+1394: if (!(address.wardName || address.ward) || !(address.provinceName || address.province)) errors.push("Vui lòng bổ sung phường/xã và tỉnh/thành.");
+1395: if (!checkoutState.shipping.method || !SHIPPING_METHODS[checkoutState.shipping.method]) errors.push("Vui lòng chọn phương thức giao hàng.");
+1396: if (checkoutState.shipping.method === "scheduled" && !checkoutState.shipping.timeSlot) errors.push("Vui lòng chọn khung giờ giao hàng.");
+1397: if (!checkoutState.payment || !PAYMENT_METHODS[checkoutState.payment]) errors.push("Vui lòng chọn phương thức thanh toán.");
+1399: if (!checkoutState.linkedBanks.length) errors.push("Vui lòng liên kết tài khoản ngân hàng để chuyển khoản.");
+1400: if (!getSelectedLinkedBank()) errors.push("Vui lòng chọn ngân hàng chuyển khoản.");
+1405: if (!invoice.company.trim()) errors.push("Vui lòng nhập tên công ty để xuất hóa đơn.");
+1406: if (!invoice.taxCode.trim()) errors.push("Vui lòng nhập mã số thuế.");
+1407: if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(invoice.email.trim())) errors.push("Email nhận hóa đơn không hợp lệ.");
+1427: <h3>Xác nhận đặt hàng</h3>
+1429: <p><span>Người nhận</span><strong>${escapeHTML(selectedAddress.fullName)}</strong></p>
+1430: <p><span>Số điện thoại</span><strong>${formatPhone(selectedAddress.phone)}</strong></p>
+1431: <p><span>Địa chỉ giao hàng</span><strong>${escapeHTML(getAddressLine())}</strong></p>
+1432: <p><span>Giao hàng</span><strong>${shipping.title}</strong></p>
+1433: <p><span>Thanh toán</span><strong>${payment.title}</strong></p>
+1434: ${selectedBank ? `<p><span>Ngân hàng</span><strong>${escapeHTML(selectedBank.bankName)} - ${escapeHTML(maskBankAccount(selectedBank.accountNumber))}</strong></p>` : ""}
+1435: <p class="is-total"><span>Tổng thanh toán</span><strong>${formatCurrency(totals.total)}</strong></p>
+1437: <div class="modern-modal-actions"><button class="modern-secondary-btn" onclick="closeCheckoutModal()">Hủy</button><button class="modern-primary-btn" onclick="confirmPlaceOrder()">Xác nhận đặt hàng</button></div>
+1454: orderNoteParts.push(`Giao hàng: ${selectedAddress.note}`);
+1457: orderNoteParts.push(`Thiệp: ${checkoutState.extras.message}`);
+1487: showCheckoutToast("Đặt hàng thành công", "success");
+1502: <h1>Đặt hàng thành công</h1>
+1503: <p>Cảm ơn bạn đã lựa chọn Tứ Quý Garden. Đơn hàng đang chờ xác nhận.</p>
+1505: <div><span>Mã đơn</span><strong>#${placedOrderId || "TQG1024"}</strong></div>
+1506: <div><span>Trạng thái</span><strong>Chờ xác nhận</strong></div>
+1507: <div><span>Tổng thanh toán</span><strong>${formatCurrency(total)}</strong></div>
+1508: <div><span>Dự kiến giao hàng</span><strong>${placedDeliveryText}</strong></div>
+1510: <div class="modern-success-actions"><a href="profile.html" class="modern-secondary-btn">Xem đơn hàng</a><a href="products.html" class="modern-primary-btn">Tiếp tục mua sắm</a></div>

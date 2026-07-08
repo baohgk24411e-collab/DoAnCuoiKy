@@ -39,13 +39,50 @@ window.AuthService = {
       password,
       healthGoal,
       isAdmin: false,
-      wishlist: []
+      wishlist: [],
+      isNewUser: true,
+      surveyCompleted: false
     };
 
     users.push(newUser);
     this.saveUsers(users);
 
     return { success: true, message: "Đăng ký tài khoản thành công! Vui lòng đăng nhập." };
+  },
+
+  loginOrRegisterGoogle(name, email) {
+    const users = this.getUsers();
+    let user = users.find(u => u.email === email);
+    let isNew = false;
+    
+    if (!user) {
+      user = {
+        id: "u_" + Date.now(),
+        name,
+        email,
+        phone: "Đăng nhập Google",
+        password: "",
+        healthGoal: "Eat Clean",
+        isAdmin: false,
+        wishlist: [],
+        isNewUser: true,
+        surveyCompleted: false
+      };
+      users.push(user);
+      this.saveUsers(users);
+      isNew = true;
+    }
+    
+    // Set active session
+    localStorage.setItem("tqg_current_user", JSON.stringify(user));
+    
+    if (user.isAdmin) {
+      localStorage.removeItem("tqg_cart");
+    }
+    
+    // Trigger login event
+    window.dispatchEvent(new Event("authChanged"));
+    return { success: true, message: `Chào mừng ${user.name} đăng nhập bằng Google thành công!`, user, isNew };
   },
 
   login(email, password, rememberMe = false) {
@@ -59,6 +96,10 @@ window.AuthService = {
     // Set active session
     localStorage.setItem("tqg_current_user", JSON.stringify(user));
     
+    if (user.isAdmin) {
+      localStorage.removeItem("tqg_cart");
+    }
+
     // Trigger login event
     window.dispatchEvent(new Event("authChanged"));
     return { success: true, message: `Chào mừng ${user.name} quay trở lại!`, user };
@@ -139,5 +180,28 @@ window.AuthService = {
 
   isInWishlist(productId) {
     return this.getWishlist().includes(productId);
+  },
+
+  changePassword(oldPassword, newPassword) {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) return { success: false, message: "Chưa đăng nhập." };
+
+    const users = this.getUsers();
+    const userIdx = users.findIndex(u => u.id === currentUser.id);
+
+    if (userIdx === -1) return { success: false, message: "Không tìm thấy người dùng." };
+
+    if (users[userIdx].password !== oldPassword) {
+      return { success: false, message: "Mật khẩu cũ không chính xác." };
+    }
+
+    users[userIdx].password = newPassword;
+    this.saveUsers(users);
+
+    // Update session
+    localStorage.setItem("tqg_current_user", JSON.stringify(users[userIdx]));
+
+    return { success: true, message: "Đổi mật khẩu thành công!" };
   }
 };
+

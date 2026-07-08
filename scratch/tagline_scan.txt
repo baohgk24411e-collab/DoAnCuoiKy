@@ -1,0 +1,4 @@
+.\index.html:175: <span class="lang-vi">Trái tươi bốn mùa,<br>hạt lành mỗi ngày</span>
+.\login.html:751: <span class="lang-vi">Trái tươi bốn mùa<br>hạt lành mỗi ngày</span>
+.\components\Footer.js:12: '<p class="footer-tagline">“Trái tươi bốn mùa, hạt lành mỗi ngày”</p>' +
+.\js\common.js:128: '<p class="footer-tagline">“Trái tươi bốn mùa, hạt lành mỗi ngày”</p>' +

@@ -1,6 +1,10 @@
 // services/cartService.js
 window.CartService = {
   getCart() {
+    const currentUser = window.AuthService ? window.AuthService.getCurrentUser() : null;
+    if (currentUser && currentUser.isAdmin) {
+      return [];
+    }
     const cart = localStorage.getItem("tqg_cart");
     return cart ? JSON.parse(cart) : [];
   },
@@ -12,58 +16,83 @@ window.CartService = {
   },
 
   addToCart(productId, quantity = 1) {
+    const isEn = (localStorage.getItem("tqg_lang") || "en") === "en";
+    const currentUser = window.AuthService ? window.AuthService.getCurrentUser() : null;
+    if (currentUser && currentUser.isAdmin) {
+      return { success: false, message: isEn ? "Administrator accounts cannot buy products." : "Tài khoản quản trị viên không thể mua hàng." };
+    }
+
     const cart = this.getCart();
     const existingItem = cart.find(item => item.productId === productId);
     const product = window.MOCK_PRODUCTS.find(p => p.id === productId);
 
-    if (!product) return { success: false, message: "Không tìm thấy sản phẩm." };
+    if (!product) return { success: false, message: isEn ? "Product not found." : "Không tìm thấy sản phẩm." };
 
     if (existingItem) {
       if (existingItem.quantity + quantity > product.stock) {
-        return { success: false, message: `Số lượng vượt quá tồn kho (Còn lại: ${product.stock}).` };
+        return { success: false, message: isEn ? `Quantity exceeds stock (Remaining: ${product.stock}).` : `Số lượng vượt quá tồn kho (Còn lại: ${product.stock}).` };
       }
       existingItem.quantity += quantity;
     } else {
       if (quantity > product.stock) {
-        return { success: false, message: `Số lượng vượt quá tồn kho (Còn lại: ${product.stock}).` };
+        return { success: false, message: isEn ? `Quantity exceeds stock (Remaining: ${product.stock}).` : `Số lượng vượt quá tồn kho (Còn lại: ${product.stock}).` };
       }
       cart.push({ productId, quantity });
     }
 
     this.saveCart(cart);
-    return { success: true, message: `Đã thêm ${quantity} x ${product.name} vào giỏ hàng.` };
+    return { success: true, message: isEn ? `Added ${quantity} x ${product.nameEn || product.name} to cart.` : `Đã thêm ${quantity} x ${product.name} vào giỏ hàng.` };
   },
 
   updateQuantity(productId, quantity) {
+    const isEn = (localStorage.getItem("tqg_lang") || "en") === "en";
     let cart = this.getCart();
     const existingItem = cart.find(item => item.productId === productId);
     const product = window.MOCK_PRODUCTS.find(p => p.id === productId);
 
-    if (!existingItem || !product) return { success: false, message: "Sản phẩm không có trong giỏ hàng." };
+    if (!existingItem || !product) return { success: false, message: isEn ? "Product not found in cart." : "Sản phẩm không có trong giỏ hàng." };
 
     if (quantity <= 0) {
       return this.removeFromCart(productId);
     }
 
     if (quantity > product.stock) {
-      return { success: false, message: `Số lượng vượt quá tồn kho (Còn lại: ${product.stock}).` };
+      return { success: false, message: isEn ? `Quantity exceeds stock (Remaining: ${product.stock}).` : `Số lượng vượt quá tồn kho (Còn lại: ${product.stock}).` };
     }
 
     existingItem.quantity = quantity;
     this.saveCart(cart);
-    return { success: true, message: "Đã cập nhật số lượng." };
+    return { success: true, message: isEn ? "Quantity updated successfully." : "Đã cập nhật số lượng." };
   },
 
   removeFromCart(productId) {
+    const isEn = (localStorage.getItem("tqg_lang") || "en") === "en";
     let cart = this.getCart();
     const product = window.MOCK_PRODUCTS.find(p => p.id === productId);
     cart = cart.filter(item => item.productId !== productId);
     this.saveCart(cart);
-    return { success: true, message: `Đã xóa ${product ? product.name : "sản phẩm"} khỏi giỏ hàng.` };
+    const prodName = product ? (isEn ? (product.nameEn || product.name) : product.name) : (isEn ? "product" : "sản phẩm");
+    return { success: true, message: isEn ? `Removed ${prodName} from cart.` : `Đã xóa ${prodName} khỏi giỏ hàng.` };
   },
 
   clearCart() {
     this.saveCart([]);
+  },
+
+  restoreCartItem(item, index = 0) {
+    const isEn = (localStorage.getItem("tqg_lang") || "en") === "en";
+    const cart = this.getCart();
+    const existingIndex = cart.findIndex(cartItem => cartItem.productId === item.productId);
+
+    if (existingIndex >= 0) {
+      cart[existingIndex].quantity = item.quantity;
+    } else {
+      const safeIndex = Math.max(0, Math.min(index, cart.length));
+      cart.splice(safeIndex, 0, { productId: item.productId, quantity: item.quantity });
+    }
+
+    this.saveCart(cart);
+    return { success: true, message: isEn ? "Restored product to cart." : "Đã khôi phục sản phẩm vào giỏ hàng." };
   },
 
   getCartCount() {
@@ -76,27 +105,28 @@ window.CartService = {
   },
 
   applyVoucher(code) {
+    const isEn = (localStorage.getItem("tqg_lang") || "en") === "en";
     const vouchers = {
-      "FREESHIP50": { type: "freeship", discountVal: 30000, minOrder: 500000, description: "Miễn phí vận chuyển (tối đa 30K) cho đơn từ 500K" },
-      "TUQUYGARDEN10": { type: "percentage", discountVal: 10, minOrder: 0, description: "Giảm 10% tổng giá trị đơn hàng" },
-      "HEALTYLIFESTYLE": { type: "fixed", discountVal: 50000, minOrder: 300000, description: "Giảm 50K cho đơn từ 300K" }
+      "FREESHIP": { type: "freeship", discountVal: 30000, minOrder: 0, description: "Miễn phí vận chuyển" },
+      "TUQUYGARDEN10": { type: "percentage", discountVal: 10, maxDiscount: 50000, minOrder: 0, description: "Giảm 10% tối đa 50.000đ" },
+      "HEALTHY50": { type: "fixed", discountVal: 50000, minOrder: 500000, description: "Giảm 50.000đ cho đơn từ 500.000đ" }
     };
 
     const formattedCode = code.trim().toUpperCase();
     const voucher = vouchers[formattedCode];
 
     if (!voucher) {
-      return { success: false, message: "Mã giảm giá không hợp lệ." };
+      return { success: false, message: isEn ? "Invalid promo code." : "Mã giảm giá không hợp lệ." };
     }
 
     const subtotal = this.getCartSubtotal();
     if (subtotal < voucher.minOrder) {
-      return { success: false, message: `Yêu cầu đơn hàng tối thiểu từ ${voucher.minOrder.toLocaleString()}đ để sử dụng mã này.` };
+      return { success: false, message: isEn ? `Minimum order of ${voucher.minOrder.toLocaleString()}đ required to use this code.` : `Yêu cầu đơn hàng tối thiểu từ ${voucher.minOrder.toLocaleString()}đ để sử dụng mã này.` };
     }
 
     localStorage.setItem("tqg_active_voucher", JSON.stringify({ code: formattedCode, ...voucher }));
     window.dispatchEvent(new Event("cartUpdated"));
-    return { success: true, message: `Áp dụng mã ${formattedCode} thành công!`, voucher };
+    return { success: true, message: isEn ? `Promo code ${formattedCode} applied successfully!` : `Áp dụng mã ${formattedCode} thành công!`, voucher };
   },
 
   removeVoucher() {
@@ -125,7 +155,8 @@ window.CartService = {
           shipping = shipping - discount;
           // Refund shipping discount in totals structure to show clearly
         } else if (voucher.type === "percentage") {
-          discount = Math.round(subtotal * (voucher.discountVal / 100));
+          const rawDiscount = Math.round(subtotal * (voucher.discountVal / 100));
+          discount = voucher.maxDiscount ? Math.min(rawDiscount, voucher.maxDiscount) : rawDiscount;
         } else if (voucher.type === "fixed") {
           discount = voucher.discountVal;
         }

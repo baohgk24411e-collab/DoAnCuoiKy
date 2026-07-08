@@ -5,7 +5,7 @@ window.OrderService = {
     if (orders) return JSON.parse(orders);
 
     // Initial mock orders to seed dashboard beautifully
-    const mockOrders = [
+      const mockOrders = [
       {
         id: "TQG1256",
         userId: "u_1",
@@ -15,8 +15,8 @@ window.OrderService = {
         address: "15 Tràng Tiền, Hoàn Kiếm, Hà Nội",
         paymentMethod: "COD",
         items: [
-          { productId: 45, name: "Mix Hạt Dinh Dưỡng 5 loại cao cấp", price: 149000, quantity: 2, image: "images/granola/Mix hạt.png" },
-          { productId: 1, name: "Xoài cát Hòa Lộc", price: 95000, quantity: 3, image: "images/fruits/Xoài cát Hòa Lộc.png" }
+          { productId: 45, name: "Mix Hạt Dinh Dưỡng 5 loại cao cấp", price: 149000, quantity: 2, image: "images/Product_Images/03. Hình ảnh/granola/Mix Nuts 5 loại.png" },
+          { productId: 1, name: "Xoài cát Hòa Lộc", price: 95000, quantity: 3, image: "images/Product_Images/03. Hình ảnh/Trái cây/17-Xoài cát Hòa Lộc/17-1.png" }
         ],
         subtotal: 583000,
         shipping: 0,
@@ -34,8 +34,8 @@ window.OrderService = {
         address: "123 Nguyễn Đình Chiểu, Quận 3, TP. Hồ Chí Minh",
         paymentMethod: "E-wallet",
         items: [
-          { productId: 48, name: "Combo Eat Clean Sống Khỏe Mỗi Ngày", price: 269000, quantity: 1, image: "images/combo/Combo.png" },
-          { productId: 14, name: "Sầu riêng Musang King", price: 250000, quantity: 1, image: "images/fruits/Sầu riêng Musang.png" }
+          { productId: 48, name: "Combo Eat Clean Sống Khỏe Mỗi Ngày", price: 269000, quantity: 1, image: "images/Product_Images/03. Hình ảnh/combo/1-Eat Clean Box/ECB-001/ECB-01-1.png" },
+          { productId: 14, name: "Sầu riêng Musang King", price: 250000, quantity: 1, image: "images/Product_Images/03. Hình ảnh/Trái cây/13-Sầu riêng Musang King/13-2.png" }
         ],
         subtotal: 519000,
         shipping: 0,
@@ -53,8 +53,8 @@ window.OrderService = {
         address: "456 Trần Hưng Đạo, Sơn Trà, Đà Nẵng",
         paymentMethod: "Bank transfer",
         items: [
-          { productId: 47, name: "Granola hạt & trái cây tự nhiên", price: 129000, quantity: 2, image: "images/granola/Granola.png" },
-          { productId: 3, name: "Ổi Ruby không hạt", price: 45000, quantity: 4, image: "images/fruits/Ổi Ruby.png" }
+          { productId: 47, name: "Granola hạt & trái cây tự nhiên", price: 129000, quantity: 2, image: "images/Product_Images/03. Hình ảnh/granola/Granola Hạt và Trái cây.png" },
+          { productId: 3, name: "Ổi Ruby không hạt", price: 45000, quantity: 4, image: "images/Product_Images/03. Hình ảnh/Trái cây/2-Ổi Ruby/2-1.png" }
         ],
         subtotal: 438000,
         shipping: 30000,
@@ -72,7 +72,7 @@ window.OrderService = {
         address: "789 Lê Lợi, Ngô Quyền, Hải Phòng",
         paymentMethod: "COD",
         items: [
-          { productId: 50, name: "Combo Quà Tặng Gia Đình Tứ Quý", price: 399000, quantity: 1, image: "images/combo/Combo trái cây.png" }
+          { productId: 50, name: "Combo Quà Tặng Gia Đình Tứ Quý", price: 399000, quantity: 1, image: "images/Product_Images/03. Hình ảnh/combo/Healthy Gift Box.png" }
         ],
         subtotal: 399000,
         shipping: 30000,
@@ -90,7 +90,7 @@ window.OrderService = {
         address: "12 Lý Tự Trọng, Cần Thơ",
         paymentMethod: "COD",
         items: [
-          { productId: 10, name: "Bưởi da xanh Bến Tre", price: 85000, quantity: 1, image: "images/fruits/Bưởi da xanh.png" }
+          { productId: 10, name: "Bưởi da xanh Bến Tre", price: 85000, quantity: 1, image: "images/Product_Images/03. Hình ảnh/Trái cây/9-Bưởi da xanh/9-2.png" }
         ],
         subtotal: 85000,
         shipping: 30000,
@@ -118,10 +118,24 @@ window.OrderService = {
 
   createOrder(customerInfo, shippingAddress, paymentMethod, totals) {
     const orders = this.getOrders();
-    const cart = window.CartService.getCart();
+    const fullCart = window.CartService.getCart();
     
-    if (cart.length === 0) {
+    if (fullCart.length === 0) {
       return { success: false, message: "Giỏ hàng của bạn đang trống." };
+    }
+
+    // Filter to selected items only (if selection exists)
+    const selectedStr = localStorage.getItem("tuquy_checkout_selected_ids");
+    let selectedIds = null;
+    if (selectedStr) {
+      try {
+        selectedIds = JSON.parse(selectedStr);
+      } catch (e) {}
+    }
+
+    const cart = fullCart.filter(item => !selectedIds || selectedIds.includes(item.productId));
+    if (cart.length === 0) {
+      return { success: false, message: "Không có sản phẩm nào được chọn để thanh toán." };
     }
 
     const items = cart.map(item => {
@@ -142,8 +156,7 @@ window.OrderService = {
         product.stock = Math.max(0, product.stock - item.quantity);
       }
     });
-    // Save updated stock to local storage mockup (we can overwrite in memory or localStorage)
-    // To make product CRUD persistent, let's store products in localStorage too if modified
+    // Save updated stock to local storage mockup
     localStorage.setItem("tqg_products", JSON.stringify(window.MOCK_PRODUCTS));
 
     const currentUser = window.AuthService.getCurrentUser();
@@ -170,8 +183,13 @@ window.OrderService = {
     orders.unshift(newOrder); // Add to beginning
     this.saveOrders(orders);
     
-    // Clear cart & vouchers
-    window.CartService.clearCart();
+    // Remove only checked out items from cart instead of clearing everything
+    cart.forEach(item => {
+      window.CartService.removeFromCart(item.productId);
+    });
+    
+    // Clear selection storage
+    localStorage.removeItem("tuquy_checkout_selected_ids");
     window.CartService.removeVoucher();
 
     return { success: true, message: "Đặt hàng thành công!", orderId };

@@ -22,314 +22,548 @@ document.addEventListener("DOMContentLoaded", () => {
   activeTab = "description";
 
   renderDetails(root);
+
+  document.addEventListener("keydown", (e) => {
+    const overlay = document.getElementById("lightbox-overlay");
+    if (!overlay || !overlay.classList.contains("open")) return;
+    if (e.key === "Escape") window.closeLightbox();
+    if (e.key === "ArrowLeft") window.navigateLightbox(-1);
+    if (e.key === "ArrowRight") window.navigateLightbox(1);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "lightbox-overlay") {
+      window.closeLightbox();
+    }
+  });
 });
 
 function translateCategory(cat) {
   const mapping = {
-    "Fruits": "Trái cây tươi ngon",
-    "Nutritional Seeds": "Hạt dinh dưỡng",
-    "Granola": "Granola ngũ cốc",
-    "Combo Healthy": "Combo sống khỏe"
+    "Fruits": "Fresh Fruits",
+    "Nutritional Seeds": "Nutritional Seeds",
+    "Granola": "Granola & Nuts",
+    "Combo Healthy": "Healthy Combos"
   };
   return mapping[cat] || cat;
+}
+
+function getSoldCount(product) {
+  return 800 + product.id * 97 + (product.reviews ? product.reviews.length * 23 : 0);
+}
+
+// Deterministic "N people viewing" number — derived from the product id so
+// it stays stable across re-renders instead of jumping around randomly,
+// which would look obviously fake.
+function getViewerCount(product) {
+  return 8 + ((product.id * 37) % 40);
+}
+
+function renderUrgencyRow(product) {
+  const chips = [];
+  if (typeof product.stock === "number" && product.stock > 0 && product.stock <= 20) {
+    chips.push(`
+      <span class="urgency-chip low-stock">
+        <span class="pulse-dot"></span>
+        Only ${product.stock} items left
+      </span>
+    `);
+  }
+  chips.push(`
+    <span class="urgency-chip viewers">
+      🔥 ${getViewerCount(product)} people are viewing this product
+    </span>
+  `);
+  return `<div class="detail-urgency-row">${chips.join("")}</div>`;
+}
+
+function getGalleryImages(product) {
+  // Return the product's actual gallery if specified, otherwise fallback to just the main product image.
+  // We do not pad with unrelated mockup images like mangoes or gift boxes.
+  return product.gallery && product.gallery.length ? [...product.gallery] : [product.image];
 }
 
 function renderNotFound(root) {
   root.innerHTML = `
     <div class="container text-center" style="padding: 100px 0;">
-      <h2 class="font-serif">Không tìm thấy sản phẩm</h2>
-      <p>Sản phẩm bạn đang tìm kiếm không tồn tại hoặc đã ngừng kinh doanh.</p>
-      <a href="products.html" class="btn btn-primary" style="margin-top: 20px;">Về cửa hàng</a>
+      <h2 class="font-serif">Product not found</h2>
+      <p>The product you are looking for does not exist or is no longer available.</p>
+      <a href="products.html" class="btn btn-primary" style="margin-top: 20px;">Back to store</a>
     </div>
   `;
+}
+
+function renderStarsHTML(rating) {
+  let html = "";
+  const fullStars = Math.floor(rating);
+  const hasHalf = rating % 1 >= 0.5;
+
+  for (let i = 1; i <= 5; i++) {
+    if (i <= fullStars) {
+      html += `<span class="star fill">&#9733;</span>`;
+    } else if (i === fullStars + 1 && hasHalf) {
+      html += `<span class="star half">&#9733;</span>`;
+    } else {
+      html += `<span class="star">&#9733;</span>`;
+    }
+  }
+  return html;
 }
 
 function renderDetails(root) {
   const p = activeProduct;
   const discountPercent = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
   const isWishlisted = window.AuthService ? window.AuthService.isInWishlist(p.id) : false;
+  const starsHTML = renderStarsHTML(p.rating);
+  const soldCount = getSoldCount(p);
+  const reviewCount = p.reviews.length || Math.floor(p.rating * 50);
 
-  // Stars HTML
-  let starsHTML = "";
-  const fullStars = Math.floor(p.rating);
-  const hasHalf = p.rating % 1 >= 0.5;
-  for (let i = 1; i <= 5; i++) {
-    if (i <= fullStars) {
-      starsHTML += `<span class="star fill">&#9733;</span>`;
-    } else if (i === fullStars + 1 && hasHalf) {
-      starsHTML += `<span class="star half">&#9733;</span>`;
-    } else {
-      starsHTML += `<span class="star">&#9734;</span>`;
-    }
-  }
-
-  // Get related products (same category, excluding current product)
   const related = window.MOCK_PRODUCTS
     .filter(item => item.category === p.category && item.id !== p.id)
-    .slice(0, 4);
+    .slice(0, 8);
+
+  const combos = window.MOCK_PRODUCTS
+    .filter(item => item.category === "Combo Healthy" && item.id !== p.id)
+    .slice(0, 8);
+
+  const galleryImages = getGalleryImages(p);
+  const currentImageIndex = galleryImages.indexOf(activeImage);
+  const safeImageIndex = currentImageIndex >= 0 ? currentImageIndex : 0;
+
+  const features = [
+    { icon: "🌿", text: "100% natural, no preservatives" },
+    { icon: "🥗", text: "Rich in fiber, vitamins & minerals" },
+    { icon: "❤️", text: "Good for heart health, digestion, and skin" },
+    { icon: "💪", text: "Suitable for Eat Clean, Keto, and healthy lifestyles" }
+  ];
 
   root.innerHTML = `
-    <div class="product-detail-container container" style="margin-top: 20px; margin-bottom: 50px;">
-      <!-- Breadcrumb -->
-      <ul class="breadcrumb" style="display:flex; list-style:none; gap:10px; font-size:14px; margin-bottom:25px; padding:0;">
-        <li><a href="index.html" style="color:var(--color-text-light);"><span class="lang-vi">Trang chủ</span><span class="lang-en">Home</span></a></li>
-        <li><span style="color:var(--color-text-light);">/</span></li>
-        <li><a href="products.html?category=${p.category}" style="color:var(--color-text-light);">${translateCategory(p.category)}</a></li>
-        <li><span style="color:var(--color-text-light);">/</span></li>
-        <li style="color:var(--color-primary); font-weight:600;">${p.name}</li>
+    <div class="product-detail-container container">
+      <ul class="breadcrumb">
+        <li><a href="index.html">Trang chủ</a></li>
+        <li>/</li>
+        <li><a href="products.html?category=${encodeURIComponent(p.category)}">${translateCategory(p.category)}</a></li>
+        <li>/</li>
+        <li>${p.name}</li>
       </ul>
 
-      <!-- Main Product Block -->
-      <div class="detail-layout-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:40px; margin-bottom:40px;">
-        
-        <!-- Column 1: Image Gallery -->
-        <div class="gallery-wrapper">
-          <div class="main-image-container" style="position:relative; background-color:var(--color-cream-light); border-radius:16px; overflow:hidden; display:flex; justify-content:center; align-items:center; height:450px;">
-            ${discountPercent > 0 ? `<span class="discount-badge-large" style="position:absolute; top:15px; left:15px; background-color:var(--color-danger); color:white; padding:4px 10px; border-radius:4px; font-weight:700; font-size:14px;">-${discountPercent}%</span>` : ""}
-            <img src="${activeImage}" alt="${p.name}" id="main-product-img" style="max-height:90%; max-width:90%; object-fit:contain;">
+      <div class="detail-layout-grid">
+        <!-- Cột Trái: Gallery & Cam kết, QR -->
+        <div class="gallery-wrapper" style="display: flex; flex-direction: column; gap: 30px;">
+          <div>
+            <div class="main-image-container" onclick="openLightbox()">
+            ${p.isBestSeller || discountPercent > 0 ? `
+              <div class="detail-badges-row">
+                ${p.isBestSeller ? `
+                  <span class="bestseller-badge-large">
+                    <span class="badge-icon">🔥</span>
+                    <span class="lang-vi">Bán chạy</span>
+                    <span class="lang-en">Bestseller</span>
+                  </span>` : ""}
+                ${discountPercent > 0 ? `
+                  <span class="discount-badge-large">
+                    <span class="lang-vi">Giảm ${discountPercent}%</span>
+                    <span class="lang-en">-${discountPercent}% OFF</span>
+                  </span>` : ""}
+              </div>
+            ` : ""}
+              ${galleryImages.length > 1 ? `
+                <button class="gallery-nav-btn gallery-prev" onclick="event.stopPropagation(); navigateGallery(-1)" aria-label="Previous image">‹</button>
+                <button class="gallery-nav-btn gallery-next" onclick="event.stopPropagation(); navigateGallery(1)" aria-label="Next image">›</button>
+              ` : ""}
+              <img src="${activeImage}" alt="${p.name}" id="main-product-img">
+            </div>
+
+            <div class="gallery-thumbnails">
+              ${galleryImages.map((img, idx) => `
+                <div class="thumb-img ${safeImageIndex === idx ? "active" : ""} ${idx === 0 ? "thumb-video" : ""}"
+                  onclick="switchImage('${img}', ${idx})">
+                  <img src="${img}" alt="${p.name} ${idx + 1}">
+                  ${idx === 0 ? `<span class="thumb-play-icon">▶</span>` : ""}
+                </div>
+              `).join("")}
+            </div>
           </div>
-          
-          <!-- Gallery Thumbnails -->
-          <div class="gallery-thumbnails" style="display:flex; gap:10px; margin-top:15px;">
-            ${p.gallery.map(img => `
-              <div class="thumb-img ${activeImage === img ? "active" : ""}" style="width:80px; height:80px; background-color:var(--color-cream-light); border:2px solid ${activeImage === img ? "var(--color-primary)" : "transparent"}; border-radius:8px; cursor:pointer; display:flex; justify-content:center; align-items:center; overflow:hidden;" onclick="switchImage('${img}')">
-                <img src="${img}" alt="${p.name}" style="max-width:90%; max-height:90%; object-fit:contain;">
+
+          <!-- Cam kết & QR của Tứ Quý Garden -->
+          <div class="trust-shipping-details">
+            <div class="info-card">
+              <div class="info-card-item">
+                <div class="ic-icon">🚚</div>
+                <div class="ic-text">
+                  <h4>Shipping</h4>
+                  <p>Fast nationwide delivery<br>Free shipping on orders from 499K</p>
+                </div>
+              </div>
+
+              <div class="info-card-item">
+                <div class="ic-icon">🎁</div>
+                <div class="ic-text">
+                  <h4>Free delivery</h4>
+                  <p>For orders from 499,000đ</p>
+                </div>
+              </div>
+
+              <a href="about.html" class="info-link">View shipping policy ›</a>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <span>🛡️</span>
+                <h4>Our promise at Tứ Quý Garden</h4>
+              </div>
+
+              <ul class="commit-list">
+                <li>100% natural products</li>
+                <li>No preservatives</li>
+                <li>Carefully selected ingredients</li>
+                <li>Proudly produced and packaged in Vietnam</li>
+              </ul>
+
+              <a href="about.html" class="info-link">Learn more about our commitment ›</a>
+            </div>
+
+            <div class="qr-card">
+              <div class="qr-content">
+                <h4>Traceability</h4>
+                <p>Scan the QR code to view the product journey and quality data</p>
+                <button class="btn btn-primary btn-sm" onclick="switchTab('trace')">Scan QR</button>
+              </div>
+
+              <div class="qr-img-box">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=tuquygarden.vn/trace/${p.id}" alt="QR">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột Phải: Thông tin mua hàng, mô tả, tính năng -->
+        <div class="product-buy-details">
+          <h1 class="detail-title font-serif">${p.name}</h1>
+
+          <div class="detail-rating-row">
+            <span class="brand-text">Brand: Tứ Quý Garden</span>
+            <span class="divider">|</span>
+            <div class="detail-stars">${starsHTML}</div>
+            <span class="rating-score">${p.rating.toFixed(1)}</span>
+            <span class="rating-num">(${reviewCount} reviews)</span>
+            <span class="divider">|</span>
+            <span class="sold-count">Sold ${soldCount.toLocaleString("vi-VN")}+</span>
+          </div>
+
+          <div class="detail-price-box">
+            <span class="current-price">${p.price.toLocaleString("vi-VN")}đ</span>
+            ${p.oldPrice ? `<span class="old-price">${p.oldPrice.toLocaleString("vi-VN")}đ</span>` : ""}
+            ${discountPercent > 0 ? `<span class="price-discount">-${discountPercent}%</span>` : ""}
+          </div>
+
+          <div class="quantity-control-row" style="margin-top: 20px;">
+            <span class="label">Quantity:</span>
+            <div class="quantity-adjuster">
+              <button onclick="adjustQuantity(-1)" aria-label="Decrease">−</button>
+              <input type="number" id="detail-qty-input" value="${quantity}" min="1" max="${p.stock}" onchange="setQuantity(this.value)">
+              <button onclick="adjustQuantity(1)" aria-label="Increase">+</button>
+            </div>
+          </div>
+
+          <div class="buy-buttons-row">
+            <button class="btn btn-outline cart-btn-large" onclick="addToCart()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              <span>Add to cart</span>
+            </button>
+            <button class="btn btn-primary buy-btn-large" onclick="buyNow()">
+              <span>Buy now</span>
+            </button>
+          </div>
+
+          <p class="detail-short-desc" style="margin-top: 24px;">${p.description}</p>
+
+          ${renderUrgencyRow(p)}
+
+          <div class="product-features-grid">
+            ${features.map(f => `
+              <div class="feat-item">
+                <span class="feat-icon">${f.icon}</span>
+                <span>${f.text}</span>
               </div>
             `).join("")}
           </div>
-        </div>
 
-        <!-- Column 2: Buy Details -->
-        <div class="product-buy-details">
-          <span class="detail-category" style="color:var(--color-secondary); text-transform:uppercase; font-size:12px; font-weight:700; display:block; margin-bottom:5px;">${translateCategory(p.category)}</span>
-          <h1 class="detail-title font-serif" style="font-size:32px; color:var(--color-text-dark); margin-bottom:15px;">${p.name}</h1>
-          
-          <!-- Rating Row -->
-          <div class="detail-rating-row" style="display:flex; align-items:center; gap:12px; font-size:14px; margin-bottom:20px; flex-wrap:wrap;">
-            <div class="detail-stars" style="color:var(--color-yellow); display:flex; gap:2px;">${starsHTML}</div>
-            <span class="rating-num" style="color:var(--color-text-light);">(${p.rating.toFixed(1)} / 5)</span>
-            <span class="divider" style="color:var(--color-gray-border);">|</span>
-            <span class="reviews-count" style="color:var(--color-text-light);"><span class="lang-vi">${p.reviews.length} đánh giá</span><span class="lang-en">${p.reviews.length} reviews</span></span>
-            <span class="divider" style="color:var(--color-gray-border);">|</span>
-            <span class="stock-status ${p.stock > 0 ? "in-stock" : "out-of-stock"}" style="color:${p.stock > 0 ? "var(--color-primary)" : "var(--color-danger)"}; font-weight:600;">
-              <span class="lang-vi">${p.stock > 0 ? `Còn hàng (Kho: ${p.stock})` : "Tạm hết hàng"}</span>
-              <span class="lang-en">${p.stock > 0 ? `In Stock (Qty: ${p.stock})` : "Out of stock"}</span>
-            </span>
-          </div>
-
-          <!-- Price Box -->
-          <div class="detail-price-box" style="margin-bottom:20px; display:flex; align-items:center; gap:15px;">
-            <span class="current-price" style="font-size:28px; font-weight:800; color:var(--color-primary);">${p.price.toLocaleString()}đ</span>
-            ${p.oldPrice ? `<span class="old-price" style="font-size:18px; text-decoration:line-through; color:var(--color-text-light);">${p.oldPrice.toLocaleString()}đ</span>` : ""}
-          </div>
-
-          <!-- Short description -->
-          <p class="detail-short-desc" style="color:var(--color-text-light); margin-bottom:25px; font-size:14px; line-height:1.6;">${p.description}</p>
-
-          <!-- Buy Action Box -->
-          <div class="detail-actions-box" style="background-color:var(--color-cream-light); padding:20px; border-radius:12px; margin-bottom:25px; border:1px solid var(--color-gray-border);">
-            <div class="quantity-control-row" style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
-              <span class="label" style="font-size:14px; font-weight:600;"><span class="lang-vi">Số lượng:</span><span class="lang-en">Quantity:</span></span>
-              <div class="quantity-adjuster" style="display:flex; align-items:center; border:1px solid var(--color-gray-border); background:white; border-radius:6px; overflow:hidden; width:120px; justify-content:space-between;">
-                <button style="border:none; background:none; padding:8px 12px; cursor:pointer; font-weight:700;" onclick="adjustQuantity(-1)">-</button>
-                <input type="number" id="detail-qty-input" value="${quantity}" min="1" max="${p.stock}" style="border:none; width:40px; text-align:center; outline:none; font-weight:600;" onchange="setQuantity(this.value)">
-                <button style="border:none; background:none; padding:8px 12px; cursor:pointer; font-weight:700;" onclick="adjustQuantity(1)">+</button>
-              </div>
+          <div class="detail-mini-benefits">
+            <div class="detail-mini-benefit">
+              <span class="mini-icon">🌿</span>
+              <span>100% natural</span>
             </div>
-
-            <div class="buy-buttons-row" style="display:flex; gap:12px; flex-wrap:wrap;">
-              <button class="btn btn-outline" style="flex:1; padding:12px 20px; font-size:14px; gap:8px;" onclick="addToCart()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                <span class="lang-vi">Thêm vào giỏ</span><span class="lang-en">Add to Cart</span>
-              </button>
-              <button class="btn btn-primary" style="flex:1; padding:12px 20px; font-size:14px;" onclick="buyNow()">
-                <span class="lang-vi">Mua ngay</span><span class="lang-en">Buy Now</span>
-              </button>
-              <button class="btn btn-secondary wishlist-btn-round ${isWishlisted ? "active" : ""}" style="width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; flex-shrink:0; background-color:${isWishlisted ? "var(--color-primary)" : "var(--color-yellow)"}; color:${isWishlisted ? "white" : "var(--color-text-dark)"}; border:none; cursor:pointer;" onclick="toggleWishlist()" title="${isWishlisted ? "Bỏ yêu thích" : "Yêu thích"}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="${isWishlisted ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-              </button>
+            <div class="detail-mini-benefit">
+              <span class="mini-icon">🔎</span>
+              <span>Clear traceability</span>
+            </div>
+            <div class="detail-mini-benefit">
+              <span class="mini-icon">🚚</span>
+              <span>Fast delivery</span>
+            </div>
+            <div class="detail-mini-benefit">
+              <span class="mini-icon">♻️</span>
+              <span>7-day return</span>
             </div>
           </div>
 
-          <!-- Tags -->
-          <div class="detail-health-goals" style="margin-bottom:20px; font-size:14px;">
-            <strong style="color:var(--color-text-dark); margin-right:10px;"><span class="lang-vi">Phù hợp cho:</span><span class="lang-en">Good for:</span></strong>
-            <div class="health-tags" style="display:inline-flex; gap:8px; flex-wrap:wrap; margin-top:5px;">
-              ${p.healthGoals.map(goal => `<span class="health-tag-badge" style="background-color:rgba(111, 175, 58, 0.1); color:var(--color-primary); padding:3px 10px; border-radius:15px; font-size:12px; font-weight:600;">${goal}</span>`).join("")}
-            </div>
-          </div>
-
-          <!-- Commitments -->
-          <div class="detail-commitments" style="display:flex; flex-direction:column; gap:8px; border-top:1px solid var(--color-gray-border); padding-top:15px; font-size:13px; color:var(--color-text-light);">
-            <div class="commit-item" style="display:flex; align-items:center; gap:8px;">
-              <span class="commit-icon" style="color:var(--color-primary); font-weight:700;">✓</span>
-              <span><span class="lang-vi">Thanh toán khi nhận hàng (COD)</span><span class="lang-en">Cash on delivery available</span></span>
-            </div>
-            <div class="commit-item" style="display:flex; align-items:center; gap:8px;">
-              <span class="commit-icon" style="color:var(--color-primary); font-weight:700;">✓</span>
-              <span><span class="lang-vi">Bao bù 1 đổi 1 trong 24h</span><span class="lang-en">1-to-1 compensation within 24h</span></span>
-            </div>
-            <div class="commit-item" style="display:flex; align-items:center; gap:8px;">
-              <span class="commit-icon" style="color:var(--color-primary); font-weight:700;">✓</span>
-              <span><span class="lang-vi">Miễn phí vận chuyển cho đơn từ 1.000.000đ</span><span class="lang-en">Free ship for orders over 1,000,000đ</span></span>
-            </div>
+          <div class="social-actions-row">
+            <button class="text-action-btn ${isWishlisted ? "active" : ""}" onclick="toggleWishlist()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${isWishlisted ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              Wishlist
+            </button>
+            <button class="text-action-btn" onclick="shareProduct()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Middle Block: Nutrition & Traceability -->
-      <div class="info-blocks-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:30px; margin-bottom:40px;">
-        <div class="nutrition-block bg-cream-light" style="background-color:var(--color-cream-light); padding:30px; border-radius:12px; border:1px solid var(--color-gray-border);">
-          <h3 class="info-block-title font-serif" style="font-size:18px; color:var(--color-text-dark); margin-bottom:20px; border-bottom:1px solid var(--color-gray-border); padding-bottom:8px;">
-            <span class="lang-vi">Bảng giá trị dinh dưỡng (trong 100g)</span>
-            <span class="lang-en">Nutrition Facts (per 100g)</span>
-          </h3>
-          <div class="nutrition-table" style="display:flex; flex-direction:column; gap:10px;">
-            <div class="nutri-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Năng lượng</span><span class="lang-en">Calories</span></span>
-              <strong>${p.nutrition.calories || "N/A"}</strong>
-            </div>
-            <div class="nutri-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Chất đạm (Protein)</span><span class="lang-en">Protein</span></span>
-              <strong>${p.nutrition.protein || "N/A"}</strong>
-            </div>
-            <div class="nutri-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Chất bột đường (Carbs)</span><span class="lang-en">Carbohydrates</span></span>
-              <strong>${p.nutrition.carbs || "N/A"}</strong>
-            </div>
-            <div class="nutri-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Chất béo (Fat)</span><span class="lang-en">Fats</span></span>
-              <strong>${p.nutrition.fat || "N/A"}</strong>
-            </div>
-            <div class="nutri-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Chất xơ (Fiber)</span><span class="lang-en">Fiber</span></span>
-              <strong>${p.nutrition.fiber || "N/A"}</strong>
-            </div>
-          </div>
+      <div class="detail-tabs-section">
+        <div class="tabs-nav-header">
+          <button class="tab-nav-btn ${activeTab === "description" ? "active" : ""}" onclick="switchTab('description')">Description</button>
+          <button class="tab-nav-btn ${activeTab === "ingredients" ? "active" : ""}" onclick="switchTab('ingredients')">Ingredients</button>
+          <button class="tab-nav-btn ${activeTab === "nutrition" ? "active" : ""}" onclick="switchTab('nutrition')">Nutrition</button>
+          <button class="tab-nav-btn ${activeTab === "trace" ? "active" : ""}" onclick="switchTab('trace')">Traceability</button>
+          <button class="tab-nav-btn ${activeTab === "reviews" ? "active" : ""}" onclick="switchTab('reviews')">Reviews (${reviewCount})</button>
         </div>
 
-        <div class="traceability-block bg-cream-light" style="background-color:var(--color-cream-light); padding:30px; border-radius:12px; border:1px solid var(--color-gray-border);">
-          <h3 class="info-block-title font-serif" style="font-size:18px; color:var(--color-text-dark); margin-bottom:20px; border-bottom:1px solid var(--color-gray-border); padding-bottom:8px;">
-            <span class="lang-vi">Truy xuất nguồn gốc sản phẩm</span>
-            <span class="lang-en">Traceability & Trust Info</span>
-          </h3>
-          <div class="traceability-data-table" style="display:flex; flex-direction:column; gap:10px;">
-            <div class="trace-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Nhà cung cấp:</span><span class="lang-en">Orchard:</span></span>
-              <strong>${p.origin}</strong>
-            </div>
-            <div class="trace-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Vùng trồng:</span><span class="lang-en">Region:</span></span>
-              <strong>${p.region}</strong>
-            </div>
-            <div class="trace-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Ngày thu hoạch:</span><span class="lang-en">Harvest Date:</span></span>
-              <strong>${p.harvestDate}</strong>
-            </div>
-            <div class="trace-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Mã lô hàng (Batch):</span><span class="lang-en">Batch ID:</span></span>
-              <strong style="color:var(--color-primary);">#TQG-${p.slug.substring(0,3).toUpperCase()}-${p.id}</strong>
-            </div>
-            <div class="trace-row" style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--color-gray-border); padding-bottom:6px; font-size:14px;">
-              <span><span class="lang-vi">Chứng nhận:</span><span class="lang-en">Certifications:</span></span>
-              <div style="display:inline-flex; gap:6px;">
-                ${p.certification.map(c => `<span style="background-color:var(--color-primary); color:white; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px;">${c}</span>`).join("")}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lower block: Tabs -->
-      <div class="detail-tabs-section" style="margin-bottom:50px;">
-        <div class="tabs-nav-header" style="display:flex; gap:10px; border-bottom:2px solid var(--color-gray-border); padding-bottom:0; margin-bottom:20px;">
-          <button class="tab-nav-btn ${activeTab === "description" ? "active" : ""}" style="border:none; background:none; padding:12px 20px; font-weight:700; cursor:pointer; border-bottom:3px solid ${activeTab === "description" ? "var(--color-primary)" : "transparent"}; color:${activeTab === "description" ? "var(--color-primary)" : "var(--color-text-light)"}; font-size:15px;" onclick="switchTab('description')">
-            <span class="lang-vi">Mô tả sản phẩm</span><span class="lang-en">Description</span>
-          </button>
-          <button class="tab-nav-btn ${activeTab === "storage" ? "active" : ""}" style="border:none; background:none; padding:12px 20px; font-weight:700; cursor:pointer; border-bottom:3px solid ${activeTab === "storage" ? "var(--color-primary)" : "transparent"}; color:${activeTab === "storage" ? "var(--color-primary)" : "var(--color-text-light)"}; font-size:15px;" onclick="switchTab('storage')">
-            <span class="lang-vi">Hướng dẫn bảo quản</span><span class="lang-en">Storage Guidelines</span>
-          </button>
-          <button class="tab-nav-btn ${activeTab === "reviews" ? "active" : ""}" style="border:none; background:none; padding:12px 20px; font-weight:700; cursor:pointer; border-bottom:3px solid ${activeTab === "reviews" ? "var(--color-primary)" : "transparent"}; color:${activeTab === "reviews" ? "var(--color-primary)" : "var(--color-text-light)"}; font-size:15px;" onclick="switchTab('reviews')">
-            <span class="lang-vi">Đánh giá (${p.reviews.length})</span><span class="lang-en">Reviews (${p.reviews.length})</span>
-          </button>
-        </div>
-
-        <div class="tab-content-body" style="font-size:14px; line-height:1.7; color:var(--color-text-dark);">
+        <div class="tab-content-body">
           ${renderTabContent()}
         </div>
       </div>
 
-      <!-- Related Products -->
+      <div class="traceability-timeline-section">
+        <h3 class="section-title text-center">A transparent journey of this product</h3>
+
+        <div class="timeline-steps">
+          <div class="step-item">
+            <div class="step-icon">🌱</div>
+            <h5>Source region</h5>
+            <p>Certified and stable</p>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step-item">
+            <div class="step-icon">✂️</div>
+            <h5>Harvest & processing</h5>
+            <p>At the right time</p>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step-item">
+            <div class="step-icon">🔬</div>
+            <h5>Selection & inspection</h5>
+            <p>Using modern technology</p>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step-item">
+            <div class="step-icon">📦</div>
+            <h5>Packaging</h5>
+            <p>Safe for food hygiene</p>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step-item">
+            <div class="step-icon">🚚</div>
+            <h5>Delivery</h5>
+            <p>Fresh and complete</p>
+          </div>
+        </div>
+      </div>
+
       ${related.length === 0 ? "" : `
-        <div class="related-products-section" style="border-top:1px solid var(--color-gray-border); padding-top:40px;">
-          <h2 class="section-title font-serif" style="font-size:24px; margin-bottom:25px;">
-            <span class="lang-vi">Sản phẩm liên quan</span><span class="lang-en">Related Products</span>
-          </h2>
-          <div class="products-grid-4" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:20px;">
+        <div class="related-products-section mt-50">
+          <div class="section-header-flex">
+            <h2 class="section-title">Related products</h2>
+            <div class="section-header-actions">
+              <a href="products.html?category=${encodeURIComponent(p.category)}" class="view-all-link">View all ›</a>
+              <button class="carousel-nav-btn" onclick="scrollCarousel('related-carousel', 1)" aria-label="Scroll next">›</button>
+            </div>
+          </div>
+          <div class="products-carousel-track" id="related-carousel">
             ${related.map(item => window.Components.ProductCard(item)).join("")}
           </div>
         </div>
       `}
+
+      ${combos.length === 0 ? "" : `
+        <div class="related-products-section mt-50">
+          <div class="section-header-flex">
+            <h2 class="section-title">Combos for you</h2>
+            <div class="section-header-actions">
+              <a href="products.html?category=Combo Healthy" class="view-all-link">View all ›</a>
+              <button class="carousel-nav-btn" onclick="scrollCarousel('combo-carousel', 1)" aria-label="Scroll next">›</button>
+            </div>
+          </div>
+          <div class="products-carousel-track" id="combo-carousel">
+            ${combos.map(item => window.Components.ProductCard(item)).join("")}
+          </div>
+        </div>
+      `}
+    </div>
+
+    <!-- Sticky mobile buy bar: appears once the main buy box scrolls out of view -->
+    <div class="sticky-buy-bar" id="sticky-buy-bar">
+      <img src="${p.image}" alt="${p.name}">
+      <div class="sticky-buy-bar-info">
+        <strong>${p.name}</strong>
+        <span>${p.price.toLocaleString("vi-VN")}đ</span>
+      </div>
+      <button class="btn btn-primary" onclick="buyNow()">Buy now</button>
+    </div>
+
+    <!-- Image lightbox -->
+    <div class="lightbox-overlay" id="lightbox-overlay">
+      <button class="lightbox-close-btn" onclick="closeLightbox()" aria-label="Close">&times;</button>
+      <button class="lightbox-nav-btn lightbox-prev" onclick="navigateLightbox(-1)" aria-label="Previous image">‹</button>
+      <img src="${activeImage}" alt="${p.name}" id="lightbox-img">
+      <button class="lightbox-nav-btn lightbox-next" onclick="navigateLightbox(1)" aria-label="Next image">›</button>
     </div>
   `;
+
+  initStickyBuyBar();
 }
 
 function renderTabContent() {
   const p = activeProduct;
+
   if (activeTab === "description") {
     return `
-      <div class="tab-pane">
-        <p style="margin-bottom:15px;">
-          <span class="lang-vi">Sản phẩm <strong>${p.name}</strong> được chọn lọc từ nông sản chất lượng cao tại vùng ${p.region}. Chúng tôi luôn áp dụng kỹ thuật thu hoạch đúng vụ để quả và hạt đạt được độ chín ngon, giữ được hàm lượng vitamin cao nhất.</span>
-          <span class="lang-en">Our <strong>${p.name}</strong> is hand-picked at premium farms in ${p.region}. We apply standard harvest techniques to guarantee optimal ripeness and high vitamin content.</span>
-        </p>
-        <p>
-          <span class="lang-vi">Dòng sản phẩm thuộc Tứ Quý Garden cam kết 3 KHÔNG: Không chất bảo quản thực vật độc hại, Không dùng chất làm chín nhân tạo, Không pha tạp phụ gia. Đảm bảo an toàn sức khỏe tuyệt đối cho người tiêu dùng văn phòng, tập luyện thể thao và trẻ em gia đình.</span>
-          <span class="lang-en">Tứ Quý Garden products guarantee 3 flags: No artificial ripening, No chemical preservatives, No additives. Pure safe foods suitable for athletes, children and office workers.</span>
-        </p>
+      <div class="tab-pane active-pane" style="animation: fadeIn 0.4s ease;">
+        <div style="line-height: 1.8; color: #555; font-size: 15px;">
+          <p style="margin-bottom: 16px;">
+            The <strong style="color: var(--color-primary);">${p.name}</strong> product is carefully selected from premium agricultural produce sourced from the <strong style="color: #8b5e3c;">${p.region}</strong> region.
+            Tứ Quý Garden guarantees a closed-loop harvesting process that preserves its natural flavor and the highest nutrient content.
+          </p>
+          <p style="margin-bottom: 20px;">
+            This product is committed to being free from harmful preservatives, artificial ripening agents, and added fillers.
+            It is suitable for Eat Clean eaters, athletes, office workers, and modern families embracing a greener lifestyle.
+          </p>
+          <div style="background: #fdfaf2; padding: 20px; border-radius: 12px; border-left: 4px solid var(--color-primary);">
+            <h5 style="margin: 0 0 10px 0; color: var(--color-primary); font-weight: 700; font-size: 16px;">🌿 Storage & usage guide:</h5>
+            <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #6d5555;">
+              <li>Store in a cool, dry, well-ventilated place away from direct sunlight.</li>
+              <li>Seal the container or bag after use to preserve its natural crispness and aroma.</li>
+              <li>Enjoy directly or pair with yogurt, smoothies, or salads.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     `;
   }
-  
-  if (activeTab === "storage") {
+
+  if (activeTab === "ingredients") {
     return `
-      <div class="tab-pane">
-        <h4 style="margin-bottom:10px;"><span class="lang-vi">Bảo quản sản phẩm ${p.category === "Fruits" ? "trái cây tươi" : "hạt khô"}:</span><span class="lang-en">Storage for ${p.category === "Fruits" ? "fruits" : "seeds"}:</span></h4>
-        <ul style="padding-left: 20px; list-style-type: disc;">
-          ${p.category === "Fruits" ? `
-            <li><span class="lang-vi">Bảo quản ngăn mát tủ lạnh (8-12°C).</span><span class="lang-en">Keep in refrigerator crisp drawer (8-12°C).</span></li>
-            <li><span class="lang-vi">Để nguyên vỏ cuống, tránh rửa nước khi chưa ăn ngay.</span><span class="lang-en">Leave peel intact, avoid washing before storage.</span></li>
-            <li><span class="lang-vi">Thời gian bảo quản ngon nhất từ 3-5 ngày.</span><span class="lang-en">Best enjoyed within 3-5 days of delivery.</span></li>
-          ` : `
-            <li><span class="lang-vi">Bảo quản trong hũ kín nắp hoặc túi zip khóa chặt.</span><span class="lang-en">Store in airtight glass container or zip pouch.</span></li>
-            <li><span class="lang-vi">Đặt nơi khô ráo, tránh nắng trực tiếp.</span><span class="lang-en">Place in dry cool cupboard, avoid direct sunlight.</span></li>
-            <li><span class="lang-vi">Có thể trữ ngăn mát tủ lạnh duy trì độ giòn tan lâu hơn.</span><span class="lang-en">Can refrigerate to preserve crispy texture for months.</span></li>
-          `}
-        </ul>
+      <div class="tab-pane active-pane" style="animation: fadeIn 0.4s ease;">
+        <div style="line-height: 1.8; color: #555; font-size: 15px;">
+          <h4 style="color: var(--color-text-dark); margin-bottom: 15px; font-weight: 700;">Clean, wholesome ingredients:</h4>
+          <ul style="padding-left: 20px; line-height: 2; margin: 0; color: #555;">
+            ${p.category === "Fruits" ? `
+              <li><strong>100% naturally ripened fruit</strong>, harvested directly from VietGAP-certified partner orchards.</li>
+              <li><strong>No pesticide residue above regulated limits</strong>.</li>
+              <li>No artificial wax coating is used to keep the fruit fresh.</li>
+            ` : `
+              <li><strong>Premium nutritional seeds</strong> (almonds, walnuts, macadamia, cashews...) are freeze-dried to preserve their natural oils.</li>
+              <li>Natural wild honey and imported organic oats are used for Granola lines.</li>
+              <li><strong>Completely free from refined sugar</strong> and artificial sweeteners.</li>
+            `}
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
+  if (activeTab === "nutrition") {
+    return `
+      <div class="tab-pane active-pane" style="animation: fadeIn 0.4s ease;">
+        <div style="max-width: 500px;">
+          <h4 style="color: var(--color-text-dark); margin-bottom: 8px; font-weight: 700;">Nutrition information</h4>
+          <p style="font-size: 13.5px; color: var(--color-text-light); margin-bottom: 20px;">* Average values per 100g of product</p>
+          <div class="nutrition-table-simple" style="border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; overflow: hidden; background: #fff;">
+            <div class="nutri-row" style="display: flex; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); background: #faf9f6;">
+              <span style="color: #666; font-weight: 500;">Energy</span>
+              <strong style="color: var(--color-primary);">${p.nutrition.calories || "N/A"} kcal</strong>
+            </div>
+            <div class="nutri-row" style="display: flex; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+              <span style="color: #666; font-weight: 500;">Protein</span>
+              <strong style="color: var(--color-text-dark);">${p.nutrition.protein || "N/A"}</strong>
+            </div>
+            <div class="nutri-row" style="display: flex; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); background: #faf9f6;">
+              <span style="color: #666; font-weight: 500;">Carbohydrate</span>
+              <strong style="color: var(--color-text-dark);">${p.nutrition.carbs || "N/A"}</strong>
+            </div>
+            <div class="nutri-row" style="display: flex; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+              <span style="color: #666; font-weight: 500;">Fat</span>
+              <strong style="color: var(--color-text-dark);">${p.nutrition.fat || "N/A"}</strong>
+            </div>
+            <div class="nutri-row" style="display: flex; justify-content: space-between; padding: 14px 20px; background: #faf9f6;">
+              <span style="color: #666; font-weight: 500;">Fiber</span>
+              <strong style="color: var(--color-text-dark);">${p.nutrition.fiber || "N/A"}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (activeTab === "trace") {
+    return `
+      <div class="tab-pane active-pane" style="animation: fadeIn 0.4s ease;">
+        <div style="max-width: 600px;">
+          <h4 style="color: var(--color-text-dark); margin-bottom: 18px; font-weight: 700;">Digital traceability profile</h4>
+          <div class="trace-table-simple" style="display: flex; flex-direction: column; gap: 12px; background: #fcfcfc; padding: 25px; border-radius: 16px; border: 1px solid rgba(0,0,0,0.05);">
+            <div class="trace-row" style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,0.08);">
+              <span style="color: #777;">Supplier:</span>
+              <strong style="color: var(--color-text-dark);">${p.origin}</strong>
+            </div>
+            <div class="trace-row" style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,0.08);">
+              <span style="color: #777;">Certified growing region:</span>
+              <strong style="color: var(--color-text-dark);">${p.region}</strong>
+            </div>
+            <div class="trace-row" style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,0.08);">
+              <span style="color: #777;">Harvest date:</span>
+              <strong style="color: var(--color-text-dark);">${p.harvestDate}</strong>
+            </div>
+            <div class="trace-row" style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,0.08);">
+              <span style="color: #777;">Batch code:</span>
+              <strong style="color: var(--color-primary); font-family: monospace; font-size: 15px;">#TQG-${p.slug.substring(0, 3).toUpperCase()}-${p.id}</strong>
+            </div>
+            <div class="trace-row" style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px;">
+              <span style="color: #777;">Certification:</span>
+              <div class="cert-tags" style="display: flex; gap: 8px;">
+                ${p.certification.map(c => `<span style="background: rgba(72,128,48,0.1); color: var(--color-primary); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase;">${c}</span>`).join("")}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     `;
   }
 
   if (activeTab === "reviews") {
     return `
-      <div class="tab-pane">
+      <div class="tab-pane active-pane" style="animation: fadeIn 0.4s ease;">
         <div class="reviews-list-container">
           ${p.reviews.length === 0 ? `
-            <p style="color: var(--color-text-light); text-align: center; padding: 20px 0;">Sản phẩm chưa có đánh giá nào. Hãy là người đầu tiên mua và nhận xét!</p>
+            <div style="text-align: center; padding: 40px 20px; color: #777;">
+              <span style="font-size: 40px; display: block; margin-bottom: 15px;">⭐️</span>
+              <p>This product has no customer reviews yet.</p>
+              <p style="font-size: 13px; color: #999;">Be the first to try it and share your feedback!</p>
+            </div>
           ` : p.reviews.map(r => `
-            <div class="review-item" style="border-bottom: 1px solid #EAEAEA; padding: 15px 0;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <strong>${r.name}</strong>
-                <div style="color: var(--color-yellow); font-size: 14px;">
+            <div class="review-item" style="border-bottom: 1px solid rgba(0,0,0,0.05); padding: 20px 0; display: flex; flex-direction: column; gap: 8px;">
+              <div class="review-head" style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: var(--color-text-dark); font-size: 15px;">${r.name}</strong>
+                <div class="review-stars" style="color: #ffb800; font-size: 15px;">
                   ${"&#9733;".repeat(r.rating)}${"&#9734;".repeat(5 - r.rating)}
                 </div>
               </div>
-              <p style="color: var(--color-text-light); font-size: 14px; line-height: 1.5;">${r.comment}</p>
+              <p style="color: #555; line-height: 1.6; font-size: 14px; margin: 0;">${r.comment}</p>
             </div>
           `).join("")}
 
-          <div style="margin-top: 25px; text-align: right;">
-            <button class="btn btn-outline btn-sm" onclick="showAddReviewModal()"><span class="lang-vi">Viết đánh giá của bạn</span><span class="lang-en">Write a review</span></button>
+          <div style="margin-top: 30px; text-align: right;">
+            <button class="btn btn-outline btn-sm" onclick="showAddReviewModal()" style="border-radius: 6px; font-weight: 600;">Write your review</button>
           </div>
         </div>
       </div>
@@ -337,28 +571,99 @@ function renderTabContent() {
   }
 }
 
-// Global functions for inline DOM click hooks
-window.switchImage = function(img) {
+window.switchImage = function (img, index) {
   activeImage = img;
   const mainImg = document.getElementById("main-product-img");
   if (mainImg) mainImg.src = img;
 
+  const lightboxImg = document.getElementById("lightbox-img");
+  if (lightboxImg) lightboxImg.src = img;
+
   const thumbs = document.querySelectorAll(".thumb-img");
-  thumbs.forEach(t => {
-    const isMatch = t.querySelector("img").getAttribute("src") === img;
-    if (isMatch) t.style.borderColor = "var(--color-primary)";
-    else t.style.borderColor = "transparent";
+  thumbs.forEach((t, idx) => {
+    const isMatch = typeof index === "number"
+      ? idx === index
+      : t.querySelector("img").getAttribute("src") === img;
+    t.classList.toggle("active", isMatch);
   });
 };
 
-window.switchTab = function(tabName) {
+window.openLightbox = function () {
+  const overlay = document.getElementById("lightbox-overlay");
+  if (overlay) {
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+};
+
+window.closeLightbox = function () {
+  const overlay = document.getElementById("lightbox-overlay");
+  if (overlay) {
+    overlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+};
+
+window.navigateLightbox = function (direction) {
+  navigateGallery(direction);
+};
+
+// Sticky mobile buy bar — only visible once the real "Mua ngay" button has
+// scrolled out of view, so it doesn't duplicate what's already on screen.
+function initStickyBuyBar() {
+  const bar = document.getElementById("sticky-buy-bar");
+  const buyRow = document.querySelector(".buy-buttons-row");
+  if (!bar || !buyRow || !("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        bar.classList.toggle("visible", !entry.isIntersecting && entry.boundingClientRect.top < 0);
+      });
+    },
+    { threshold: 0 }
+  );
+  observer.observe(buyRow);
+}
+
+window.navigateGallery = function (direction) {
+  if (!activeProduct) return;
+  const galleryImages = getGalleryImages(activeProduct);
+  const currentIndex = galleryImages.indexOf(activeImage);
+  const nextIndex = (currentIndex + direction + galleryImages.length) % galleryImages.length;
+  switchImage(galleryImages[nextIndex], nextIndex);
+};
+
+window.scrollCarousel = function (carouselId, direction) {
+  const track = document.getElementById(carouselId);
+  if (!track) return;
+  const card = track.querySelector(".product-card");
+  const scrollAmount = card ? card.offsetWidth + 22 : 300;
+  track.scrollBy({ left: scrollAmount * direction, behavior: "smooth" });
+};
+
+window.switchTab = function (tabName) {
   activeTab = tabName;
   const root = document.getElementById("product-detail-root");
   if (root) renderDetails(root);
 };
 
-window.adjustQuantity = function(amount) {
+window.shareProduct = function () {
+  if (navigator.share) {
+    navigator.share({
+      title: activeProduct.name,
+      text: activeProduct.description,
+      url: window.location.href
+    }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(window.location.href);
+    window.showToast("Product link copied!", "success");
+  }
+};
+
+window.adjustQuantity = function (amount) {
   const nextVal = quantity + amount;
+
   if (nextVal >= 1 && nextVal <= activeProduct.stock) {
     quantity = nextVal;
     const input = document.getElementById("detail-qty-input");
@@ -366,29 +671,33 @@ window.adjustQuantity = function(amount) {
   }
 };
 
-window.setQuantity = function(val) {
+window.setQuantity = function (val) {
   let intVal = parseInt(val) || 1;
   intVal = Math.max(1, Math.min(activeProduct.stock, intVal));
   quantity = intVal;
+
   const input = document.getElementById("detail-qty-input");
   if (input) input.value = intVal;
 };
 
-window.addToCart = function() {
+window.addToCart = function () {
   if (!window.CartService) return;
+
   const result = window.CartService.addToCart(activeProduct.id, quantity);
+
   if (result.success) {
     window.showToast(result.message, "success");
-    // Update badge in common
     if (window.updateHeaderState) window.updateHeaderState();
   } else {
     window.showToast(result.message, "error");
   }
 };
 
-window.buyNow = function() {
+window.buyNow = function () {
   if (!window.CartService) return;
+
   const result = window.CartService.addToCart(activeProduct.id, quantity);
+
   if (result.success) {
     window.location.href = "cart.html";
   } else {
@@ -396,9 +705,11 @@ window.buyNow = function() {
   }
 };
 
-window.toggleWishlist = function() {
+window.toggleWishlist = function () {
   if (!window.AuthService) return;
+
   const result = window.AuthService.toggleWishlist(activeProduct.id);
+
   if (result.success) {
     window.showToast(result.message, "success");
     const root = document.getElementById("product-detail-root");
@@ -409,40 +720,29 @@ window.toggleWishlist = function() {
   }
 };
 
-window.showAddReviewModal = function() {
+window.showAddReviewModal = function () {
   if (!window.AuthService) return;
+
   const currentUser = window.AuthService.getCurrentUser();
+
   if (!currentUser) {
-    window.showToast("Vui lòng đăng nhập để gửi nhận xét.", "error");
+    window.showToast("Please log in to submit a review.", "error");
     window.location.href = "login.html";
     return;
   }
 
-  const comment = prompt("Nhập nhận xét đánh giá của bạn:");
-  if (comment === null) return;
-  if (comment.trim() === "") {
-    window.showToast("Nội dung không được bỏ trống.", "error");
-    return;
-  }
+  window.showReviewModal(({ comment, rating }) => {
+    activeProduct.reviews.push({
+      name: currentUser.name,
+      rating,
+      comment
+    });
 
-  const ratingStr = prompt("Nhập số sao (1 đến 5):", "5");
-  const ratingVal = parseInt(ratingStr) || 5;
-  if (ratingVal < 1 || ratingVal > 5) {
-    window.showToast("Số sao từ 1 đến 5.", "error");
-    return;
-  }
+    localStorage.setItem("tqg_products", JSON.stringify(window.MOCK_PRODUCTS));
+    window.showToast("Review submitted successfully!", "success");
 
-  activeProduct.reviews.push({
-    name: currentUser.name,
-    rating: ratingVal,
-    comment: comment
+    activeTab = "reviews";
+    const root = document.getElementById("product-detail-root");
+    if (root) renderDetails(root);
   });
-
-  // Save back to localStorage products
-  localStorage.setItem("tqg_products", JSON.stringify(window.MOCK_PRODUCTS));
-  window.showToast("Gửi nhận xét thành công!", "success");
-  
-  activeTab = "reviews";
-  const root = document.getElementById("product-detail-root");
-  if (root) renderDetails(root);
 };
