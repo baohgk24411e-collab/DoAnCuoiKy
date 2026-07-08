@@ -889,12 +889,21 @@
                   <circle id="arc-protein" cx="100" cy="100" r="70" fill="none" stroke="#2980B9" stroke-width="15" stroke-dasharray="440" stroke-dashoffset="330" transform="rotate(-90, 100, 100)" stroke-linecap="round" />
                   <circle id="arc-carbs" cx="100" cy="100" r="70" fill="none" stroke="#F5C542" stroke-width="15" stroke-dasharray="440" stroke-dashoffset="220" transform="rotate(45, 100, 100)" stroke-linecap="round" />
                   <circle id="arc-fat" cx="100" cy="100" r="70" fill="none" stroke="#E06A55" stroke-width="15" stroke-dasharray="440" stroke-dashoffset="370" transform="rotate(180, 100, 100)" stroke-linecap="round" />
-                  <text x="100" y="105" text-anchor="middle" font-size="14" font-weight="700" fill="var(--color-text-dark)">Macros Ratio</text>
+                  <text id="macro-ratio-label" x="100" y="105" text-anchor="middle" font-size="14" font-weight="700" fill="var(--color-text-dark)">Macros Ratio</text>
                 </svg>
                 <div style="display:flex; gap:12px; margin-top:20px; font-size:11px; font-weight:700; flex-wrap:wrap; justify-content:center;">
-                  <span style="color:#2980B9; display:flex; align-items:center; gap:4px;"><span style="display:inline-block; width:8px; height:8px; background:#2980B9; border-radius:2px;"></span>Protein: <span id="val-pct-protein">25%</span></span>
-                  <span style="color:#F5C542; display:flex; align-items:center; gap:4px;"><span style="display:inline-block; width:8px; height:8px; background:#F5C542; border-radius:2px;"></span>Carbs: <span id="val-pct-carbs">50%</span></span>
-                  <span style="color:#E06A55; display:flex; align-items:center; gap:4px;"><span style="display:inline-block; width:8px; height:8px; background:#E06A55; border-radius:2px;"></span>Fat: <span id="val-pct-fat">25%</span></span>
+                  <span style="color:#2980B9; display:flex; align-items:center; gap:4px;">
+                    <span style="display:inline-block; width:8px; height:8px; background:#2980B9; border-radius:2px;"></span>
+                    <span class="lang-vi">Đạm:</span><span class="lang-en">Protein:</span> <span id="val-pct-protein">25%</span>
+                  </span>
+                  <span style="color:#F5C542; display:flex; align-items:center; gap:4px;">
+                    <span style="display:inline-block; width:8px; height:8px; background:#F5C542; border-radius:2px;"></span>
+                    <span class="lang-vi">Carbs:</span><span class="lang-en">Carbs:</span> <span id="val-pct-carbs">50%</span>
+                  </span>
+                  <span style="color:#E06A55; display:flex; align-items:center; gap:4px;">
+                    <span style="display:inline-block; width:8px; height:8px; background:#E06A55; border-radius:2px;"></span>
+                    <span class="lang-vi">Béo:</span><span class="lang-en">Fat:</span> <span id="val-pct-fat">25%</span>
+                  </span>
                 </div>
               </div>
 

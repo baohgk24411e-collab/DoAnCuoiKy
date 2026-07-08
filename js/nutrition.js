@@ -421,10 +421,16 @@ function generateNutritionPlan() {
   document.getElementById("rec-title").innerText = isEn ? recipe.nameEn : recipe.nameVi;
   document.getElementById("rec-desc").innerText = isEn ? recipe.descEn : recipe.descVi;
   
-  document.getElementById("rec-protein").innerText = `Protein: ${recipe.macros.protein}`;
-  document.getElementById("rec-carbs").innerText = `Carbs: ${recipe.macros.carbs}`;
-  document.getElementById("rec-fat").innerText = `Fats: ${recipe.macros.fat}`;
-  document.getElementById("rec-fiber").innerText = `Fiber: ${recipe.macros.fiber}`;
+  document.getElementById("rec-protein").innerText = isEn ? `Protein: ${recipe.macros.protein}` : `Đạm: ${recipe.macros.protein}`;
+  document.getElementById("rec-carbs").innerText = isEn ? `Carbs: ${recipe.macros.carbs}` : `Carbs: ${recipe.macros.carbs}`;
+  document.getElementById("rec-fat").innerText = isEn ? `Fats: ${recipe.macros.fat}` : `Chất béo: ${recipe.macros.fat}`;
+  document.getElementById("rec-fiber").innerText = isEn ? `Fiber: ${recipe.macros.fiber}` : `Chất xơ: ${recipe.macros.fiber}`;
+
+  // Update SVG inside-circle label
+  const ratioLabel = document.getElementById("macro-ratio-label");
+  if (ratioLabel) {
+    ratioLabel.textContent = isEn ? "Macros Ratio" : "Tỷ lệ Dinh dưỡng";
+  }
 
   // Build ingredients table
   const table = document.getElementById("ingredients-table-body");
@@ -579,6 +585,13 @@ function drawLineChart(goal) {
     <circle cx="${p.x}" cy="${p.y}" r="4" fill="${strokeColor}" stroke="white" stroke-width="1.5" />
     <text x="${p.x}" y="${p.y - 8}" text-anchor="middle" font-size="8" font-weight="700" fill="${strokeColor}">${p.val}</text>
   `).join("");
+
+  // Translate X-axis labels dynamically (y=135)
+  const isEn = document.body.classList.contains("lang-en");
+  const xLabels = document.querySelectorAll("#svg-line-chart text[y='135']");
+  xLabels.forEach((el, idx) => {
+    el.textContent = isEn ? `D${idx + 1}` : `N${idx + 1}`;
+  });
 }
 
 window.resetQuiz = function() {

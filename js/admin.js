@@ -414,26 +414,27 @@ window.hideSplineTooltip = function() {
 
 // EXPORT TRANSACTIONS TO EXCEL/CSV FILE
 window.exportToCSV = function() {
+  const isEn = document.body.classList.contains("lang-en");
   if (!window.OrderService) {
-    window.showToast("Order service not ready!", "error");
+    window.showToast(isEn ? "Order service not ready!" : "Dịch vụ đơn hàng chưa sẵn sàng!", "error");
     return;
   }
   const allOrders = window.OrderService.getOrders();
   if (!allOrders || allOrders.length === 0) {
-    window.showToast("No order data to export!", "warning");
+    window.showToast(isEn ? "No order data to export!" : "Không có dữ liệu đơn hàng để xuất!", "warning");
     return;
   }
 
   // Load html2pdf from CDN dynamically if not loaded
   if (typeof html2pdf === 'undefined') {
-    window.showToast("Initializing PDF converter...", "info");
+    window.showToast(isEn ? "Initializing PDF converter..." : "Đang khởi tạo công cụ chuyển đổi PDF...", "info");
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
     script.onload = () => {
       generateActualPDFReport(allOrders);
     };
     script.onerror = () => {
-      window.showToast("Failed to initialize PDF library!", "error");
+      window.showToast(isEn ? "Failed to initialize PDF library!" : "Không thể tải thư viện PDF!", "error");
     };
     document.head.appendChild(script);
   } else {
@@ -442,6 +443,7 @@ window.exportToCSV = function() {
 };
 
 function generateActualPDFReport(allOrders) {
+  const isEn = document.body.classList.contains("lang-en");
   const successfulOrders = allOrders.filter(o => o.status === "Hoàn thành");
   const pendingOrders = allOrders.filter(o => o.status === "Chờ xác nhận");
   const processingOrders = allOrders.filter(o => o.status === "Đang xử lý" || o.status === "Đang giao");
@@ -479,15 +481,37 @@ function generateActualPDFReport(allOrders) {
 
   // Generate transaction rows
   const txRows = allOrders.map(o => {
-    const dateStr = new Date(o.date).toLocaleString("en-US");
-    const pm = o.paymentMethod === "Bank transfer" ? "Bank Transfer" : (o.paymentMethod === "E-wallet" ? "E-Wallet" : "COD");
+    const dateStr = new Date(o.date).toLocaleString(isEn ? "en-US" : "vi-VN");
+    
+    let pm = o.paymentMethod;
+    if (!isEn) {
+      if (o.paymentMethod === "Bank transfer") pm = "Chuyển khoản";
+      else if (o.paymentMethod === "E-wallet") pm = "Ví điện tử";
+      else pm = "COD";
+    } else {
+      if (o.paymentMethod === "Bank transfer") pm = "Bank Transfer";
+      else if (o.paymentMethod === "E-wallet") pm = "E-Wallet";
+      else pm = "COD";
+    }
     
     let bg = "#fef3c7", fg = "#92400e";
-    let statusEn = "Pending";
-    if (o.status === "Hoàn thành") { bg = "#d1fae5"; fg = "#065f46"; statusEn = "Completed"; }
-    else if (o.status === "Đã hủy") { bg = "#fee2e2"; fg = "#991b1b"; statusEn = "Cancelled"; }
-    else if (o.status === "Đang xử lý") { bg = "#e0f2fe"; fg = "#075985"; statusEn = "Processing"; }
-    else if (o.status === "Đang giao") { bg = "#e0f2fe"; fg = "#075985"; statusEn = "Shipping"; }
+    let statusLabel = isEn ? "Pending" : "Chờ xác nhận";
+    if (o.status === "Hoàn thành") { 
+      bg = "#d1fae5"; fg = "#065f46"; 
+      statusLabel = isEn ? "Completed" : "Hoàn thành"; 
+    }
+    else if (o.status === "Đã hủy") { 
+      bg = "#fee2e2"; fg = "#991b1b"; 
+      statusLabel = isEn ? "Cancelled" : "Đã hủy"; 
+    }
+    else if (o.status === "Đang xử lý") { 
+      bg = "#e0f2fe"; fg = "#075985"; 
+      statusLabel = isEn ? "Processing" : "Đang xử lý"; 
+    }
+    else if (o.status === "Đang giao") { 
+      bg = "#e0f2fe"; fg = "#075985"; 
+      statusLabel = isEn ? "Shipping" : "Đang giao"; 
+    }
 
     return `
       <tr>
@@ -500,13 +524,13 @@ function generateActualPDFReport(allOrders) {
         <td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">${pm}</td>
         <td style="padding: 8px; border-bottom: 1px solid #E2DDD5; font-weight:700; color:#4D7C2F; text-align:right;">${fmt(o.total)}</td>
         <td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align:center;">
-          <span style="font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; background:${bg}; color:${fg};">${statusEn}</span>
+          <span style="font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; background:${bg}; color:${fg};">${statusLabel}</span>
         </td>
       </tr>
     `;
   }).join("");
 
-  const todayStr = new Date().toLocaleString("en-US");
+  const todayStr = new Date().toLocaleString(isEn ? "en-US" : "vi-VN");
 
   const reportHTML = `
     <div style="font-family: Arial, sans-serif; color: #2E3A2B; line-height: 1.5; padding: 25px; background: #FFFFFF; width: 700px;">
@@ -515,11 +539,11 @@ function generateActualPDFReport(allOrders) {
         <tr>
           <td style="vertical-align: bottom;">
             <h2 style="color: #4D7C2F; margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 0.5px; font-family: Arial, sans-serif;">TỨ QUÝ GARDEN</h2>
-            <span style="font-size: 10px; color: #5B6A56; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; font-family: Arial, sans-serif;">Premium Green Organic Farming System</span>
+            <span style="font-size: 10px; color: #5B6A56; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; font-family: Arial, sans-serif;">${isEn ? 'Premium Green Organic Farming System' : 'Hệ thống Nông sản Hữu cơ Xanh Cao cấp'}</span>
           </td>
           <td style="text-align: right; vertical-align: bottom; font-family: Arial, sans-serif;">
-            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #2E3A2B;">BUSINESS PERFORMANCE REPORT</h3>
-            <span style="font-size: 11px; color: #5B6A56;">Export Time: ${todayStr}</span>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #2E3A2B;">${isEn ? 'BUSINESS PERFORMANCE REPORT' : 'BÁO CÁO KẾT QUẢ KINH DOANH'}</h3>
+            <span style="font-size: 11px; color: #5B6A56;">${isEn ? 'Export Time' : 'Thời gian xuất'}: ${todayStr}</span>
           </td>
         </tr>
       </table>
@@ -529,26 +553,26 @@ function generateActualPDFReport(allOrders) {
         <tr>
           <td style="width: 25%; padding-right: 8px;">
             <div style="background: #F4F9F0; border: 1px solid #D5E8C9; padding: 12px; border-radius: 8px; text-align: center;">
-              <span style="font-size: 9px; color: #15803D; font-weight: 700; display: block; margin-bottom: 4px;">TOTAL REVENUE</span>
+              <span style="font-size: 9px; color: #15803D; font-weight: 700; display: block; margin-bottom: 4px;">${isEn ? 'TOTAL REVENUE' : 'TỔNG DOANH THU'}</span>
               <strong style="font-size: 15px; color: #16A34A;">${fmt(totalSales)}</strong>
             </div>
           </td>
           <td style="width: 25%; padding: 0 4px;">
             <div style="background: #F0F9FF; border: 1px solid #E0F2FE; padding: 12px; border-radius: 8px; text-align: center;">
-              <span style="font-size: 9px; color: #0369A1; font-weight: 700; display: block; margin-bottom: 4px;">COMPLETED ORDERS</span>
-              <strong style="font-size: 15px; color: #0284C7;">${successfulOrders.length} Orders</strong>
+              <span style="font-size: 9px; color: #0369A1; font-weight: 700; display: block; margin-bottom: 4px;">${isEn ? 'COMPLETED ORDERS' : 'ĐƠN HOÀN THÀNH'}</span>
+              <strong style="font-size: 15px; color: #0284C7;">${successfulOrders.length} ${isEn ? 'Orders' : 'Đơn'}</strong>
             </div>
           </td>
           <td style="width: 25%; padding: 0 4px;">
             <div style="background: #FFFBEB; border: 1px solid #FEF3C7; padding: 12px; border-radius: 8px; text-align: center;">
-              <span style="font-size: 9px; color: #B45309; font-weight: 700; display: block; margin-bottom: 4px;">PROCESSING ORDERS</span>
-              <strong style="font-size: 15px; color: #D97706;">${pendingOrders.length + processingOrders.length} Orders</strong>
+              <span style="font-size: 9px; color: #B45309; font-weight: 700; display: block; margin-bottom: 4px;">${isEn ? 'PROCESSING ORDERS' : 'ĐƠN ĐANG XỬ LÝ'}</span>
+              <strong style="font-size: 15px; color: #D97706;">${pendingOrders.length + processingOrders.length} ${isEn ? 'Orders' : 'Đơn'}</strong>
             </div>
           </td>
           <td style="width: 25%; padding-left: 8px;">
             <div style="background: #FEF2F2; border: 1px solid #FEE2E2; padding: 12px; border-radius: 8px; text-align: center;">
-              <span style="font-size: 9px; color: #B91C1C; font-weight: 700; display: block; margin-bottom: 4px;">CANCELLED ORDERS</span>
-              <strong style="font-size: 15px; color: #DC2626;">${cancelledOrders.length} Orders</strong>
+              <span style="font-size: 9px; color: #B91C1C; font-weight: 700; display: block; margin-bottom: 4px;">${isEn ? 'CANCELLED ORDERS' : 'ĐƠN ĐÃ HỦY'}</span>
+              <strong style="font-size: 15px; color: #DC2626;">${cancelledOrders.length} ${isEn ? 'Orders' : 'Đơn'}</strong>
             </div>
           </td>
         </tr>
@@ -560,20 +584,20 @@ function generateActualPDFReport(allOrders) {
           <td style="width: 48%; vertical-align: top;">
             <div style="border: 1px solid #E2DDD5; border-radius: 10px; overflow: hidden;">
               <div style="background: #4D7C2F; color: #FFFFFF; font-weight: 800; font-size: 11px; padding: 8px 12px; text-transform: uppercase;">
-                📍 Revenue Analysis by Region
+                ${isEn ? '📍 Revenue Analysis by Region' : '📍 Phân tích Doanh thu theo Vùng'}
               </div>
               <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
                 <thead>
                   <tr style="background: #F0EEE4; border-bottom: 1px solid #E2DDD5;">
-                    <th style="padding: 8px; text-align: left; font-weight:700;">Product Region</th>
-                    <th style="padding: 8px; text-align: right; font-weight:700;">Revenue</th>
+                    <th style="padding: 8px; text-align: left; font-weight:700;">${isEn ? 'Product Region' : 'Vùng sản xuất'}</th>
+                    <th style="padding: 8px; text-align: right; font-weight:700;">${isEn ? 'Revenue' : 'Doanh thu'}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">Cai Be (Tien Giang)</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(salesRegion["Cái Bè"])}</td></tr>
-                  <tr style="background: #F8F7F2;"><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">Moc Chau (Son La)</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(salesRegion["Mộc Châu"])}</td></tr>
-                  <tr><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">Tay Nguyen (Dak Lak, Gia Lai)</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(salesRegion["Tây Nguyên"])}</td></tr>
-                  <tr style="background: #F8F7F2;"><td style="padding: 8px;">Ben Tre</td><td style="padding: 8px; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(salesRegion["Bến Tre"])}</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">${isEn ? 'Cai Be (Tien Giang)' : 'Cái Bè (Tiền Giang)'}</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(salesRegion["Cái Bè"])}</td></tr>
+                  <tr style="background: #F8F7F2;"><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">${isEn ? 'Moc Chau (Son La)' : 'Mộc Châu (Sơn La)'}</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(salesRegion["Mộc Châu"])}</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">${isEn ? 'Tay Nguyen (Dak Lak, Gia Lai)' : 'Tây Nguyên (Đắk Lắk, Gia Lai)'}</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(salesRegion["Tây Nguyên"])}</td></tr>
+                  <tr style="background: #F8F7F2;"><td style="padding: 8px;">Bến Tre</td><td style="padding: 8px; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(salesRegion["Bến Tre"])}</td></tr>
                 </tbody>
               </table>
             </div>
@@ -582,19 +606,19 @@ function generateActualPDFReport(allOrders) {
           <td style="width: 48%; vertical-align: top;">
             <div style="border: 1px solid #E2DDD5; border-radius: 10px; overflow: hidden;">
               <div style="background: #4D7C2F; color: #FFFFFF; font-weight: 800; font-size: 11px; padding: 8px 12px; text-transform: uppercase;">
-                🏷️ Revenue by Category Group
+                ${isEn ? '🏷️ Revenue by Category Group' : '🏷️ Doanh thu theo Nhóm sản phẩm'}
               </div>
               <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
                 <thead>
                   <tr style="background: #F0EEE4; border-bottom: 1px solid #E2DDD5;">
-                    <th style="padding: 8px; text-align: left; font-weight:700;">Category Group</th>
-                    <th style="padding: 8px; text-align: right; font-weight:700;">Revenue</th>
+                    <th style="padding: 8px; text-align: left; font-weight:700;">${isEn ? 'Category Group' : 'Nhóm sản phẩm'}</th>
+                    <th style="padding: 8px; text-align: right; font-weight:700;">${isEn ? 'Revenue' : 'Doanh thu'}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">🍎 Fresh Fruits (Fruits)</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(categorySales["Fruits"] || 0)}</td></tr>
-                  <tr style="background: #F8F7F2;"><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">🌰 Nutritional Seeds (Nutritional Seeds)</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(categorySales["Nutritional Seeds"] || 0)}</td></tr>
-                  <tr><td style="padding: 8px;">🌾 Healthy Granola</td><td style="padding: 8px; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(categorySales["Granola"] || 0)}</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">🍎 ${isEn ? 'Fresh Fruits' : 'Trái cây tươi'} (Fruits)</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(categorySales["Fruits"] || 0)}</td></tr>
+                  <tr style="background: #F8F7F2;"><td style="padding: 8px; border-bottom: 1px solid #E2DDD5;">🌰 ${isEn ? 'Nutritional Seeds' : 'Hạt dinh dưỡng'} (Nutritional Seeds)</td><td style="padding: 8px; border-bottom: 1px solid #E2DDD5; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(categorySales["Nutritional Seeds"] || 0)}</td></tr>
+                  <tr><td style="padding: 8px;">🌾 ${isEn ? 'Healthy Granola' : 'Ngũ cốc Granola sạch'}</td><td style="padding: 8px; text-align: right; font-weight: 700; color: #4D7C2F;">${fmt(categorySales["Granola"] || 0)}</td></tr>
                 </tbody>
               </table>
             </div>
@@ -605,17 +629,17 @@ function generateActualPDFReport(allOrders) {
       <!-- Ledger Table -->
       <div style="border: 1px solid #E2DDD5; border-radius: 10px; overflow: hidden; margin-bottom: 25px; font-family: Arial, sans-serif;">
         <div style="background: #4D7C2F; color: #FFFFFF; font-weight: 800; font-size: 11px; padding: 8px 12px; text-transform: uppercase;">
-          📝 Detailed Transaction List
+          ${isEn ? '📝 Detailed Transaction List' : '📝 Danh sách Giao dịch Chi tiết'}
         </div>
         <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
           <thead>
             <tr style="background: #F0EEE4; border-bottom: 1px solid #E2DDD5;">
-              <th style="padding: 8px; text-align: left; font-weight: 700;">Order ID</th>
-              <th style="padding: 8px; text-align: left; font-weight: 700;">Customer</th>
-              <th style="padding: 8px; text-align: left; font-weight: 700;">Order Date</th>
-              <th style="padding: 8px; text-align: left; font-weight: 700;">Payment</th>
-              <th style="padding: 8px; text-align: right; font-weight: 700;">Total</th>
-              <th style="padding: 8px; text-align: center; font-weight: 700;">Status</th>
+              <th style="padding: 8px; text-align: left; font-weight: 700;">${isEn ? 'Order ID' : 'Mã đơn hàng'}</th>
+              <th style="padding: 8px; text-align: left; font-weight: 700;">${isEn ? 'Customer' : 'Khách hàng'}</th>
+              <th style="padding: 8px; text-align: left; font-weight: 700;">${isEn ? 'Order Date' : 'Ngày đặt'}</th>
+              <th style="padding: 8px; text-align: left; font-weight: 700;">${isEn ? 'Payment' : 'Thanh toán'}</th>
+              <th style="padding: 8px; text-align: right; font-weight: 700;">${isEn ? 'Total' : 'Tổng cộng'}</th>
+              <th style="padding: 8px; text-align: center; font-weight: 700;">${isEn ? 'Status' : 'Trạng thái'}</th>
             </tr>
           </thead>
           <tbody>
@@ -628,15 +652,15 @@ function generateActualPDFReport(allOrders) {
       <table style="width: 100%; border-collapse: collapse; margin-top: 35px; padding: 0 15px; font-size: 11px; font-family: Arial, sans-serif;">
         <tr>
           <td style="text-align: center; width: 45%; vertical-align: top;">
-            <strong>Prepared By</strong><br>
-            <span style="font-size: 9px; color: #5B6A56;">(Signature & Full Name)</span>
+            <strong>${isEn ? 'Prepared By' : 'Người lập báo cáo'}</strong><br>
+            <span style="font-size: 9px; color: #5B6A56;">${isEn ? '(Signature & Full Name)' : '(Ký & ghi rõ họ tên)'}</span>
             <div style="height: 45px;"></div>
-            <span style="font-weight: 700;">Automated System</span>
+            <span style="font-weight: 700;">${isEn ? 'Automated System' : 'Hệ thống tự động'}</span>
           </td>
           <td style="width: 10%;"></td>
           <td style="text-align: center; width: 45%; vertical-align: top;">
-            <strong>Director's Approval</strong><br>
-            <span style="font-size: 9px; color: #5B6A56;">(Signature & Stamp)</span>
+            <strong>${isEn ? "Director's Approval" : 'Phê duyệt của Giám đốc'}</strong><br>
+            <span style="font-size: 9px; color: #5B6A56;">${isEn ? '(Signature & Stamp)' : '(Ký tên & đóng dấu)'}</span>
             <div style="height: 45px;"></div>
             <strong style="color: #4D7C2F; font-size: 12px;">TỨ QUÝ GARDEN</strong>
           </td>
@@ -644,24 +668,24 @@ function generateActualPDFReport(allOrders) {
       </table>
 
       <div style="text-align: center; font-size: 9px; color: #5B6A56; margin-top: 35px; border-top: 1px dashed #E2DDD5; padding-top: 10px; font-family: Arial, sans-serif;">
-        Internal document of Tứ Quý Garden © 2026.
+        ${isEn ? 'Internal document of Tứ Quý Garden © 2026.' : 'Tài liệu lưu hành nội bộ của Tứ Quý Garden © 2026.'}
       </div>
     </div>
   `;
 
   const opt = {
     margin:       0.3,
-    filename:     'Tu_Quy_Garden_Business_Report.pdf',
+    filename:     isEn ? 'Tu_Quy_Garden_Business_Report.pdf' : 'Bao_Cao_Doanh_Thu_Tu_Quy_Garden.pdf',
     image:        { type: 'jpeg', quality: 0.98 },
     html2canvas:  { scale: 2, useCORS: true },
     jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
   };
 
   html2pdf().from(reportHTML).set(opt).save().then(() => {
-    window.showToast("PDF report successfully downloaded!", "success");
+    window.showToast(isEn ? "PDF report successfully downloaded!" : "Đã tải xuống báo cáo PDF thành công!", "success");
   }).catch(err => {
     console.error("PDF generation error:", err);
-    window.showToast("Error generating PDF!", "error");
+    window.showToast(isEn ? "Error generating PDF!" : "Lỗi khi xuất báo cáo PDF!", "error");
   });
 }
 
@@ -1833,6 +1857,7 @@ window.showAdminReportsModal = function(e) {
   window.highlightSidebarMenu('reports');
   if (!window.OrderService) return;
 
+  const isEn = document.body.classList.contains("lang-en");
   const allOrders = window.OrderService.getOrders();
   const successfulOrders = allOrders.filter(o => o.status === "Hoàn thành");
   const pendingOrders = allOrders.filter(o => o.status === "Chờ xác nhận");
@@ -1842,7 +1867,7 @@ window.showAdminReportsModal = function(e) {
   const fmt = val => window.formatVND ? window.formatVND(val) : val.toLocaleString() + "đ";
 
   // Calculate category revenues
-  const categorySales = { "Fruits": 0, "Nuts": 0, "Granola": 0 };
+  const categorySales = { "Fruits": 0, "Nutritional Seeds": 0, "Granola": 0, "Combo Healthy": 0 };
   successfulOrders.forEach(o => {
     o.items.forEach(item => {
       const prod = window.MOCK_PRODUCTS.find(p => p.id === item.productId);
@@ -1853,13 +1878,29 @@ window.showAdminReportsModal = function(e) {
     });
   });
 
+  const getCatName = cat => {
+    if (isEn) {
+      if (cat === "Fruits") return "Fresh Fruits";
+      if (cat === "Nutritional Seeds" || cat === "Nuts") return "Nutritional Seeds";
+      if (cat === "Granola") return "Healthy Granola";
+      if (cat === "Combo Healthy") return "Healthy Combos";
+      return cat;
+    } else {
+      if (cat === "Fruits") return "Trái cây tươi";
+      if (cat === "Nutritional Seeds" || cat === "Nuts") return "Hạt dinh dưỡng";
+      if (cat === "Granola") return "Granola ngũ cốc";
+      if (cat === "Combo Healthy") return "Combo sống khỏe";
+      return cat;
+    }
+  };
+
   const catTotal = Object.values(categorySales).reduce((a, b) => a + b, 0) || 1;
   const categoriesHTML = Object.entries(categorySales).map(([cat, val]) => {
     const percent = Math.round((val / catTotal) * 100);
     return `
       <div onclick="window.showReportCategoryDetails('${cat}')" class="report-cat-bar-item" style="margin-bottom:16px; cursor:pointer; padding:10px 14px; border-radius:8px; border: 1px solid var(--color-gray-border); background: white; transition:all 0.2s;" onmouseenter="this.style.background='rgba(77,124,47,0.06)'; this.style.borderColor='var(--color-primary)';" onmouseleave="this.style.background='white'; this.style.borderColor='var(--color-gray-border)';">
         <div style="display:flex; justify-content:space-between; font-size:13.5px; font-weight:700; margin-bottom:6px; color:var(--color-text-dark);">
-          <span>📂 ${cat} <span style="font-size:11px; color:var(--color-primary); font-weight:normal; font-style:italic;">(Nhấp xem chi tiết)</span></span>
+          <span>📂 ${getCatName(cat)} <span style="font-size:11px; color:var(--color-primary); font-weight:normal; font-style:italic;">(${isEn ? 'Click to view details' : 'Nhấp xem chi tiết'})</span></span>
           <span style="color:var(--color-primary);">${fmt(val)} (${percent}%)</span>
         </div>
         <div style="width:100%; height:10px; background:#e2ddd5; border-radius:6px; overflow:hidden;">
@@ -1883,25 +1924,25 @@ window.showAdminReportsModal = function(e) {
         <span style="font-weight:700; color:var(--color-text-dark);">${idx + 1}. ${user}</span>
         <strong style="color:var(--color-primary); font-size:14.5px;">${fmt(spend)}</strong>
       </div>
-    `).join("") || '<p style="text-align:center; color:var(--color-text-light); font-size:13px; padding:20px;">Chưa có dữ liệu giao dịch</p>';
+    `).join("") || `<p style="text-align:center; color:var(--color-text-light); font-size:13px; padding:20px;">${isEn ? 'No transaction data' : 'Chưa có dữ liệu giao dịch'}</p>`;
 
   const content = `
     <div style="border-bottom: 2px solid #F0EEE4; padding-bottom: 15px; margin-bottom: 25px;">
-      <h2 style="font-size:24px; font-weight: 800; color:#4D7C2F; margin: 0;">📈 Transactions & Analytics Report</h2>
+      <h2 style="font-size:24px; font-weight: 800; color:#4D7C2F; margin: 0;">${isEn ? '📈 Transactions & Analytics Report' : '📈 Báo cáo Giao dịch & Phân tích'}</h2>
     </div>
     
     <!-- Financial highlight metrics -->
     <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:30px;">
       <div style="background:#f4f9f0; border:1px solid #e5f2dc; padding:16px; border-radius:12px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-        <span style="font-size:11.5px; color:#15803d; display:block; margin-bottom:6px; font-weight:700;">ACTUAL REVENUE</span>
+        <span style="font-size:11.5px; color:#15803d; display:block; margin-bottom:6px; font-weight:700;">${isEn ? 'ACTUAL REVENUE' : 'DOANH THU THỰC TẾ'}</span>
         <strong style="font-size:22px; color:#16a34a;">${fmt(totalSales)}</strong>
       </div>
       <div style="background:#fcf8f0; border:1px solid #faebd7; padding:16px; border-radius:12px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-        <span style="font-size:11.5px; color:#b45309; display:block; margin-bottom:6px; font-weight:700;">COMPLETED ORDERS</span>
+        <span style="font-size:11.5px; color:#b45309; display:block; margin-bottom:6px; font-weight:700;">${isEn ? 'COMPLETED ORDERS' : 'ĐƠN HÀNG HOÀN THÀNH'}</span>
         <strong style="font-size:22px; color:#d97706;">${successfulOrders.length} / ${allOrders.length}</strong>
       </div>
       <div style="background:#fef5f5; border:1px solid #fde2e2; padding:16px; border-radius:12px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-        <span style="font-size:11.5px; color:#b91c1c; display:block; margin-bottom:6px; font-weight:700;">ORDER CANCEL RATE</span>
+        <span style="font-size:11.5px; color:#b91c1c; display:block; margin-bottom:6px; font-weight:700;">${isEn ? 'ORDER CANCEL RATE' : 'TỶ LỆ HỦY ĐƠN'}</span>
         <strong style="font-size:22px; color:#dc2626;">${allOrders.length > 0 ? Math.round((cancelledOrders.length / allOrders.length) * 100) : 0}%</strong>
       </div>
     </div>
@@ -1909,11 +1950,11 @@ window.showAdminReportsModal = function(e) {
     <!-- Categories & Client spend grid splits -->
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px; margin-bottom:25px;">
       <div>
-        <h3 style="margin:0 0 15px 0; font-size:16px; font-weight:800; border-bottom:2px solid var(--color-gray-border); padding-bottom:8px; color:var(--color-text-dark);">Revenue by Category</h3>
+        <h3 style="margin:0 0 15px 0; font-size:16px; font-weight:800; border-bottom:2px solid var(--color-gray-border); padding-bottom:8px; color:var(--color-text-dark);">${isEn ? 'Revenue by Category' : 'Doanh thu theo Danh mục'}</h3>
         ${categoriesHTML}
       </div>
       <div>
-        <h3 style="margin:0 0 15px 0; font-size:16px; font-weight:800; border-bottom:2px solid var(--color-gray-border); padding-bottom:8px; color:var(--color-text-dark);">Top 3 Best Spending Customers</h3>
+        <h3 style="margin:0 0 15px 0; font-size:16px; font-weight:800; border-bottom:2px solid var(--color-gray-border); padding-bottom:8px; color:var(--color-text-dark);">${isEn ? 'Top 3 Best Spending Customers' : 'Top 3 Khách hàng Chi tiêu Nhiều nhất'}</h3>
         ${topCustomersHTML}
       </div>
     </div>
@@ -1921,16 +1962,16 @@ window.showAdminReportsModal = function(e) {
     <!-- Click details list box -->
     <div id="report-category-details-box" style="margin-top:25px; display:none; background:white; border:1px solid var(--color-gray-border); padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.04); transition:all 0.3s;">
       <h3 style="margin:0 0 15px 0; font-size:16px; font-weight:800; border-bottom:2px solid var(--color-gray-border); padding-bottom:8px; color:var(--color-text-dark); display:flex; justify-content:space-between; align-items:center;">
-        <span id="report-details-title">Bestselling Products Details</span>
+        <span id="report-details-title">${isEn ? 'Bestselling Products Details' : 'Chi tiết Sản phẩm Bán chạy'}</span>
         <button onclick="document.getElementById('report-category-details-box').style.display='none'" style="background:none; border:none; font-size:22px; cursor:pointer; color:var(--color-text-light); font-weight:700;">&times;</button>
       </h3>
       <div style="overflow-x:auto;">
         <table style="width:100%; border-collapse:collapse; font-size:13.5px; text-align:left;">
           <thead>
             <tr style="border-bottom:2px solid var(--color-gray-border); color:var(--color-text-light); font-weight:700; background:var(--color-cream-light);">
-              <th style="padding:12px 14px;">Product Name</th>
-              <th style="padding:12px 14px; text-align:center;">Quantity Sold</th>
-              <th style="padding:12px 14px; text-align:right;">Revenue Earned</th>
+              <th style="padding:12px 14px;">${isEn ? 'Product Name' : 'Tên sản phẩm'}</th>
+              <th style="padding:12px 14px; text-align:center;">${isEn ? 'Quantity Sold' : 'Số lượng đã bán'}</th>
+              <th style="padding:12px 14px; text-align:right;">${isEn ? 'Revenue Earned' : 'Doanh thu đạt được'}</th>
             </tr>
           </thead>
           <tbody id="report-details-tbody">
@@ -1948,6 +1989,7 @@ window.showAdminReportsModal = function(e) {
 window.showReportCategoryDetails = function(catName) {
   if (!window.OrderService) return;
 
+  const isEn = document.body.classList.contains("lang-en");
   const allOrders = window.OrderService.getOrders();
   const successfulOrders = allOrders.filter(o => o.status === "Hoàn thành");
   const fmt = val => window.formatVND ? window.formatVND(val) : val.toLocaleString() + "đ";
@@ -1977,11 +2019,29 @@ window.showReportCategoryDetails = function(catName) {
   const title = document.getElementById("report-details-title");
   const tbody = document.getElementById("report-details-tbody");
 
+  const getCatName = cat => {
+    if (isEn) {
+      if (cat === "Fruits") return "Fresh Fruits";
+      if (cat === "Nutritional Seeds" || cat === "Nuts") return "Nutritional Seeds";
+      if (cat === "Granola") return "Healthy Granola";
+      if (cat === "Combo Healthy") return "Healthy Combos";
+      return cat;
+    } else {
+      if (cat === "Fruits") return "Trái cây tươi";
+      if (cat === "Nutritional Seeds" || cat === "Nuts") return "Hạt dinh dưỡng";
+      if (cat === "Granola") return "Granola ngũ cốc";
+      if (cat === "Combo Healthy") return "Combo sống khỏe";
+      return cat;
+    }
+  };
+
   if (container && title && tbody) {
-    title.innerHTML = `🔥 Báo cáo doanh số nhóm: <span style="color:var(--color-primary); font-weight:800;">${catName}</span>`;
+    title.innerHTML = isEn
+      ? `🔥 Category Sales Report: <span style="color:var(--color-primary); font-weight:800;">${getCatName(catName)}</span>`
+      : `🔥 Báo cáo doanh số nhóm: <span style="color:var(--color-primary); font-weight:800;">${getCatName(catName)}</span>`;
     
     if (sorted.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:15px; color:var(--color-text-light);">No products sold in this category yet.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:15px; color:var(--color-text-light);">${isEn ? 'No products sold in this category yet.' : 'Chưa có sản phẩm nào được bán trong nhóm này.'}</td></tr>`;
     } else {
       tbody.innerHTML = sorted.map(item => `
         <tr style="border-bottom:1px solid var(--color-gray-border);">
@@ -1989,7 +2049,7 @@ window.showReportCategoryDetails = function(catName) {
             <img src="${item.image}" style="width:30px; height:30px; object-fit:contain; border-radius:4px; border:1px solid var(--color-gray-border); background:white; padding:2px;">
             <strong>${item.name}</strong>
           </td>
-          <td style="padding:10px 14px; text-align:center; font-weight:700; color:var(--color-text-dark);">${item.quantity} kg/hộp</td>
+          <td style="padding:10px 14px; text-align:center; font-weight:700; color:var(--color-text-dark);">${item.quantity} ${isEn ? 'kg/box' : 'kg/hộp'}</td>
           <td style="padding:10px 14px; text-align:right; font-weight:800; color:var(--color-primary);">${fmt(item.revenue)}</td>
         </tr>
       `).join("");
@@ -2015,10 +2075,10 @@ window.showAdminSettingsModal = function(e) {
     
     <div style="font-size:14px; line-height:1.6;">
       <div style="background:white; border:1px solid var(--color-gray-border); padding:20px; border-radius:12px; margin-bottom:25px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-        <h3 style="margin:0 0 15px 0; font-size:16px; font-weight:800; color:var(--color-text-dark); border-bottom:2px solid var(--color-gray-border); padding-bottom:8px;">Theme & Language</h3>
+        <h3 style="margin:0 0 15px 0; font-size:16px; font-weight:800; color:var(--color-text-dark); border-bottom:2px solid var(--color-gray-border); padding-bottom:8px;">Theme Settings</h3>
         
         <!-- Theme Toggle -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0;">
           <div>
             <strong style="color:var(--color-text-dark); font-size:14.5px;">Dark Mode</strong>
             <span style="font-size:12px; color:var(--color-text-light); display:block; margin-top:2px;">Switch interface to dark colors to protect eyes when working at night</span>
@@ -2029,17 +2089,6 @@ window.showAdminSettingsModal = function(e) {
               <span style="position:absolute; content:''; height:18px; width:18px; left:3px; bottom:2px; background-color:white; transition:.4s; border-radius:50%; transform:${isDarkTheme ? 'translateX(24px)' : 'none'}; box-shadow:0 1px 3px rgba(0,0,0,0.25);"></span>
             </label>
           </div>
-        </div>
-
-        <!-- Language toggle link -->
-        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--color-gray-border); padding-top:20px;">
-          <div>
-            <strong style="color:var(--color-text-dark); font-size:14.5px;">Display Language</strong>
-            <span style="font-size:12px; color:var(--color-text-light); display:block; margin-top:2px;">Switch main interface language between Vietnamese and English</span>
-          </div>
-          <button class="btn btn-outline" onclick="window.toggleLanguageSettings()" style="padding:8px 16px; font-size:13px; font-weight:700; border-radius:8px; border-color:var(--color-gray-border); background:white; color:var(--color-text-dark); cursor:pointer;">
-            🌐 ${isEn ? 'Switch to Vietnamese' : 'Chuyển sang Tiếng Anh'}
-          </button>
         </div>
       </div>
 
