@@ -1368,9 +1368,8 @@ window.highlightSidebarMenu = function(tabName) {
   
   let selector = "";
   if (tabName === 'dashboard') selector = 'a[href="admin-dashboard.html"]';
-  else if (tabName === 'products-crud') selector = 'a[href="admin-products.html"]';
+  else if (tabName === 'products-crud' || tabName === 'products') selector = 'a[href="admin-products.html"]';
   else if (tabName === 'orders-crud') selector = 'a[href="admin-orders.html"]';
-  else if (tabName === 'products') selector = 'a[onclick*="showAdminProductsModal"]';
   else if (tabName === 'customers') selector = 'a[onclick*="showAdminCustomersModal"]';
   else if (tabName === 'categories') selector = 'a[onclick*="showAdminCategoriesModal"]';
   else if (tabName === 'promotions') selector = 'a[onclick*="showAdminPromotionsModal"]';
