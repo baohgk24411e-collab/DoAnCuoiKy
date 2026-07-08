@@ -251,6 +251,7 @@ function setupCommonRoots() {
   if (!document.getElementById("auto-breadcrumb") && !hasInlineBreadcrumbPage && !path.includes("admin") && !path.includes("login.html") && !path.includes("profile.html")) {
     const breadcrumbMap = {
       "about.html":        [{ label: "Về chúng tôi", labelEn: "About Us" }],
+      "contact.html":      [{ label: "Liên hệ", labelEn: "Contact Us" }],
       "products.html":     [{ label: "Cửa hàng", labelEn: "Shop" }],
       "detail.html":       [{ label: "Cửa hàng", labelEn: "Shop", href: "products.html" }, { label: "Chi tiết sản phẩm", labelEn: "Product Detail" }],
       "cart.html":         [{ label: "Giỏ hàng", labelEn: "Cart" }],

@@ -140,7 +140,7 @@ function renderDetails(root) {
   root.innerHTML = `
     <div class="product-detail-container container">
       <ul class="breadcrumb">
-        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="index.html"><span class="lang-vi">Trang chủ</span><span class="lang-en">Home</span></a></li>
         <li>/</li>
         <li><a href="products.html?category=${encodeURIComponent(p.category)}">${translateCategory(p.category)}</a></li>
         <li>/</li>

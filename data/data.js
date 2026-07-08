@@ -1966,9 +1966,9 @@ window.MOCK_PRODUCTS = [
     ],
     "price": 119000,
     "oldPrice": 149000,
-    "image": "images/Product_Images/03. Hình ảnh/granola/2. Hạnh nhân rang bơ vỏ tự nhiên 200g/1.1.png",
+    "image": "images/Product_Images/03. Hình ảnh/granola/2. Hạnh nhân rang bơ vị tự nhiên 200g/1.1.png",
     "gallery": [
-      "images/Product_Images/03. Hình ảnh/granola/2. Hạnh nhân rang bơ vỏ tự nhiên 200g/1.1.png"
+      "images/Product_Images/03. Hình ảnh/granola/2. Hạnh nhân rang bơ vị tự nhiên 200g/1.1.png"
     ],
     "origin": "Nhập khẩu USA - Xử lý tại Tứ Quý",
     "region": "Đà Lạt, Lâm Đồng",
@@ -2094,9 +2094,9 @@ window.MOCK_PRODUCTS = [
     ],
     "price": 145000,
     "oldPrice": 179000,
-    "image": "images/Product_Images/03. Hình ảnh/granola/5. Hạnh nhân rang sấy vỏ tự nhiên 250g/6.1.png",
+    "image": "images/Product_Images/03. Hình ảnh/granola/5. Hạnh nhân rang sấy vị tự nhiên 250g/6.1.png",
     "gallery": [
-      "images/Product_Images/03. Hình ảnh/granola/5. Hạnh nhân rang sấy vỏ tự nhiên 250g/6.1.png"
+      "images/Product_Images/03. Hình ảnh/granola/5. Hạnh nhân rang sấy vị tự nhiên 250g/6.1.png"
     ],
     "origin": "Nhập khẩu Chile",
     "region": "Đà Lạt, Lâm Đồng",
@@ -2638,9 +2638,9 @@ window.MOCK_PRODUCTS = [
     ],
     "price": 149000,
     "oldPrice": 195000,
-    "image": "images/Product_Images/03. Hình ảnh/granola/15. Hạt dẻ cười nguyên vị rang muối/15.1.png",
+    "image": "images/Product_Images/03. Hình ảnh/granola/15. Hạt dẻ cười nguyên vỏ rang muối/15.1.png",
     "gallery": [
-      "images/Product_Images/03. Hình ảnh/granola/15. Hạt dẻ cười nguyên vị rang muối/15.1.png"
+      "images/Product_Images/03. Hình ảnh/granola/15. Hạt dẻ cười nguyên vỏ rang muối/15.1.png"
     ],
     "origin": "Nhập khẩu USA",
     "region": "Đà Lạt, Lâm Đồng",
