@@ -453,7 +453,7 @@ body.dark-mode-theme {
 /* Stats Grid - always 4 columns on wide screens */
     .admin-stats-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 18px;
       margin-bottom: 28px;
     }
@@ -1354,6 +1354,8 @@ body.dark-mode-theme {
 .status-hoan-thanh { background-color: #dcfce7; color: #15803d; border: 1px solid rgba(21, 128, 97, 0.15); }
 
 .status-da-huy { background-color: #fee2e2; color: #b91c1c; border: 1px solid rgba(185, 28, 28, 0.15); }
+
+.status-tra-hang-hoan-tien { background-color: #fffbeb; color: #b45309; border: 1px solid rgba(180, 83, 9, 0.15); }
 
 @media (max-width: 992px) {
       .admin-layout-grid {

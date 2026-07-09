@@ -263,6 +263,10 @@
             <span class="admin-summary-label"><span class="lang-vi">Đã hoàn thành</span><span class="lang-en">Completed</span></span>
             <span class="admin-summary-value" id="kpi-orders-completed" style="color: #15803d;">0</span>
           </div>
+          <div class="admin-summary-card" style="border-left: 4px solid #dc2626;" onclick="filterOrdersByStatus('refund-requests')">
+            <span class="admin-summary-label"><span class="lang-vi">Yêu cầu hoàn trả</span><span class="lang-en">Refund Requests</span></span>
+            <span class="admin-summary-value" id="kpi-orders-refund-requests" style="color: #dc2626;">0</span>
+          </div>
         </div>
 
         <!-- Search / Tabs row -->
@@ -282,6 +286,8 @@
             <div class="status-filter-tab" id="tab-status-shipping" onclick="filterOrdersByStatus('Đang giao')"><span class="lang-vi">Đang giao</span><span class="lang-en">Shipping</span></div>
             <div class="status-filter-tab" id="tab-status-completed" onclick="filterOrdersByStatus('Hoàn thành')"><span class="lang-vi">Hoàn thành</span><span class="lang-en">Completed</span></div>
             <div class="status-filter-tab" id="tab-status-cancelled" onclick="filterOrdersByStatus('Đã hủy')"><span class="lang-vi">Đã hủy</span><span class="lang-en">Cancelled</span></div>
+            <div class="status-filter-tab" id="tab-status-refund-requests" onclick="filterOrdersByStatus('refund-requests')"><span class="lang-vi">Yêu cầu hoàn trả</span><span class="lang-en">Refund Requests</span></div>
+            <div class="status-filter-tab" id="tab-status-refunded" onclick="filterOrdersByStatus('Trả hàng/Hoàn tiền')"><span class="lang-vi">Đã hoàn tiền</span><span class="lang-en">Refunded</span></div>
           </div>
         </div>
 

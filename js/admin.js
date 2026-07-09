@@ -68,6 +68,11 @@ function initAdminDashboard() {
   if (prods) prods.innerText = kpis.totalProducts;
   if (pend) pend.innerText = pendingCount;
 
+  // Update refund request KPI count in dashboard
+  const refundReqCount = allOrders.filter(o => o.refundRequest && o.refundRequest.status === "pending").length;
+  const refundEl = document.getElementById("kpi-refund-requests");
+  if (refundEl) refundEl.innerText = refundReqCount;
+
   // Bind dynamic current calendar date
   const dateEl = document.getElementById("current-calendar-date");
   if (dateEl) {
@@ -160,7 +165,8 @@ function translateOrderStatus(status) {
     "Đang chuẩn bị": "Preparing",
     "Đang giao": "Shipping",
     "Hoàn thành": "Completed",
-    "Đã hủy": "Cancelled"
+    "Đã hủy": "Cancelled",
+    "Trả hàng/Hoàn tiền": "Returned/Refunded"
   };
   return translations[status] || status;
 }
@@ -1139,8 +1145,8 @@ function initAdminOrders() {
     orderStatusFilter = filterParam;
     
     // Update active tab styles
-    const statuses = ["all", "Chờ xác nhận", "Đang xử lý", "Đang giao", "Hoàn thành", "Đã hủy"];
-    const ids = ["all", "pending", "processing", "shipping", "completed", "cancelled"];
+    const statuses = ["all", "Chờ xác nhận", "Đang xử lý", "Đang giao", "Hoàn thành", "Đã hủy", "refund-requests", "Trả hàng/Hoàn tiền"];
+    const ids = ["all", "pending", "processing", "shipping", "completed", "cancelled", "refund-requests", "refunded"];
     
     statuses.forEach((s, idx) => {
       const tabEl = document.getElementById(`tab-status-${ids[idx]}`);
@@ -1172,6 +1178,9 @@ function renderOrdersList() {
   if (kpiPending) kpiPending.innerText = allOrders.filter(o => o.status === "Chờ xác nhận").length;
   if (kpiProcessing) kpiProcessing.innerText = allOrders.filter(o => o.status === "Đang xử lý" || o.status === "Đang giao").length;
   if (kpiCompleted) kpiCompleted.innerText = allOrders.filter(o => o.status === "Hoàn thành").length;
+  
+  const kpiRefundRequests = document.getElementById("kpi-orders-refund-requests");
+  if (kpiRefundRequests) kpiRefundRequests.innerText = allOrders.filter(o => o.refundRequest && o.refundRequest.status === "pending").length;
 
   // Apply search query (ID, customer name, or ordered item name)
   if (orderSearchQuery) {
@@ -1184,7 +1193,9 @@ function renderOrdersList() {
   }
 
   // Apply status filter
-  if (orderStatusFilter !== "all") {
+  if (orderStatusFilter === "refund-requests") {
+    orders = orders.filter(o => o.refundRequest && o.refundRequest.status === "pending");
+  } else if (orderStatusFilter !== "all") {
     orders = orders.filter(o => o.status === orderStatusFilter);
   }
 
@@ -1201,12 +1212,23 @@ function renderOrdersList() {
     if (o.status === "Đang giao") statusClass = "status-dang-giao";
     if (o.status === "Hoàn thành") statusClass = "status-hoan-thanh";
     if (o.status === "Đã hủy") statusClass = "status-da-huy";
+    if (o.status === "Trả hàng/Hoàn tiền") statusClass = "status-tra-hang-hoan-tien";
 
     const dateText = new Date(o.date).toLocaleString("en-US");
+    
+    let refundBadge = "";
+    if (o.refundRequest && o.refundRequest.status === "pending") {
+      const isEn = document.body.classList.contains("lang-en");
+      refundBadge = `
+        <br><span style="display:inline-block; font-size:10px; font-weight:700; background-color:#fff3cd; color:#856404; border:1px solid #ffeeba; padding:2px 6px; border-radius:4px; margin-top:4px;">
+          ⚠️ ${isEn ? "Refund Req" : "Yêu cầu hoàn trả"}
+        </span>
+      `;
+    }
 
     return `
       <tr>
-        <td><strong>#${o.id}</strong></td>
+        <td><strong>#${o.id}</strong>${refundBadge}</td>
         <td>
           <strong>${o.customerName}</strong><br>
           <span style="font-size:11px; color:var(--color-text-light);">${o.customerPhone}</span>
@@ -1221,6 +1243,7 @@ function renderOrdersList() {
             <option value="Đang giao" ${o.status === "Đang giao" ? "selected" : ""}>Shipping</option>
             <option value="Hoàn thành" ${o.status === "Hoàn thành" ? "selected" : ""}>Completed</option>
             <option value="Đã hủy" ${o.status === "Đã hủy" ? "selected" : ""}>Cancelled</option>
+            <option value="Trả hàng/Hoàn tiền" ${o.status === "Trả hàng/Hoàn tiền" ? "selected" : ""}>Refunded</option>
           </select>
         </td>
         <td style="text-align: center;">
@@ -1253,8 +1276,8 @@ window.filterOrdersByStatus = function(val) {
   orderStatusFilter = val;
   
   // Update active tab styles
-  const statuses = ["all", "Chờ xác nhận", "Đang xử lý", "Đang giao", "Hoàn thành", "Đã hủy"];
-  const ids = ["all", "pending", "processing", "shipping", "completed", "cancelled"];
+  const statuses = ["all", "Chờ xác nhận", "Đang xử lý", "Đang giao", "Hoàn thành", "Đã hủy", "refund-requests", "Trả hàng/Hoàn tiền"];
+  const ids = ["all", "pending", "processing", "shipping", "completed", "cancelled", "refund-requests", "refunded"];
   
   statuses.forEach((s, idx) => {
     const tabEl = document.getElementById(`tab-status-${ids[idx]}`);
@@ -1299,6 +1322,65 @@ window.openOrderDetailsModal = function(id) {
     </div>
   `).join("");
 
+  // Generate refund warning block if request metadata exists
+  let refundRequestHTML = "";
+  if (o.refundRequest) {
+    const isEn = document.body.classList.contains("lang-en");
+    const reasonMap = {
+      "wrong-product": isEn ? "Wrong product received" : "Nhận sai sản phẩm",
+      "damaged": isEn ? "Product damaged / expired" : "Sản phẩm bị hỏng / hết hạn",
+      "not-as-described": isEn ? "Not as described" : "Không đúng mô tả",
+      "changed-mind": isEn ? "Changed mind" : "Thay đổi ý định",
+      "other": isEn ? "Other" : "Lý do khác"
+    };
+    const friendlyReason = reasonMap[o.refundRequest.reason] || o.refundRequest.reason;
+    const requestStatus = o.refundRequest.status === "pending" 
+      ? (isEn ? "Pending Review" : "Đang chờ duyệt")
+      : o.refundRequest.status === "approved"
+        ? (isEn ? "Approved" : "Đã chấp nhận hoàn trả")
+        : (isEn ? "Rejected" : "Đã từ chối");
+        
+    let statusColor = "#d97706"; // amber
+    if (o.refundRequest.status === "approved") statusColor = "#15803d"; // green
+    if (o.refundRequest.status === "rejected") statusColor = "#b91c1c"; // red
+    
+    let actionButtons = "";
+    if (o.refundRequest.status === "pending") {
+      actionButtons = `
+        <div style="margin-top:15px; display:flex; gap:10px;">
+          <button onclick="handleRefundDecision('${o.id}', 'approved')" style="background:linear-gradient(135deg,#16a34a,#15803d); border:none; color:white; font-size:12px; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; box-shadow:0 3px 8px rgba(22,163,74,0.2);">
+            ${isEn ? "✓ Approve Refund" : "✓ Chấp nhận hoàn tiền"}
+          </button>
+          <button onclick="handleRefundDecision('${o.id}', 'rejected')" style="background:linear-gradient(135deg,#dc2626,#b91c1c); border:none; color:white; font-size:12px; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; box-shadow:0 3px 8px rgba(220,38,38,0.2);">
+            ${isEn ? "✗ Reject Request" : "✗ Từ chối yêu cầu"}
+          </button>
+        </div>
+      `;
+    }
+
+    refundRequestHTML = `
+      <div style="margin-bottom:20px; font-size:12.5px; line-height:1.6; background-color:rgba(220,38,38,0.03); padding:16px; border-radius:12px; border:1px solid rgba(220,38,38,0.12);">
+        <h4 style="margin:0 0 10px 0; font-size:14px; color:#b91c1c; font-weight:800; border-bottom:1px solid rgba(220,38,38,0.12); padding-bottom:6px; display:flex; align-items:center; gap:6px;">
+          <span>🚨</span> ${isEn ? "Return & Refund Request Info" : "Thông tin yêu cầu hoàn trả"}
+        </h4>
+        <div style="display:grid; grid-template-columns: 110px 1fr; gap:6px 12px; color:#2e3a2b;">
+          <strong>${isEn ? "Status:" : "Trạng thái:"}</strong>
+          <span style="font-weight:700; color:${statusColor};">${requestStatus}</span>
+          
+          <strong>${isEn ? "Reason:" : "Lý do:"}</strong>
+          <span>${friendlyReason}</span>
+          
+          <strong>${isEn ? "Cust. Notes:" : "Khách ghi chú:"}</strong>
+          <span style="font-style:italic; color:#5b6a56;">"${o.refundRequest.note || (isEn ? 'No notes' : 'Không có ghi chú')}"</span>
+          
+          <strong>${isEn ? "Time:" : "Thời gian yêu cầu:"}</strong>
+          <span>${new Date(o.refundRequest.requestedAt).toLocaleString(isEn ? 'en-US' : 'vi-VN')}</span>
+        </div>
+        ${actionButtons}
+      </div>
+    `;
+  }
+
   const detailsHTML = `
     <div style="border-bottom: 2px solid #F0EEE4; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
       <h3 style="font-size:20px; font-weight: 800; color:#4D7C2F; margin: 0;">Đơn hàng #${o.id}</h3>
@@ -1307,6 +1389,9 @@ window.openOrderDetailsModal = function(id) {
       </span>
     </div>
     <div style="max-height: 480px; overflow-y: auto; padding-right:8px;">
+      
+      ${refundRequestHTML}
+
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
         <div style="font-size:12.5px; line-height:1.6; background-color:rgba(77, 124, 47, 0.04); padding:16px; border-radius:12px; border:1px solid rgba(77, 124, 47, 0.1);">
           <h4 style="margin:0 0 10px 0; font-size:13px; color:#2E3A2B; font-weight: 800; border-bottom:1px solid rgba(77, 124, 47, 0.1); padding-bottom:6px;">Recipient Details</h4>
@@ -1354,6 +1439,35 @@ window.openOrderDetailsModal = function(id) {
   `;
 
   window.showCustomModal(detailsHTML);
+};
+
+// Global handler for refund decisions (approved / rejected)
+window.handleRefundDecision = function(orderId, decision) {
+  if (!window.OrderService) return;
+  const orders = window.OrderService.getOrders();
+  const idx = orders.findIndex(o => o.id === orderId);
+  if (idx === -1) return;
+
+  const isEn = document.body.classList.contains("lang-en");
+  orders[idx].refundRequest.status = decision;
+  
+  if (decision === "approved") {
+    orders[idx].status = "Trả hàng/Hoàn tiền";
+  } else if (decision === "rejected") {
+    orders[idx].status = "Hoàn thành";
+  }
+
+  window.OrderService.saveOrders(orders);
+  window.closeCustomModal();
+  
+  const msg = decision === "approved"
+    ? (isEn ? "Refund request approved." : "Đã duyệt yêu cầu trả hàng / hoàn tiền.")
+    : (isEn ? "Refund request rejected." : "Đã từ chối yêu cầu trả hàng / hoàn tiền.");
+  window.showToast(msg, "success");
+  
+  if (typeof renderOrdersList === "function") {
+    renderOrdersList();
+  }
 };
 
 // ==========================================================================

@@ -5,7 +5,7 @@ const TRACE_DATABASE = {
   "TQG-XOAI-001": {
     nameVi: "Xoài cát Hòa Lộc sạch Cái Bè",
     nameEn: "Hoa Loc Sweet Mangoes - Cái Bè",
-    image: "images/fruits/Xoài cát Hòa Lộc.png",
+    image: "images/Product_Images/03. Hình ảnh/Trái cây/17-Xoài cát Hòa Lộc/17-1.png",
     descVi: "Xoài chín cây thơm lừng, ngọt đậm vị, thu hoạch trực tiếp tại Hợp tác xã Xoài cát Cái Bè, tỉnh Tiền Giang. Đạt tiêu chuẩn VietGAP xuất khẩu.",
     descEn: "Tree-ripened mangoes with rich sweet fragrance, harvested at Cai Be Mango Cooperative, Tien Giang province. Meets export VietGAP standards.",
     coopVi: "HTX Xoài cát Cái Bè, Tiền Giang",
@@ -36,7 +36,7 @@ const TRACE_DATABASE = {
   "TQG-MAN-002": {
     nameVi: "Mận hậu chín ngọt Bản Ôn, Sơn La",
     nameEn: "Sweet Red Plums - Ban On, Son La",
-    image: "images/fruits/Mận.png",
+    image: "images/Product_Images/03. Hình ảnh/Trái cây/3-Mận hậu Người Hmong/3-1.png",
     descVi: "Mận hậu chín đỏ ngọt lịm pha chút chua nhẹ giòn tan, phủ phấn trắng tự nhiên, hái từ nông trại cao nguyên Mộc Châu lộng gió.",
     descEn: "Ripe sweet red plums with crispy texture and natural white powder, harvested from high-altitude Moc Chau highlands.",
     coopVi: "HTX Mận Hậu sạch Bản Ôn, Sơn La",
@@ -67,7 +67,7 @@ const TRACE_DATABASE = {
   "TQG-BUOI-003": {
     nameVi: "Bưởi da xanh Bến Tre ruột đỏ VIP",
     nameEn: "Green Skin Pink Pomelos - Bến Tre",
-    image: "images/fruits/Bưởi da xanh.png",
+    image: "images/Product_Images/03. Hình ảnh/Trái cây/9-Bưởi da xanh/9-2.png",
     descVi: "Múi bưởi hồng đậm, mọng nước, dễ lột, ngọt thanh không đắng. Được canh tác theo tiêu chuẩn GlobalGAP khắt khe nhất.",
     descEn: "Rich pink pulps, juicy, easy to peel, sweet and refreshingly crisp. Grown under rigorous GlobalGAP protocols.",
     coopVi: "HTX Bưởi Da Xanh Mỏ Cày Bắc, Bến Tre",
@@ -98,7 +98,7 @@ const TRACE_DATABASE = {
   "TQG-HAT-004": {
     nameVi: "Mix Hạt Dinh Dưỡng 5 loại cao cấp",
     nameEn: "Premium 5-Nut Mixed Seeds",
-    image: "images/granola/Mix hạt.png",
+    image: "images/Product_Images/03. Hình ảnh/granola/Mix Nuts 5 loại.png",
     descVi: "Hạt dinh dưỡng sấy giòn thơm ngậy bao gồm Macca, Hạnh nhân, Hạt điều, Óc chó, và Hạt bí hữu cơ sấy lạnh giữ nguyên dưỡng chất.",
     descEn: "Bake-crisp nutritional nuts including Macadamia, Almond, Cashew, Walnut, and organic Pumpkin seeds dried with low-temp technology.",
     coopVi: "HTX Nông nghiệp Hữu cơ Krông Năng, Đắk Lắk",
@@ -129,7 +129,7 @@ const TRACE_DATABASE = {
   "TQG-CHIA-005": {
     nameVi: "Hạt chia hữu cơ nhập khẩu Úc",
     nameEn: "Organic Chia Seeds - Imported from Australia",
-    image: "images/granola/Hạt Chia.png",
+    image: "images/Product_Images/03. Hình ảnh/granola/Hạt Chia.png",
     descVi: "Hạt chia hữu cơ nhập khẩu nguyên bao từ Úc, giàu chất xơ, Omega-3 tốt cho hệ tim mạch và hỗ trợ giảm cân hiệu quả.",
     descEn: "Organic chia seeds imported from Australia, rich in fiber, Omega-3 for cardiovascular health and weight management.",
     coopVi: "Nông trại hữu cơ EcoFarm Australia (Nhập khẩu bởi Tứ Quý)",
@@ -160,7 +160,7 @@ const TRACE_DATABASE = {
   "TQG-ROI-006": {
     nameVi: "Roi An Phước đỏ ngọt Cái Bè",
     nameEn: "An Phuoc Red Rose Apple - Cai Be",
-    image: "images/fruits/Roi.png",
+    image: "images/Product_Images/03. Hình ảnh/Trái cây/34-Roi mận An Phước/34-2.png",
     descVi: "Roi An Phước hình quả chuông màu đỏ sẫm rất bắt mắt, thịt quả dày giòn xốp mọng nước, vị ngọt thanh và thơm dịu, thu hoạch trực tiếp tại nhà vườn Cái Bè.",
     descEn: "An Phuoc Red Rose Apple shaped like a bell with deep red color, thick crispy flesh, juicy, sweet and mild fragrance.",
     coopVi: "HTX Cây ăn trái hữu cơ Cái Bè, Tiền Giang",

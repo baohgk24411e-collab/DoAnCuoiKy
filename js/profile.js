@@ -901,7 +901,7 @@ function renderOrderHistory() {
   } else if (filter === "Hoàn thành") {
     filteredOrders = orders.filter(o => o.status === "Hoàn thành");
   } else if (filter === "Đã hủy") {
-    filteredOrders = orders.filter(o => o.status === "Đã hủy");
+    filteredOrders = orders.filter(o => o.status === "Đã hủy" || o.status === "Trả hàng/Hoàn tiền");
   }
 
   // Step 2: Filter by search keyword (case-insensitive, diacritic-aware)
@@ -957,6 +957,7 @@ function renderOrderHistory() {
     if (order.status === "Đang giao") statusClass = "status-dang-giao";
     if (order.status === "Hoàn thành") statusClass = "status-hoan-thanh";
     if (order.status === "Đã hủy") statusClass = "status-da-huy";
+    if (order.status === "Trả hàng/Hoàn tiền") statusClass = "status-tra-hang-hoan-tien";
 
     // Translate status for EN
     let statusLabel = order.status;
@@ -966,14 +967,24 @@ function renderOrderHistory() {
         "Đang xử lý": "Processing",
         "Đang giao": "Shipping",
         "Hoàn thành": "Completed",
-        "Đã hủy": "Cancelled"
+        "Đã hủy": "Cancelled",
+        "Trả hàng/Hoàn tiền": "Returned/Refunded"
       };
       statusLabel = trans[order.status] || order.status;
     }
 
     // Progress bar width and active steps for timeline
     let timelineHTML = "";
-    if (order.status !== "Đã hủy") {
+    if (order.status === "Trả hàng/Hoàn tiền") {
+      timelineHTML = `
+        <div style="padding: 12px; text-align: center; color: #b45309; font-weight: 600; background: #fffbeb; border: 1px solid rgba(180, 83, 9, 0.15); border-radius: 8px; font-size:13px; margin: 15px 0;">
+          ${isEn 
+            ? "This order has been returned and refunded." 
+            : "Đơn hàng này đã được trả hàng và hoàn tiền thành công."
+          }
+        </div>
+      `;
+    } else if (order.status !== "Đã hủy") {
       let progressWidth = "0%";
       let step1 = "completed", step2 = "", step3 = "", step4 = "";
 
@@ -1074,9 +1085,26 @@ function renderOrderHistory() {
       ? `<button class="btn-received-goods" onclick="markOrderReceived('${order.id}')">${receivedGoodsLabel}</button>`
       : "";
 
-    const refundBtnHTML = order.status === "Hoàn thành"
-      ? `<button class="btn-request-refund" onclick="requestOrderRefund('${order.id}')">${requestRefundLabel}</button>`
-      : "";
+    let refundBtnHTML = "";
+    if (order.status === "Hoàn thành") {
+      if (order.refundRequest) {
+        let reqStatusText = "";
+        let color = "";
+        if (order.refundRequest.status === "pending") {
+          reqStatusText = isEn ? "Refund Pending" : "Đang chờ duyệt hoàn tiền";
+          color = "#d97706";
+        } else if (order.refundRequest.status === "approved") {
+          reqStatusText = isEn ? "Refund Approved" : "Đã hoàn tiền";
+          color = "#15803d";
+        } else if (order.refundRequest.status === "rejected") {
+          reqStatusText = isEn ? "Refund Rejected" : "Từ chối hoàn tiền";
+          color = "#b91c1c";
+        }
+        refundBtnHTML = `<span style="font-size:12px; font-weight:700; color:${color}; padding:6px 12px; display:inline-block; border-radius:4px; background:rgba(0,0,0,0.03); border:1px solid rgba(0,0,0,0.05); margin-top:10px;">ℹ️ ${reqStatusText}</span>`;
+      } else {
+        refundBtnHTML = `<button class="btn-request-refund" onclick="requestOrderRefund('${order.id}')">${requestRefundLabel}</button>`;
+      }
+    }
 
     return `
       <div class="order-card">
