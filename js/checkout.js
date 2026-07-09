@@ -69,7 +69,11 @@ let addressMarker = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   const currentUser = window.AuthService ? window.AuthService.getCurrentUser() : null;
-  if (currentUser && currentUser.isAdmin) {
+  if (!currentUser) {
+    window.location.replace("login.html?redirect=cart.html");
+    return;
+  }
+  if (currentUser.isAdmin) {
     window.location.replace("admin-dashboard.html");
     return;
   }

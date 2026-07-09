@@ -649,6 +649,21 @@ window.closeVoucherModal = function() {
 };
 
 window.handleCheckoutClick = function(event) {
+  if (!window.AuthService || !window.AuthService.getCurrentUser()) {
+    event.preventDefault();
+    const isEn = (localStorage.getItem("tqg_lang") || "en") === "en";
+    showCartToast(
+      isEn 
+        ? "Please log in to make a purchase." 
+        : "Vui lòng đăng nhập tài khoản để thực hiện mua hàng.", 
+      "error"
+    );
+    setTimeout(() => {
+      window.location.href = "login.html?redirect=cart.html";
+    }, 1500);
+    return;
+  }
+
   const selectedItems = getSelectedItems(getCartItems());
   if (selectedItems.length === 0) {
     event.preventDefault();
