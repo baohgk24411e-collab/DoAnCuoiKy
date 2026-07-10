@@ -2,84 +2,6 @@
 (function () {
   "use strict";
 
-  const seasonalDataVI = {
-    1: {
-      season: "Tet and New Year season",
-      fruits: ["Bưởi da xanh", "Quýt đường", "Dưa hấu", "Vú sữa Lò Rèn", "Cam xoàn"],
-      combos: ["Seasonal Fruit Box", "Family Fruit Box"]
-    },
-    2: {
-      season: "after Tet season",
-      fruits: ["Bưởi da xanh", "Cam xoàn", "Quýt đường", "Dưa lưới", "Chuối Laba"],
-      combos: ["Vitamin Box", "Fresh Start Box"]
-    },
-    3: {
-      season: "Spring season",
-      fruits: ["Xoài cát Hòa Lộc", "Dâu tây Đà Lạt", "Dưa lưới Hoàng Kim", "Ổi Ruby", "Chuối Laba"],
-      combos: ["Spring Fruit Box", "Eat Clean Box"]
-    },
-    4: {
-      season: "early Summer season",
-      fruits: ["Xoài cát Hòa Lộc", "Mận hậu", "Dưa hấu", "Dứa mật MD2", "Bơ Đắk Lắk"],
-      combos: ["Summer Starter Box", "Office Fruit Box"]
-    },
-    5: {
-      season: "Summer season",
-      fruits: ["Vải thiều Bắc Giang", "Mận hậu", "Xoài", "Dứa Queen", "Chôm chôm"],
-      combos: ["Summer Fruit Box", "Seasonal Fruit Box"]
-    },
-    6: {
-      season: "tropical fruits season",
-      fruits: ["Vải thiều", "Chôm chôm", "Măng cụt", "Sầu riêng Ri6", "Bơ Đắk Lắk", "Dưa hấu"],
-      combos: ["Tropical Fruit Box", "Combo Healthy"]
-    },
-    7: {
-      season: "tropical fruits season",
-      fruits: ["Nhãn tiêu", "Chôm chôm", "Măng cụt Lái Thiêu", "Sầu riêng Ri6", "Bơ Đắk Lắk", "Dưa hấu không hạt"],
-      combos: ["Seasonal Fruit Box", "Summer Fresh Box", "Eat Clean Box"]
-    },
-    8: {
-      season: "late Summer season",
-      fruits: ["Nhãn xuồng cơm vàng", "Chôm chôm nhãn", "Bơ Đắk Lắk", "Thanh long", "Dứa mật MD2"],
-      combos: ["Energy Fruit Box", "Office Snack Box"]
-    },
-    9: {
-      season: "early Autumn season",
-      fruits: ["Hồng giòn Đà Lạt", "Na dai Đông Triều", "Thanh long", "Nho Bình Thuận", "Sapoche"],
-      combos: ["Autumn Fruit Box", "Healthy Family Box"]
-    },
-    10: {
-      season: "Autumn season",
-      fruits: ["Hồng giòn Đà Lạt", "Na hoàng hậu", "Nho Bình Thuận", "Bưởi da xanh", "Dưa lê hoàng kim"],
-      combos: ["Autumn Wellness Box", "Gift Fruit Box"]
-    },
-    11: {
-      season: "late Autumn early Winter season",
-      fruits: ["Cam xoàn", "Quýt đường", "Bưởi Năm Roi", "Dưa lưới", "Vú sữa"],
-      combos: ["Vitamin C Box", "Family Fruit Box"]
-    },
-    12: {
-      season: "end of year season",
-      fruits: ["Bưởi Năm Roi", "Cam xoàn", "Quýt đường", "Dưa hấu", "Vú sữa Lò Rèn"],
-      combos: ["Year-end Gift Box", "Premium Seasonal Box"]
-    }
-  };
-
-  const seasonalDataEN = {
-    1: { season: "Lunar New Year and early year", fruits: seasonalDataVI[1].fruits, combos: seasonalDataVI[1].combos },
-    2: { season: "post-Tet season", fruits: seasonalDataVI[2].fruits, combos: seasonalDataVI[2].combos },
-    3: { season: "spring", fruits: seasonalDataVI[3].fruits, combos: seasonalDataVI[3].combos },
-    4: { season: "early summer", fruits: seasonalDataVI[4].fruits, combos: seasonalDataVI[4].combos },
-    5: { season: "summer", fruits: seasonalDataVI[5].fruits, combos: seasonalDataVI[5].combos },
-    6: { season: "tropical fruit season", fruits: seasonalDataVI[6].fruits, combos: seasonalDataVI[6].combos },
-    7: { season: "tropical fruit season", fruits: seasonalDataVI[7].fruits, combos: seasonalDataVI[7].combos },
-    8: { season: "late summer", fruits: seasonalDataVI[8].fruits, combos: seasonalDataVI[8].combos },
-    9: { season: "early autumn", fruits: seasonalDataVI[9].fruits, combos: seasonalDataVI[9].combos },
-    10: { season: "autumn", fruits: seasonalDataVI[10].fruits, combos: seasonalDataVI[10].combos },
-    11: { season: "late autumn to early winter", fruits: seasonalDataVI[11].fruits, combos: seasonalDataVI[11].combos },
-    12: { season: "year-end season", fruits: seasonalDataVI[12].fruits, combos: seasonalDataVI[12].combos }
-  };
-
   const QUICK_CHIPS_VI = [
     "What fruits are in season?",
     "Suggest eat clean combo",
@@ -97,17 +19,6 @@
     "Delivery policy",
     "Checkout support"
   ];
-
-  const PRODUCT_SUGGESTIONS = {
-    seasonal: [1, 4, 48],
-    eatclean: [47, 48, 45],
-    gym: [49, 45, 46],
-    traceability: [1, 45, 47],
-    delivery: [48, 45, 47],
-    checkout: [48, 49, 47],
-    certification: [45, 47, 49],
-    general: [47, 45, 48]
-  };
 
   let greeted = false;
   let toggleBtn, panel, closeBtn, bodyEl, inputEl, sendBtn;
@@ -223,25 +134,52 @@
     return rest + " hoặc " + last;
   }
 
+  function getSeasonalProductsForMonth(month) {
+    if (!window.MOCK_PRODUCTS) return [];
+    let seasonSearch = "Quanh năm";
+    if (month >= 2 && month <= 4) seasonSearch = "Mùa xuân";
+    else if (month >= 5 && month <= 7) seasonSearch = "Mùa hè";
+    else if (month >= 8 && month <= 10) seasonSearch = "Mùa thu";
+    else seasonSearch = "Mùa đông";
+
+    return window.MOCK_PRODUCTS.filter(p => 
+      (p.season && p.season.toLowerCase().includes(seasonSearch.toLowerCase())) ||
+      (p.season && p.season.toLowerCase().includes("quanh năm")) ||
+      p.isSeasonal
+    );
+  }
+
   function getSeasonalResponse() {
     const lang = isEnglish() ? "en" : "vi";
     const month = new Date().getMonth() + 1;
-    const data = lang === "en" ? seasonalDataEN[month] : seasonalDataVI[month];
-    const fruits = formatFruitList(data.fruits, lang);
-    const combos = formatComboList(data.combos, lang);
+    const seasonalProds = getSeasonalProductsForMonth(month);
+    
+    // Group into fruits (Fruits category) and combos (Combo Healthy category)
+    const fruitsList = seasonalProds.filter(p => p.category === "Fruits").map(p => p.name);
+    const combosList = seasonalProds.filter(p => p.category === "Combo Healthy").map(p => p.name);
+
+    // Fallbacks if list is empty
+    const fruits = fruitsList.length > 0 ? formatFruitList(fruitsList.slice(0, 5), lang) : (lang === "en" ? "organic fruits" : "các loại trái cây hữu cơ");
+    const combos = combosList.length > 0 ? formatComboList(combosList.slice(0, 2), lang) : (lang === "en" ? "healthy combos" : "các gói combo sức khỏe");
+
+    let seasonName = "";
+    if (month >= 2 && month <= 4) seasonName = lang === "en" ? "Spring season" : "mùa xuân";
+    else if (month >= 5 && month <= 7) seasonName = lang === "en" ? "Summer season" : "mùa hè";
+    else if (month >= 8 && month <= 10) seasonName = lang === "en" ? "Autumn season" : "mùa thu";
+    else seasonName = lang === "en" ? "Winter season" : "mùa đông";
 
     if (lang === "en") {
       return (
-        "It's currently month " + month + ", which is " + data.season + ". " +
-        "Tứ Quý Garden suggests " + fruits + ". " +
-        "For convenience, you can choose " + combos + "."
+        "It's currently month " + month + ", which is the " + seasonName + ". " +
+        "Tứ Quý Garden suggests fresh products in season: " + fruits + ". " +
+        "For healthy convenience, you can choose: " + combos + "."
       );
     }
 
     return (
-      "Hiện tại là tháng " + month + ", đang là " + data.season + ". " +
-      "Bạn có thể chọn " + fruits + ". " +
-      "Nếu muốn mua tiện hơn, mình gợi ý " + combos + "."
+      "Hiện tại là tháng " + month + ", đang là " + seasonName + ". " +
+      "Tứ Quý Garden gợi ý cho bạn các sản phẩm tươi ngon đúng vụ: " + fruits + ". " +
+      "Để tiện lợi hơn, bạn có thể chọn các combo: " + combos + "."
     );
   }
 
@@ -412,16 +350,59 @@
   }
 
   function getSuggestedProducts(key) {
-    if (!key || !window.MOCK_PRODUCTS) return [];
-    const ids = PRODUCT_SUGGESTIONS[key] || [];
-    return ids
-      .map(function (id) {
-        return window.MOCK_PRODUCTS.find(function (p) {
-          return p.id === id;
-        });
-      })
-      .filter(Boolean)
-      .slice(0, 3);
+    if (!window.MOCK_PRODUCTS || !window.MOCK_PRODUCTS.length) return [];
+    
+    let filtered = [];
+    const products = window.MOCK_PRODUCTS;
+
+    if (key === "seasonal") {
+      const month = new Date().getMonth() + 1;
+      let seasonSearch = "Quanh năm";
+      if (month >= 2 && month <= 4) seasonSearch = "Mùa xuân";
+      else if (month >= 5 && month <= 7) seasonSearch = "Mùa hè";
+      else if (month >= 8 && month <= 10) seasonSearch = "Mùa thu";
+      else seasonSearch = "Mùa đông";
+
+      filtered = products.filter(p => 
+        (p.season && p.season.toLowerCase().includes(seasonSearch.toLowerCase())) || 
+        (p.season && p.season.toLowerCase().includes("quanh năm")) ||
+        p.isSeasonal
+      );
+    } 
+    else if (key === "eatclean") {
+      filtered = products.filter(p => 
+        p.healthGoals && p.healthGoals.some(g => 
+          g.toLowerCase().includes("clean") || 
+          g.toLowerCase().includes("giảm cân") ||
+          g.toLowerCase().includes("lành mạnh")
+        )
+      );
+    } 
+    else if (key === "gym") {
+      filtered = products.filter(p => 
+        p.healthGoals && p.healthGoals.some(g => 
+          g.toLowerCase().includes("năng lượng") || 
+          g.toLowerCase().includes("gym") ||
+          g.toLowerCase().includes("tăng cơ") ||
+          g.toLowerCase().includes("thể thao")
+        )
+      );
+    } 
+    else if (key === "traceability") {
+      filtered = products.filter(p => p.origin && p.certification && p.certification.length > 0);
+    } 
+    else if (key === "certification") {
+      filtered = products.filter(p => p.certification && p.certification.length > 0);
+    }
+    else {
+      filtered = products.filter(p => p.isBestSeller || p.rating >= 4.8);
+    }
+
+    if (filtered.length === 0) {
+      filtered = products;
+    }
+
+    return filtered.slice(0, 3);
   }
 
   function formatPrice(price) {
